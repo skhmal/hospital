@@ -1,7 +1,10 @@
-package com.khmal.Hosp.service;
+package com.khmal.hospital.service;
 
-import com.khmal.Hosp.entity.Patient;
+
+import com.khmal.hospital.entity.Doctor;
+import com.khmal.hospital.entity.Patient;
 
 public interface AdministratorService {
     void addPatient(Patient patient);
+    void addDoctor(Doctor doctor);
 }

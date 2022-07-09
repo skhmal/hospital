@@ -1,12 +1,11 @@
-package com.khmal.Hosp.entity;
-
-import org.hibernate.mapping.List;
+package com.khmal.hospital.entity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "doctor")
 public class Doctor extends User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

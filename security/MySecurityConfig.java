@@ -1,4 +1,4 @@
-package com.khmal.Hosp.security;
+package com.khmal.hospital.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

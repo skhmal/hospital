@@ -1,4 +1,4 @@
-package com.khmal.Hosp.entity;
+package com.khmal.hospital.entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;

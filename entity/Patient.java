@@ -1,23 +1,25 @@
-package com.khmal.Hosp.entity;
+package com.khmal.hospital.entity;
+
+import lombok.*;
+import lombok.extern.log4j.Log4j2;
 
 import javax.persistence.*;
 
+@ToString
+@Log4j2
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "patient")
 public class Patient extends User {
-    @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    public Patient(User user) {
-        this.user = user;
-    }
-
-    public Patient() {
-
-    }
 }

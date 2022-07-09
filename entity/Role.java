@@ -1,4 +1,4 @@
-package com.khmal.Hosp.entity;
+package com.khmal.hospital.entity;
 
 import javax.persistence.*;
 
@@ -10,7 +10,6 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-
 
     @Column(name = "username")
     private String username;

@@ -1,4 +1,4 @@
-package com.khmal.Hosp.entity;
+package com.khmal.hospital.entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ public abstract class BaseClass {
     private int id;
 
     @Column(name = "is_deleted")
-    boolean isDeleted;
+    Integer isDeleted;
 
     @Column(name = "deleted_date")
     private LocalDate deletedDate;

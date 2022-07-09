@@ -1,22 +1,25 @@
-package com.khmal.Hosp.entity;
+package com.khmal.hospital.entity;
+
+import lombok.*;
+import lombok.extern.log4j.Log4j2;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
+@Log4j2
 @Inheritance(strategy = InheritanceType.JOINED)
-//@AttributeOverrides({
-//        @AttributeOverride(name="isDeleted", column=@Column(name="is_deleted")),
-//        @AttributeOverride(name="deletedDate", column=@Column(name="deleted_date"))
-//})
-//@MappedSuperclass
-public class User extends BaseClass{
-    @Id
+public class User extends BaseClass {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "firstname")
     private String firstName;
@@ -27,24 +30,9 @@ public class User extends BaseClass{
     @Column(name = "birthday")
     private LocalDate birthday;
 
+    @Transient
     private String password;
 
     @Column(name = "enabled")
     private byte enabled;
-
-    @OneToOne
-    @JoinColumn(name = "username", referencedColumnName = "username")
-    private Role role;
-
-    public User(String firstName, String lastName, LocalDate birthday, String password, byte enabled) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthday = birthday;
-        this.password = password;
-        this.enabled = enabled;
-    }
-
-    public User() {
-
-    }
 }
