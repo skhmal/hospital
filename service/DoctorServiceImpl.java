@@ -35,6 +35,12 @@ public class DoctorServiceImpl implements DoctorService{
         }
     }
 
+//    @Override
+//    public Doctor getDoctorByFirstName(String name) {
+//        Doctor doctor = doctorRepository.getDoctorByFirstName(name);
+//        return doctor;
+//    }
+
     @Override
     public List<Doctor> getAllDoctors() {
         return doctorRepository.findAll();

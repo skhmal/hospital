@@ -1,10 +1,11 @@
 package com.khmal.hospital.entity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "doctor")
-public class Doctor extends User {
+public class Doctor  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,4 +19,14 @@ public class Doctor extends User {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+
+    public Doctor(DoctorSpecialization doctorSpecialization, User user) {
+        this.doctorSpecialization = doctorSpecialization;
+        this.user = user;
+    }
+
+    public Doctor() {
+
+    }
 }

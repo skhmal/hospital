@@ -4,12 +4,12 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Entity
 @Table(name = "administrator")
 public class Administrator extends User {
@@ -35,5 +35,14 @@ public class Administrator extends User {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public Administrator(String username, String firstName, String lastName, LocalDate birthday, String password, byte enabled, User user) {
+        super(username, firstName, lastName, birthday, password, enabled);
+        this.user = user;
+    }
+
+    public Administrator(User user) {
+        this.user = user;
     }
 }

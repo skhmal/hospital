@@ -1,25 +1,55 @@
 package com.khmal.hospital.entity;
 
-import lombok.*;
-import lombok.extern.log4j.Log4j2;
-
 import javax.persistence.*;
 
-@ToString
-@Log4j2
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 @Entity
 @Table(name = "patient")
-public class Patient extends User {
+public class Patient {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    private User userPatient;
 
+    private int permission = 1;
+
+    public Patient(User userPatient) {
+        this.userPatient = userPatient;
+    }
+
+    public Patient() {
+
+    }
+
+    public int getPermission() {
+        return permission;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public User getUserPatient() {
+        return userPatient;
+    }
+
+    public void setUserPatient(User user) {
+        this.userPatient = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id=" + id +
+                ", userPatient=" + userPatient +
+                '}';
+    }
 }

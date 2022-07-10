@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class PatientServiceImpl implements PatientService{
     @NonNull
     private AppointmentRepository appointmentRepository;
 
+    @Autowired
     public PatientServiceImpl(PatientRepository patientRepository, DoctorRepository doctorRepository, AppointmentRepository appointmentRepository) {
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
@@ -51,9 +53,18 @@ public class PatientServiceImpl implements PatientService{
         return patientRepository.findAll();
     }
 
+
+
     @Override
     public Patient getPatientByName(String name) {
-        return patientRepository.getPatientByFirstName(name);
+//        return patientRepository.getPatientByFirstName(name);
+        return null;
+    }
+
+    @Override
+    public Patient addNewPatient(Patient patient) {
+       patientRepository.save(patient);
+        return patient;
     }
 
 
