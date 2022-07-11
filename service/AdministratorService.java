@@ -1,10 +1,8 @@
 package com.khmal.hospital.service;
 
 
-import com.khmal.hospital.entity.Doctor;
-import com.khmal.hospital.entity.Patient;
+import com.khmal.hospital.entity.Administrator;
 
 public interface AdministratorService {
-    void addPatient(Patient patient);
-    void addDoctor(Doctor doctor);
+    Administrator addNewAdministrator(Administrator administrator);
 }

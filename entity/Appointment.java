@@ -1,31 +1,28 @@
 package com.khmal.hospital.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "appointment")
-//@AttributeOverrides({
-//        @AttributeOverride(name="isDeleted", column=@Column(name="isDeleted")),
-//        @AttributeOverride(name="deleted_date", column=@Column(name="deleted_date"))
-//})
 public class Appointment extends BaseClass{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
-//    @Column(name = "doctor_id")
-//    private int doctorId;
-//
-//    @Column(name = "patient_id")
-//    private int patientId;
-
     @Column(name = "date")
     private LocalDateTime date;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "appoitment_type_id", referencedColumnName = "id")
+    @JoinColumn(name = "appointment_type_id", referencedColumnName = "id")
     private AppointmentType appointmentType;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -35,4 +32,11 @@ public class Appointment extends BaseClass{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     private Doctor doctor;
+
+    public Appointment(LocalDateTime date, AppointmentType appointmentType, Patient patient, Doctor doctor) {
+        this.date = date;
+        this.appointmentType = appointmentType;
+        this.patient = patient;
+        this.doctor = doctor;
+    }
 }

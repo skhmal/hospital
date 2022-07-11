@@ -1,8 +1,14 @@
 package com.khmal.hospital.entity;
 
+import lombok.*;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @Table(name = "authorities")
 public class Role {
 
@@ -15,7 +21,13 @@ public class Role {
     private String username;
 
     @Column(name = "authority")
-    private String authority;
+    private String roleName;
 
+    @OneToOne(mappedBy = "doctorSpecialization")
+    private Doctor doctorRole;
 
+    public Role(String username, String roleName) {
+        this.username = username;
+        this.roleName = roleName;
+    }
 }

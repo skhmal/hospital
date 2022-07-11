@@ -1,8 +1,14 @@
 package com.khmal.hospital.entity;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+import javax.persistence.*;
+
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "nurse")
 public class Nurse{
@@ -13,10 +19,12 @@ public class Nurse{
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private User userNurse;
 
-    public Nurse(User user) {
-        this.user = user;
+    public static final String ROLE = "ROLE_NURSE";
+
+    public Nurse(User userNurse) {
+        this.userNurse = userNurse;
     }
 
     public Nurse() {

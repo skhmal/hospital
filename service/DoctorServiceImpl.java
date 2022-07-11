@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class DoctorServiceImpl implements DoctorService{
 
-    private DoctorRepository doctorRepository;
+    private final DoctorRepository doctorRepository;
 
     @Autowired
     public DoctorServiceImpl(DoctorRepository doctorRepository) {
@@ -25,14 +25,8 @@ public class DoctorServiceImpl implements DoctorService{
 
     @Override
     public Doctor getDoctorById(Integer id) {
-//        Doctor doctor = doctorRepository.getDoctorById(id);
         Optional<Doctor> doctor = doctorRepository.findById(id);
-
-        if (doctor == null){
-            throw new IllegalArgumentException("Doctor is null");
-        }else {
-            return doctor.get();
-        }
+        return doctor.orElse(null);
     }
 
 //    @Override

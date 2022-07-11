@@ -1,8 +1,15 @@
 package com.khmal.hospital.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
+@ToString
 @Table(name = "patient")
 public class Patient {
 
@@ -15,41 +22,12 @@ public class Patient {
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private User userPatient;
 
-    private int permission = 1;
+    public static final String ROLE = "ROLE_PATIENT";
 
     public Patient(User userPatient) {
         this.userPatient = userPatient;
     }
 
     public Patient() {
-
-    }
-
-    public int getPermission() {
-        return permission;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public User getUserPatient() {
-        return userPatient;
-    }
-
-    public void setUserPatient(User user) {
-        this.userPatient = user;
-    }
-
-    @Override
-    public String toString() {
-        return "Patient{" +
-                "id=" + id +
-                ", userPatient=" + userPatient +
-                '}';
     }
 }

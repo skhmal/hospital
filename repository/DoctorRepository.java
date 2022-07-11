@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
     Doctor getDoctorById(Integer id);
-//    Doctor getDoctorByFirstName(String firstname);
 }

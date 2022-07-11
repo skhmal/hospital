@@ -8,11 +8,12 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Getter
+@NoArgsConstructor
 @Setter
 @ToString
 @Entity
 @Table(name = "administrator")
-public class Administrator extends User {
+public class Administrator{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,8 @@ public class Administrator extends User {
    @OneToOne(cascade = CascadeType.ALL)
    @JoinColumn(name = "user_id", referencedColumnName = "id")
    private User user;
+
+   public static final String ROLE = "ROLE_ADMINISTRATOR";
 
     @Override
     public boolean equals(Object o) {
@@ -35,11 +38,6 @@ public class Administrator extends User {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public Administrator(String username, String firstName, String lastName, LocalDate birthday, String password, byte enabled, User user) {
-        super(username, firstName, lastName, birthday, password, enabled);
-        this.user = user;
     }
 
     public Administrator(User user) {
