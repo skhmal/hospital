@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,13 +14,14 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "appointment")
 public class Appointment extends BaseClass{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
-    @Column(name = "date")
-    private LocalDateTime date;
+    @Column(name = "appointment_date")
+    private LocalDate date;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "appointment_type_id", referencedColumnName = "id")
@@ -33,7 +35,7 @@ public class Appointment extends BaseClass{
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     private Doctor doctor;
 
-    public Appointment(LocalDateTime date, AppointmentType appointmentType, Patient patient, Doctor doctor) {
+    public Appointment(LocalDate date, AppointmentType appointmentType, Patient patient, Doctor doctor) {
         this.date = date;
         this.appointmentType = appointmentType;
         this.patient = patient;
