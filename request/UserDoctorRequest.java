@@ -1,4 +1,4 @@
-package com.khmal.hospital.viewmodel;
+package com.khmal.hospital.request;
 
 import com.khmal.hospital.entity.Doctor;
 import com.khmal.hospital.entity.User;
@@ -7,9 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDoctorViewModel {
+public class UserDoctorRequest {
 
-    public Doctor doctor;
+    public static Doctor doctor;
 
-    public User user;
+    public static User user;
 }

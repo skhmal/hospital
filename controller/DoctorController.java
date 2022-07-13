@@ -2,15 +2,14 @@ package com.khmal.hospital.controller;
 
 import com.khmal.hospital.entity.*;
 import com.khmal.hospital.service.*;
-import com.khmal.hospital.viewmodel.AppointmentDoctorPatient;
-import com.khmal.hospital.viewmodel.DiagnoseDoctorPatientViewModel;
+import com.khmal.hospital.request.AppointmentDoctorPatientRequest;
+import com.khmal.hospital.request.DiagnoseDoctorPatientRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/doctor")
@@ -24,7 +23,7 @@ public class DoctorController {
 
 
     @PostMapping("/diagnose")
-    public Diagnose addNewDiagnose(@RequestBody DiagnoseDoctorPatientViewModel diagnoseDoctorPatientViewModel){
+    public Diagnose addNewDiagnose(@RequestBody DiagnoseDoctorPatientRequest diagnoseDoctorPatientViewModel){
 
         LocalDate date = LocalDate.now();
 
@@ -36,27 +35,58 @@ public class DoctorController {
 
         Diagnose diagnose = new Diagnose(summary, date, patient, doctor);
 
-        diagnoseService.addNewDiagnose(diagnose);
+        diagnoseService.saveDiagnose(diagnose);
 
         return diagnose;
     }
 
+    @GetMapping("/diagnose")
+    public List<Diagnose> getAllDiagnoses(){
+        return diagnoseService.getAllDiagnoses();
+    }
+
+    @PutMapping("/diagnose")
+    public Diagnose updateDiagnose(@RequestBody Diagnose diagnose){
+        diagnoseService.saveDiagnose(diagnose);
+        return diagnose;
+    }
+
+    @DeleteMapping("/diagnose")
+    public void deleteDiagnose(@RequestBody Diagnose diagnose){
+        diagnoseService.deleteDiagnose(diagnose);
+    }
+
     @PostMapping("/appointment")
-    public Appointment createAppointment(@RequestBody AppointmentDoctorPatient appointmentDoctorPatient){
+    public Appointment createAppointment(@RequestBody AppointmentDoctorPatientRequest appointmentDoctorPatientRequest){
 
         LocalDate date = LocalDate.now();
 
-        Doctor doctor = doctorService.getDoctorById(appointmentDoctorPatient.getDoctor().getId());
+        Doctor doctor = doctorService.getDoctorById(appointmentDoctorPatientRequest.getDoctor().getId());
 
-        Patient patient = patientService.getPatientById(appointmentDoctorPatient.getPatient().getId());
+        Patient patient = patientService.getPatientById(appointmentDoctorPatientRequest.getPatient().getId());
 
-        AppointmentType appointmentType = appointmentTypeService.getAppoitmentTypeById(appointmentDoctorPatient.getAppointmentType().getId());
+        AppointmentType appointmentType = appointmentTypeService.getAppoitmentTypeById(appointmentDoctorPatientRequest.getAppointmentType().getId());
 
         Appointment appointment = new Appointment(date, appointmentType, patient, doctor);
 
-        appointmentService.addNewAppointment(appointment);
+        appointmentService.saveAppointment(appointment);
 
         return appointment;
+    }
+
+    @GetMapping("/appointment")
+    public List<Appointment> getAllAppointments(){
+       return appointmentService.getAllAppointments();
+    }
+
+    @PutMapping("/appointment")
+    public Appointment updateAppointments(@RequestBody Appointment appointment){
+        return appointmentService.saveAppointment(appointment);
+    }
+
+    @DeleteMapping("/appointment")
+    public void deleteAppointment(Appointment appointment){
+        appointmentService.deleteAppointment(appointment);
     }
 
     @Autowired

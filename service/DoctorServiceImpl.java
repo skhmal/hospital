@@ -19,7 +19,7 @@ public class DoctorServiceImpl implements DoctorService{
     }
 
     @Override
-    public Doctor addDoctor(Doctor doctor) {
+    public Doctor saveDoctor(Doctor doctor) {
         return doctorRepository.save(doctor);
     }
 
@@ -29,14 +29,13 @@ public class DoctorServiceImpl implements DoctorService{
         return doctor.orElse(null);
     }
 
-//    @Override
-//    public Doctor getDoctorByFirstName(String name) {
-//        Doctor doctor = doctorRepository.getDoctorByFirstName(name);
-//        return doctor;
-//    }
-
     @Override
     public List<Doctor> getAllDoctors() {
         return doctorRepository.findAll();
+    }
+
+    @Override
+    public void deleteDoctor(Doctor doctor) {
+        doctorRepository.delete(doctor);
     }
 }

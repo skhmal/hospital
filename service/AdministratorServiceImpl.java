@@ -6,6 +6,8 @@ import com.khmal.hospital.repository.AdministratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class AdministratorServiceImpl implements AdministratorService{
@@ -18,7 +20,17 @@ public class AdministratorServiceImpl implements AdministratorService{
     }
 
     @Override
-    public Administrator addNewAdministrator(Administrator administrator) {
+    public Administrator saveAdmin(Administrator administrator) {
         return administratorRepository.save(administrator);
+    }
+
+    @Override
+    public List<Administrator> getAllAdmins() {
+        return administratorRepository.findAll();
+    }
+
+    @Override
+    public void deleteAdmin(Administrator administrator) {
+        administratorRepository.delete(administrator);
     }
 }

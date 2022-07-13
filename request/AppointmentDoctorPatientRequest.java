@@ -1,14 +1,12 @@
-package com.khmal.hospital.viewmodel;
+package com.khmal.hospital.request;
 
 import com.khmal.hospital.entity.AppointmentType;
 import com.khmal.hospital.entity.Doctor;
 import com.khmal.hospital.entity.Patient;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-public class AppointmentDoctorPatient {
+public class AppointmentDoctorPatientRequest {
     Doctor doctor;
     Patient patient;
     AppointmentType appointmentType;

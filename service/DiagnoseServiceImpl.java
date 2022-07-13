@@ -5,6 +5,8 @@ import com.khmal.hospital.repository.DiagnoseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DiagnoseServiceImpl implements DiagnoseService{
 
@@ -17,7 +19,17 @@ public class DiagnoseServiceImpl implements DiagnoseService{
 
 
     @Override
-    public Diagnose addNewDiagnose(Diagnose diagnose) {
+    public Diagnose saveDiagnose(Diagnose diagnose) {
         return diagnoseRepository.save(diagnose);
+    }
+
+    @Override
+    public List<Diagnose> getAllDiagnoses() {
+        return diagnoseRepository.findAll();
+    }
+
+    @Override
+    public void deleteDiagnose(Diagnose diagnose) {
+        diagnoseRepository.delete(diagnose);
     }
 }

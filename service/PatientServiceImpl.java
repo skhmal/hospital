@@ -6,10 +6,7 @@ import com.khmal.hospital.entity.Patient;
 import com.khmal.hospital.repository.AppointmentRepository;
 import com.khmal.hospital.repository.DoctorRepository;
 import com.khmal.hospital.repository.PatientRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +42,7 @@ public class PatientServiceImpl implements PatientService{
 
     @Override
     public List<Appointment> getAllAppoitmentsByUserId(Integer userId) {
-        return appointmentRepository.getAppointmentsByPatient_Id(userId);
+        return appointmentRepository.getAppointmentsByPatientId(userId);
     }
 
     @Override
@@ -57,14 +54,17 @@ public class PatientServiceImpl implements PatientService{
 
     @Override
     public Patient getPatientByName(String name) {
-//        return patientRepository.getPatientByFirstName(name);
         return null;
     }
 
     @Override
-    public Patient addNewPatient(Patient patient) {
+    public void savePatient(Patient patient) {
        patientRepository.save(patient);
-        return patient;
+    }
+
+    @Override
+    public void deletePatient(Patient patient) {
+        patientRepository.delete(patient);
     }
 
 

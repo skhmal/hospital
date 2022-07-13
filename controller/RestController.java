@@ -2,9 +2,9 @@ package com.khmal.hospital.controller;
 
 import com.khmal.hospital.entity.*;
 import com.khmal.hospital.service.*;
-import com.khmal.hospital.viewmodel.AppointmentDoctorPatient;
-import com.khmal.hospital.viewmodel.DiagnoseDoctorPatientViewModel;
-import com.khmal.hospital.viewmodel.UserDoctorViewModel;
+import com.khmal.hospital.request.AppointmentDoctorPatientRequest;
+import com.khmal.hospital.request.DiagnoseDoctorPatientRequest;
+import com.khmal.hospital.request.UserDoctorRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,14 +18,13 @@ public class RestController {
 
 
     @Autowired
-    public RestController(AdministratorServiceImpl administratorService, NurseServiceImpl nurseService, PatientServiceImpl patientService, DoctorServiceImpl doctorService, UserServiceImpl userService, RoleServiceImpl roleService, DoctorSpecializationServiceImpl doctorSpecializationService, AppointmentService appointmentService, AppointmentTypeServiceImpl appointmentTypeService, DiagnoseServiceImpl diagnoseService) {
+    public RestController(AdministratorServiceImpl administratorService, NurseServiceImpl nurseService, PatientServiceImpl patientService, DoctorServiceImpl doctorService, UserServiceImpl userService, RoleServiceImpl roleService, AppointmentService appointmentService, AppointmentTypeServiceImpl appointmentTypeService, DiagnoseServiceImpl diagnoseService) {
         this.administratorService = administratorService;
         this.nurseService = nurseService;
         this.patientService = patientService;
         this.doctorService = doctorService;
         this.userService = userService;
         this.roleService = roleService;
-        this.doctorSpecializationService = doctorSpecializationService;
         this.appointmentService = appointmentService;
         this.appointmentTypeService = appointmentTypeService;
         this.diagnoseService = diagnoseService;
@@ -46,8 +45,6 @@ public class RestController {
 
     private RoleServiceImpl roleService;
 
-    private DoctorSpecializationServiceImpl doctorSpecializationService;
-
     private AppointmentService appointmentService;
 
     private AppointmentTypeServiceImpl appointmentTypeService;
@@ -58,14 +55,14 @@ public class RestController {
     public Patient addNewPatient(@RequestBody User user){
        Patient patient = new Patient(userService.addNewUser(user));
 
-       patientService.addNewPatient(patient);
+       patientService.savePatient(patient);
        roleService.addRole(new Role(user.getUsername(), Patient.ROLE));
 
        return patient;
     }
 
     @PostMapping("/diagnose")
-    public Diagnose addNewDiagnose(@RequestBody DiagnoseDoctorPatientViewModel diagnoseDoctorPatientViewModel){
+    public Diagnose addNewDiagnose(@RequestBody DiagnoseDoctorPatientRequest diagnoseDoctorPatientViewModel){
 
         LocalDate date = LocalDate.now();
 
@@ -77,25 +74,25 @@ public class RestController {
 
         Diagnose diagnose = new Diagnose(summary, date, patient, doctor);
 
-        diagnoseService.addNewDiagnose(diagnose);
+        diagnoseService.saveDiagnose(diagnose);
 
         return diagnose;
     }
 
     @PostMapping("/appointment")
-    public Appointment createAppointment(@RequestBody AppointmentDoctorPatient appointmentDoctorPatient){
+    public Appointment createAppointment(@RequestBody AppointmentDoctorPatientRequest appointmentDoctorPatientRequest){
 
         LocalDate date = LocalDate.now();
 
-        Doctor doctor = doctorService.getDoctorById(appointmentDoctorPatient.getDoctor().getId());
+        Doctor doctor = doctorService.getDoctorById(appointmentDoctorPatientRequest.getDoctor().getId());
 
-        Patient patient = patientService.getPatientById(appointmentDoctorPatient.getPatient().getId());
+        Patient patient = patientService.getPatientById(appointmentDoctorPatientRequest.getPatient().getId());
 
-        AppointmentType appointmentType = appointmentTypeService.getAppoitmentTypeById(appointmentDoctorPatient.getAppointmentType().getId());
+        AppointmentType appointmentType = appointmentTypeService.getAppoitmentTypeById(appointmentDoctorPatientRequest.getAppointmentType().getId());
 
         Appointment appointment = new Appointment(date, appointmentType, patient, doctor);
 
-        appointmentService.addNewAppointment(appointment);
+        appointmentService.saveAppointment(appointment);
 
         return appointment;
     }
@@ -110,22 +107,22 @@ public class RestController {
     public Nurse addNewNurse(@RequestBody User user){
         Nurse nurse = new Nurse(userService.addNewUser(user));
 
-        nurseService.addNewNurse(nurse);
+        nurseService.saveNurse(nurse);
         roleService.addRole(new Role(user.getUsername(), Nurse.ROLE));
 
         return nurse;
     }
 
     @PostMapping("/doctor")
-    public Doctor addNewDoctor(@RequestBody UserDoctorViewModel userDoctorViewModel){
+    public Doctor addNewDoctor(@RequestBody UserDoctorRequest userDoctorRequest){
 
-        User user = userService.addNewUser(userDoctorViewModel.getUser());
+        User user = userService.addNewUser(userDoctorRequest.getUser());
 
-        Doctor doctor = new Doctor(userDoctorViewModel.getDoctor()
+        Doctor doctor = new Doctor(userDoctorRequest.getDoctor()
                 .getDoctorSpecialization(), user);
 
-        doctorService.addDoctor(doctor);
-        roleService.addRole(new Role(userDoctorViewModel.getUser().getUsername(), Doctor.ROLE));
+        doctorService.saveDoctor(doctor);
+        roleService.addRole(new Role(userDoctorRequest.getUser().getUsername(), Doctor.ROLE));
 
         return doctor;
     }
@@ -134,7 +131,7 @@ public class RestController {
     public Administrator addNewAdministrator(@RequestBody User user){
         Administrator administrator = new Administrator(userService.addNewUser(user));
 
-        administratorService.addNewAdministrator(administrator);
+        administratorService.saveAdmin(administrator);
         roleService.addRole(new Role(user.getUsername(), Administrator.ROLE));
 
         return administrator;

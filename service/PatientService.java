@@ -14,5 +14,7 @@ public interface PatientService {
 
     Patient getPatientByName(String name);
 
-    Patient addNewPatient(Patient patient);
+    void savePatient(Patient patient);
+
+    void deletePatient(Patient patient);
 }
