@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 public class DiagnoseDoctorPatientRequest {
-    Patient patient;
-    Doctor doctor;
-    String summary;
+    private Patient patient;
+    private Doctor doctor;
+    private String summary;
 
 }

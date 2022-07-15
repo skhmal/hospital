@@ -1,6 +1,7 @@
 package com.khmal.hospital.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -10,8 +11,10 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Entity
+@NoArgsConstructor
 @Table(name = "nurse")
 public class Nurse{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,9 +28,5 @@ public class Nurse{
 
     public Nurse(User userNurse) {
         this.userNurse = userNurse;
-    }
-
-    public Nurse() {
-
     }
 }

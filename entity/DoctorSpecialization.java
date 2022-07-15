@@ -26,5 +26,4 @@ public class DoctorSpecialization{
     public DoctorSpecialization(String name) {
         this.name = name;
     }
-
 }

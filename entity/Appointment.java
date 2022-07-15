@@ -6,14 +6,13 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "appointment")
-public class Appointment{
+public class Appointment extends BaseClass{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

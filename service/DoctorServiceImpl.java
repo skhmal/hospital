@@ -1,6 +1,8 @@
 package com.khmal.hospital.service;
 
 import com.khmal.hospital.entity.Doctor;
+import com.khmal.hospital.entity.DoctorSpecialization;
+import com.khmal.hospital.entity.Patient;
 import com.khmal.hospital.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,5 +39,17 @@ public class DoctorServiceImpl implements DoctorService{
     @Override
     public void deleteDoctor(Doctor doctor) {
         doctorRepository.delete(doctor);
+    }
+
+    @Override
+    public List<Doctor> getDoctorsBySpecialization(DoctorSpecialization doctorSpecialization) {
+        List<Doctor> doctorList = doctorRepository.findDoctorsByDoctorSpecialization(doctorSpecialization);
+        return doctorList;
+    }
+
+    @Override
+    public Integer getPatientCounter(List<Patient> patientList) {
+        Integer quantity = doctorRepository.countByPatientsList(patientList);
+        return quantity;
     }
 }

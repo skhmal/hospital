@@ -15,16 +15,20 @@ import java.util.List;
 @RequestMapping("/doctor")
 public class DoctorController {
 
-    private final AppointmentServiceImpl appointmentService;
-    private final DiagnoseServiceImpl diagnoseService;
-    private final PatientServiceImpl patientService;
-    private final DoctorServiceImpl doctorService;
-    private final AppointmentTypeServiceImpl appointmentTypeService;
+    private final AppointmentService appointmentService;
+    private final DiagnoseService diagnoseService;
+    private final PatientService patientService;
+    private final DoctorService doctorService;
+    private final AppointmentTypeService appointmentTypeService;
 
 
     @PostMapping("/diagnose")
     public Diagnose addNewDiagnose(@RequestBody DiagnoseDoctorPatientRequest diagnoseDoctorPatientViewModel){
 
+        return getDiagnose(diagnoseDoctorPatientViewModel, patientService, doctorService, diagnoseService);
+    }
+
+    static Diagnose getDiagnose(@RequestBody DiagnoseDoctorPatientRequest diagnoseDoctorPatientViewModel, PatientService patientService, DoctorService doctorService, DiagnoseService diagnoseService) {
         LocalDate date = LocalDate.now();
 
         Patient patient = patientService.getPatientById(diagnoseDoctorPatientViewModel.getPatient().getId());
@@ -59,6 +63,10 @@ public class DoctorController {
     @PostMapping("/appointment")
     public Appointment createAppointment(@RequestBody AppointmentDoctorPatientRequest appointmentDoctorPatientRequest){
 
+        return getAppointment(appointmentDoctorPatientRequest, doctorService, patientService, appointmentTypeService, appointmentService);
+    }
+
+    static Appointment getAppointment(@RequestBody AppointmentDoctorPatientRequest appointmentDoctorPatientRequest, DoctorService doctorService, PatientService patientService, AppointmentTypeService appointmentTypeService, AppointmentService appointmentService) {
         LocalDate date = LocalDate.now();
 
         Doctor doctor = doctorService.getDoctorById(appointmentDoctorPatientRequest.getDoctor().getId());
@@ -90,7 +98,7 @@ public class DoctorController {
     }
 
     @Autowired
-    public DoctorController(AppointmentServiceImpl appointmentService, DiagnoseServiceImpl diagnoseService, PatientServiceImpl patientService, DoctorServiceImpl doctorService, AppointmentTypeServiceImpl appointmentTypeService) {
+    public DoctorController(AppointmentService appointmentService, DiagnoseService diagnoseService, PatientService patientService, DoctorService doctorService, AppointmentTypeService appointmentTypeService) {
         this.appointmentService = appointmentService;
         this.diagnoseService = diagnoseService;
         this.patientService = patientService;

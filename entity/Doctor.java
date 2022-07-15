@@ -1,12 +1,21 @@
 package com.khmal.hospital.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-@Getter
+import java.util.ArrayList;
+import java.util.List;
+
+
 @Setter
+@Getter
 @Entity
+@NoArgsConstructor
+@ToString
 @Table(name = "doctor")
 public class Doctor{
 
@@ -15,7 +24,7 @@ public class Doctor{
     @Column(name = "id")
     private int id;
 
-    @OneToOne(optional = false)
+    @OneToOne
     @JoinColumn(name = "doctor_specialization_id", referencedColumnName = "id")
     private DoctorSpecialization doctorSpecialization;
 
@@ -24,6 +33,23 @@ public class Doctor{
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userDoctor;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name = "doctor_patient",
+            joinColumns = @JoinColumn(name = "doctor_id"),
+            inverseJoinColumns = @JoinColumn(name = "patient_id")
+    )
+    @JsonManagedReference
+    @ToString.Exclude
+    private List<Patient> patientsList;
+
+    public void addPatientToPatientList(Patient patient){
+        if (patientsList == null){
+            patientsList = new ArrayList<>();
+        }
+        patientsList.add(patient);
+    }
+
     public static final String ROLE = "ROLE_DOCTOR";
 
     public Doctor(DoctorSpecialization doctorSpecialization, User userDoctor) {
@@ -31,18 +57,7 @@ public class Doctor{
         this.userDoctor = userDoctor;
     }
 
-    public Doctor() {
-    }
-
     public Doctor(User user) {
         this.userDoctor = user;
-    }
-
-    @Override
-    public String toString() {
-        return "Doctor{" +
-                "doctorSpecialization=" + doctorSpecialization +
-                ", userDoctor=" + userDoctor +
-                '}';
     }
 }

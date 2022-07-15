@@ -8,7 +8,7 @@ import java.util.List;
 public interface PatientService {
 
     Patient getPatientById(Integer id);
-    List<Appointment> getAllAppoitmentsByUserId(Integer userId);
+    List<Appointment> getAllAppoitmentByPatientId(Integer patientId);
 
     List<Patient> getAllPatients();
 

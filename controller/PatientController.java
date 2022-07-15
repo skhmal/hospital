@@ -15,11 +15,11 @@ import java.util.List;
 @RequestMapping("/patient")
 public class PatientController {
 
-    private AppointmentServiceImpl appointmentService;
-    private DiagnoseServiceImpl diagnoseService;
+    private final AppointmentServiceImpl appointmentService;
+    private final DiagnoseServiceImpl diagnoseService;
 
 
-    @GetMapping("/appointments")
+    @GetMapping("/appointment")
     public List<Appointment> getAllAppointments(){
        return appointmentService.getAllAppointments();
     }

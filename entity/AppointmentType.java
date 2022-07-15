@@ -12,6 +12,7 @@ import javax.persistence.*;
 @ToString
 @Table(name = "appointment_type")
 public class AppointmentType{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -19,5 +20,4 @@ public class AppointmentType{
 
     @Column(name = "name")
     private String name;
-
 }

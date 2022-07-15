@@ -1,8 +1,8 @@
 package com.khmal.hospital.service;
 
 import com.khmal.hospital.entity.Administrator;
-import com.khmal.hospital.entity.User;
 import com.khmal.hospital.repository.AdministratorRepository;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class AdministratorServiceImpl implements AdministratorService{
 
-    private AdministratorRepository administratorRepository;
+    private final AdministratorRepository administratorRepository;
 
     @Autowired
     public AdministratorServiceImpl(AdministratorRepository administratorRepository) {
@@ -20,7 +20,7 @@ public class AdministratorServiceImpl implements AdministratorService{
     }
 
     @Override
-    public Administrator saveAdmin(Administrator administrator) {
+    public Administrator saveAdmin(@NonNull Administrator administrator) {
         return administratorRepository.save(administrator);
     }
 
@@ -31,6 +31,8 @@ public class AdministratorServiceImpl implements AdministratorService{
 
     @Override
     public void deleteAdmin(Administrator administrator) {
-        administratorRepository.delete(administrator);
+        if (administrator != null){
+            administratorRepository.delete(administrator);
+        }
     }
 }
