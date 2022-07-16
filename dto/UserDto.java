@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class UserDto {
+    Integer id;
     String username;
     String firstName;
     String lastName;

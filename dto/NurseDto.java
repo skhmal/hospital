@@ -6,5 +6,5 @@ import lombok.Data;
 public class NurseDto {
     Integer id;
 
-    UserDto userDto;
+    UserDto user;
 }

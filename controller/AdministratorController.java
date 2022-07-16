@@ -1,10 +1,13 @@
 package com.khmal.hospital.controller;
 
+import com.khmal.hospital.dto.*;
 import com.khmal.hospital.entity.*;
 import com.khmal.hospital.exception_handling.NoSuchUserException;
+import com.khmal.hospital.mapper.*;
 import com.khmal.hospital.request.DoctorPatientRequest;
 import com.khmal.hospital.service.*;
 import com.khmal.hospital.request.UserDoctorRequest;
+import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,10 +25,10 @@ public class AdministratorController {
     private final NurseService nurseService;
     private final AdministratorService administratorService;
 
-    @PostMapping("/patient")
-    public Patient addNewPatient(@RequestBody User user) {
-        Patient patient = new Patient(userService.addNewUser(user));
 
+    @PostMapping("/patient")
+    public Patient addNewPatient(@RequestBody UserDto userDto) {
+        Patient patient = new Patient(userService.addNewUser(UserMapper.INSTANCE.toEntity(userDto)));
 
         //draft, for instance
         try {
@@ -34,42 +37,43 @@ public class AdministratorController {
             throw new NoSuchUserException("Patient not saved");
         }
 
-        roleService.addRole(new Role(user.getUsername(), Patient.ROLE));
+        roleService.addRole(new Role(userDto.getUsername(), Patient.ROLE));
 
         return patient;
     }
 
     @GetMapping("/patients")
-    public List<Patient> getAllPatients() {
+    public List<PatientDto> getAllPatients() {
         List<Patient> patientList = patientService.getAllPatients();
-
 
         if (patientList == null) {
             throw new NoSuchUserException("Patient list is empty");
         }
-        return patientList;
+
+        return PatientMapper.INSTANCE.toDto(patientList);
     }
 
     @PutMapping("/patient")
-    public Patient updatePatient(@RequestBody Patient patient) {
+    public PatientDto updatePatient(@RequestBody PatientDto patientDto) {
 
+        Patient patient = PatientMapper.INSTANCE.toEntity(patientDto);
         //draft, for instance
         try {
             patientService.savePatient(patient);
         } catch (Exception e) {
             throw new NoSuchUserException("Patient not updated");
         }
-        return patient;
+        return patientDto;
     }
 
     @DeleteMapping("/patient")
-    public void deletePatient(@RequestBody Patient patient) {
-        patientService.deletePatient(patient);
+    public void deletePatient(@RequestBody PatientDto patientDto) {
+        patientService.deletePatient(PatientMapper.INSTANCE.toEntity(patientDto));
     }
 
     @PostMapping("/nurse")
-    public Nurse addNewNurse(@RequestBody User user) {
-        Nurse nurse = new Nurse(userService.addNewUser(user));
+    public NurseDto addNewNurse(@RequestBody UserDto userDto) {
+        Nurse nurse = new Nurse(userService.addNewUser(UserMapper.INSTANCE.toEntity(userDto)));
 
         try {
             nurseService.saveNurse(nurse);
@@ -77,24 +81,44 @@ public class AdministratorController {
             throw new NoSuchUserException("Nurse not saved");
         }
 
-        roleService.addRole(new Role(user.getUsername(), Nurse.ROLE));
+        roleService.addRole(new Role(userDto.getUsername(), Nurse.ROLE));
 
-        return nurse;
+        return NurseMapper.INSTANCE.toDto(nurse);
     }
 
     @GetMapping("/nurse")
-    public List<Nurse> getAllNurses() {
-        return nurseService.getAllNurses();
+    public List<NurseDto> getAllNurses() {
+        List<Nurse> nurseList = nurseService.getAllNurses();
+
+        if (nurseList == null){
+            throw  new NoSuchUserException("There is no nurse");
+        }
+
+        return NurseMapper.INSTANCE.toDto(nurseList);
     }
 
     @PutMapping("/nurse")
-    public Nurse updateNurse(@RequestBody Nurse nurse) {
-        return nurseService.saveNurse(nurse);
+    public NurseDto updateNurse(@RequestBody NurseDto nurseDto) {
+
+        Nurse nurse = NurseMapper.INSTANCE.toEntity(nurseDto);
+
+        try {
+            nurseService.saveNurse(nurse);
+        }catch (Exception e){
+            throw new NoSuchUserException("Nurse wasn't update");
+        }
+
+        return nurseDto;
     }
 
     @DeleteMapping("/nurse")
-    public void deleteNurse(@RequestBody Nurse nurse) {
-        nurseService.deleteNurse(nurse);
+    public void deleteNurse(@RequestBody NurseDto nurseDto) {
+
+        try {
+            nurseService.deleteNurse(NurseMapper.INSTANCE.toEntity(nurseDto));
+        }catch (Exception e){
+            throw new NoSuchUserException("Nurse wasn't delete");
+        }
     }
 
 
@@ -140,8 +164,10 @@ public class AdministratorController {
     }
 
     @DeleteMapping("/doctor")
-    public void deleteDoctor(Doctor doctor) {
-        doctorService.deleteDoctor(doctor);
+    public void deleteDoctor(DoctorDto doctorDto){
+
+    doctorService.deleteDoctor(DoctorMapper.INSTANCE.toEntity(doctorDto));
+
     }
 
     @PostMapping("/admin")
@@ -155,8 +181,14 @@ public class AdministratorController {
     }
 
     @GetMapping("/admin")
-    public List<Administrator> getAllAdministrators() {
-        return administratorService.getAllAdmins();
+    public List<AdministratorDto> getAllAdministrators() {
+        List<Administrator> administratorList = administratorService.getAllAdmins();
+
+        if(administratorList == null){
+            throw new NoSuchUserException("There is no administrators");
+        }
+
+        return AdministratorMapper.INSTANCE.toDto(administratorService.getAllAdmins());
     }
 
     @PutMapping("/admin")

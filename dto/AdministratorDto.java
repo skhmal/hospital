@@ -7,5 +7,5 @@ public class AdministratorDto {
 
     Integer id;
 
-    UserDto userDto;
+    UserDto user;
 }

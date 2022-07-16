@@ -8,7 +8,7 @@ import java.util.List;
 public class DoctorDto {
     Integer id;
 
-    UserDto userDto;
+    UserDto userPatient;
 
-    List<PatientDto> patientDtoList;
+    List<PatientDto> patientList;
 }
