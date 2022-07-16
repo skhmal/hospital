@@ -5,6 +5,7 @@ import com.khmal.hospital.entity.Patient;
 
 import java.util.List;
 
+
 public interface PatientService {
 
     Patient getPatientById(Integer id);

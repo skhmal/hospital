@@ -170,7 +170,7 @@ public class AdministratorController {
     }
 
     @Autowired
-    public AdministratorController(DoctorServiceImpl doctorService, PatientServiceImpl patientService, UserServiceImpl userService, RoleServiceImpl roleService, NurseServiceImpl nurseService, AdministratorServiceImpl administratorService) {
+    public AdministratorController(DoctorService doctorService, PatientService patientService, UserService userService, RoleService roleService, NurseService nurseService, AdministratorService administratorService) {
         this.doctorService = doctorService;
         this.patientService = patientService;
         this.userService = userService;

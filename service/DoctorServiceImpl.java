@@ -49,7 +49,7 @@ public class DoctorServiceImpl implements DoctorService{
 
     @Override
     public Integer getPatientCounter(List<Patient> patientList) {
-        Integer quantity = doctorRepository.countByPatientsList(patientList);
-        return quantity;
+//        Integer quantity = doctorRepository.countByPatientsList(patientList);
+        return null;
     }
 }

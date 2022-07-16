@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     //parameter draft, only for instance
     @ExceptionHandler
-    public ResponseEntity<IncorrectData> handleSaveException(NoSuchUserException noSuchUserException){
+    public ResponseEntity<IncorrectData> handleSaveException(Exception noSuchUserException){
         IncorrectData data = new IncorrectData();
         data.setInfo(noSuchUserException.getMessage());
 

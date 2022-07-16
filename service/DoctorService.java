@@ -6,6 +6,7 @@ import com.khmal.hospital.entity.Patient;
 
 import java.util.List;
 
+
 public interface DoctorService {
     Doctor saveDoctor(Doctor doctor);
 

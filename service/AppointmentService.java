@@ -4,6 +4,7 @@ import com.khmal.hospital.entity.Appointment;
 
 import java.util.List;
 
+
 public interface AppointmentService {
     Appointment saveAppointment(Appointment appointment);
 

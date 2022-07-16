@@ -4,6 +4,7 @@ import com.khmal.hospital.entity.Diagnose;
 
 import java.util.List;
 
+
 public interface DiagnoseService {
     Diagnose saveDiagnose(Diagnose diagnose);
 
