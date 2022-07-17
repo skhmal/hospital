@@ -167,16 +167,16 @@ public class AdministratorController {
         return doctorDto;
     }
 
-    @PutMapping("/doctor/appoint")
-    public Doctor appointPatientToTheDoctor(@RequestBody DoctorPatientRequest doctorPatientRequest) {
+    @PostMapping("/doctor/appoint")
+    public DoctorDto appointPatientToTheDoctor(@RequestBody DoctorPatientRequest doctorPatientRequest) {
 
-        Doctor doctor = doctorPatientRequest.getDoctor();
-        Patient patient = doctorPatientRequest.getPatient();
+        Doctor doctor = doctorService.getDoctorById(doctorPatientRequest.getDoctor().getId());
+        Patient patient = patientService.getPatientById(doctorPatientRequest.getPatient().getId());
 
         doctor.addPatientToPatientList(patient);
         doctorService.saveDoctor(doctor);
 
-        return doctor;
+        return DoctorMapper.INSTANCE.toDto(doctor);
     }
 
     @DeleteMapping("/doctor")

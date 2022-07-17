@@ -4,17 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
-public class DoctorDto {
+public class DoctorSpecializationDto {
     Integer id;
-
-    UserDto userDoctor;
-
-    DoctorSpecializationDto doctorSpecialization;
-
-    List<PatientDto> patientsList;
+    String name;
 }
