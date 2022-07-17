@@ -1,14 +1,18 @@
 package com.khmal.hospital.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class DoctorDto {
     Integer id;
 
-    UserDto userPatient;
+    UserDto userDoctor;
 
-    List<PatientDto> patientList;
+    List<PatientDto> patientsList;
 }

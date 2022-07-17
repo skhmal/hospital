@@ -1,7 +1,6 @@
 package com.khmal.hospital.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,15 +27,14 @@ public class Patient {
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private User userPatient;
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "doctor_patient",
             joinColumns = @JoinColumn(name = "patient_id"),
             inverseJoinColumns = @JoinColumn(name = "doctor_id")
     )
-    @JsonBackReference
     @ToString.Exclude
+    @JsonIgnore
     private List<Doctor> doctorsList;
 
     public void addDoctorToDoctorList(Doctor doctor){
