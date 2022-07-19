@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
-    Patient getPatientById(Integer id);
-    List<Patient>  getAllByUserPatientNotNull();
+
 }

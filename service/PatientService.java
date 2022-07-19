@@ -1,5 +1,6 @@
 package com.khmal.hospital.service;
 
+import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.entity.Appointment;
 import com.khmal.hospital.entity.Patient;
 
@@ -15,7 +16,7 @@ public interface PatientService {
 
     Patient getPatientByName(String name);
 
-    void savePatient(Patient patient);
+    void savePatient(PatientDto patient);
 
     void deletePatient(Patient patient);
 }

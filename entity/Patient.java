@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -23,11 +23,22 @@ public class Patient {
     @Column(name = "id")
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
-    private User userPatient;
+    @Column(name = "firstname")
+    private String firstname;
 
-@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @Column(name = "lastname")
+    private String lastname;
+
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "birthday")
+    private LocalDate birthday;
+
+    @Column(name = "discharged")
+    private boolean discharged;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "doctor_patient",
             joinColumns = @JoinColumn(name = "patient_id"),
@@ -35,18 +46,15 @@ public class Patient {
     )
     @ToString.Exclude
     @JsonIgnore
-    private List<Doctor> doctorsList;
-
-    public void addDoctorToDoctorList(Doctor doctor){
-        if (doctorsList == null){
-            doctorsList = new ArrayList<>();
-        }
-        doctorsList.add(doctor);
-    }
+    private List<HospitalStuff> doctorsList;
 
     public static final String ROLE = "ROLE_PATIENT";
 
-    public Patient(User userPatient) {
-        this.userPatient = userPatient;
+    public Patient(String firstname, String lastname, String username, LocalDate birthday, boolean discharged) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.username = username;
+        this.birthday = birthday;
+        this.discharged = discharged;
     }
 }

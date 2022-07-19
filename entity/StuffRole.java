@@ -3,27 +3,21 @@ package com.khmal.hospital.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-@Table(name = "doctor_specialization")
-public class DoctorSpecialization{
+@Entity
+@Table(name = "role_stuff")
+public class StuffRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
-    @Column(name = "name")
-    private String name;
-
-    public DoctorSpecialization(String name) {
-        this.name = name;
-    }
+    @Column(name = "role_name")
+    private String roleName;
 }

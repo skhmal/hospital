@@ -1,10 +1,13 @@
 package com.khmal.hospital.service;
 
 
+import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.entity.Appointment;
 import com.khmal.hospital.entity.Patient;
+import com.khmal.hospital.entity.Role;
+import com.khmal.hospital.exception_handling.NoSuchUserException;
+import com.khmal.hospital.mapper.PatientMapper;
 import com.khmal.hospital.repository.AppointmentRepository;
-import com.khmal.hospital.repository.DoctorRepository;
 import com.khmal.hospital.repository.PatientRepository;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
@@ -18,25 +21,19 @@ import java.util.List;
 @Log4j2
 public class PatientServiceImpl implements PatientService{
 
-
-    @NonNull
     private PatientRepository patientRepository;
-    @NonNull
-    private DoctorRepository doctorRepository;
-    @NonNull
     private AppointmentRepository appointmentRepository;
 
     @Autowired
-    public PatientServiceImpl(PatientRepository patientRepository, DoctorRepository doctorRepository, AppointmentRepository appointmentRepository) {
+    public PatientServiceImpl(PatientRepository patientRepository, AppointmentRepository appointmentRepository) {
         this.patientRepository = patientRepository;
-        this.doctorRepository = doctorRepository;
         this.appointmentRepository = appointmentRepository;
     }
 
 
     @Override
     public Patient getPatientById(Integer id) {
-       Patient patient = patientRepository.getPatientById(id);
+       Patient patient = new Patient();
         return patient;
     }
 
@@ -57,8 +54,14 @@ public class PatientServiceImpl implements PatientService{
     }
 
     @Override
-    public void savePatient(Patient patient) {
-       patientRepository.save(patient);
+    public void savePatient(PatientDto patientDto) {
+        try {
+            Patient patient = PatientMapper.INSTANCE.toEntity(patientDto);
+            System.out.println(patient);
+            patientRepository.save(patient);
+        } catch (Exception e) {
+            throw new NoSuchUserException("Patient not saved");
+        }
     }
 
     @Override

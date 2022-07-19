@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "diagnose")
-public class Diagnose extends BaseClass{
+public class Diagnose{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +31,5 @@ public class Diagnose extends BaseClass{
 
     @OneToOne
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    private Doctor doctor;
-
-    public Diagnose(String summary, LocalDate diagnoseDate, Patient patient, Doctor doctor) {
-        this.summary = summary;
-        this.diagnoseDate = diagnoseDate;
-        this.patient = patient;
-        this.doctor = doctor;
-    }
+    private HospitalStuff hospitalStuff;
 }

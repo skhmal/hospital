@@ -4,13 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
+@Setter
 @ToString
-public class UserDto {
-    private String username;
+public class StuffRoleDto {
+    private Integer id;
 
-    private String password;
-
-    private Integer enabled;
+    private String roleName;
 }

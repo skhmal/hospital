@@ -15,19 +15,17 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
-    @Column(name = "username")
-    private String username;
+    @OneToOne
+    @JoinColumn (name = "username")
+    private User user;
 
     @Column(name = "authority")
     private String roleName;
 
-    @OneToOne(mappedBy = "doctorSpecialization")
-    private Doctor doctorRole;
-
-    public Role(String username, String roleName) {
-        this.username = username;
+    public Role(User user, String roleName) {
+        this.user = user;
         this.roleName = roleName;
     }
 }

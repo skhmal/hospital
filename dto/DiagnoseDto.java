@@ -1,14 +1,23 @@
 package com.khmal.hospital.dto;
 
-import lombok.Data;
+import com.khmal.hospital.entity.HospitalStuff;
+import com.khmal.hospital.entity.Patient;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
+@ToString
 public class DiagnoseDto {
+
     private int id;
+
     private String summary;
+
     private LocalDate diagnoseDate;
-    private PatientDto patient;
-    private DoctorDto doctor;
+
+    private Patient patient;
+
+    private HospitalStuff hospitalStuff;
 }
