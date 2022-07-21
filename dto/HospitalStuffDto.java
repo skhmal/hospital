@@ -1,8 +1,6 @@
 package com.khmal.hospital.dto;
 
-import com.khmal.hospital.entity.StuffRole;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 

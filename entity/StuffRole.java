@@ -3,6 +3,7 @@ package com.khmal.hospital.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "role_stuff")
 public class StuffRole {
 

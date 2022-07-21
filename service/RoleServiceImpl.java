@@ -1,8 +1,6 @@
 package com.khmal.hospital.service;
 
-import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.RoleDto;
-import com.khmal.hospital.dto.UserDto;
 import com.khmal.hospital.entity.Role;
 import com.khmal.hospital.mapper.RoleMapper;
 import com.khmal.hospital.repository.RoleRepository;

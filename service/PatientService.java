@@ -12,11 +12,13 @@ public interface PatientService {
     Patient getPatientById(Integer id);
     List<Appointment> getAllAppoitmentByPatientId(Integer patientId);
 
-    List<Patient> getAllPatients();
+    List<PatientDto> getAllPatients();
 
     Patient getPatientByName(String name);
 
-    void savePatient(PatientDto patient);
+    void addNewPatient(PatientDto patient);
 
-    void deletePatient(Patient patient);
+    PatientDto updatePatient(PatientDto patientDto);
+
+    void deletePatient(PatientDto patientDto);
 }
