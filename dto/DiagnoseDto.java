@@ -2,7 +2,9 @@ package com.khmal.hospital.dto;
 
 import com.khmal.hospital.entity.HospitalStuff;
 import com.khmal.hospital.entity.Patient;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 

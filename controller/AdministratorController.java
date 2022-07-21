@@ -1,10 +1,16 @@
 package com.khmal.hospital.controller;
 
-import com.khmal.hospital.dto.*;
-import com.khmal.hospital.service.*;
-import com.khmal.hospital.webb.PatientUserRole;
+import com.khmal.hospital.dto.HospitalStuffDto;
+import com.khmal.hospital.dto.PatientDto;
+import com.khmal.hospital.service.HospitalStuffService;
+import com.khmal.hospital.service.PatientService;
+import com.khmal.hospital.service.RoleService;
+import com.khmal.hospital.service.UserServiceImpl;
+import com.khmal.hospital.dto.webb.HospitalStuffDtoUserDtoRoleDto;
+import com.khmal.hospital.dto.webb.PatientDtoUserDtoRoleDto;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @RestController
@@ -25,73 +31,46 @@ public class AdministratorController {
 
 
     @PostMapping("/patient")
-    public PatientDto addNewPatient(@RequestBody PatientUserRole patient) {
-        System.out.println(patient);
-        patientService.savePatient(patient.getPatientDto());
+    public PatientDto addNewPatient(@RequestBody PatientDtoUserDtoRoleDto patient) {
+
+        patientService.addNewPatient(patient.getPatientDto());
+
         userService.saveUser(patient.getUserDto());
+
         roleService.addRole(patient.getRoleDto());
 
         return patient.getPatientDto();
     }
 
-//    @GetMapping("/patients")
-//    public List<PatientDto> getAllPatients() {
-//        List<Patient> patientList = patientService.getAllPatients();
-//
-//        if (patientList == null) {
-//            throw new NoSuchUserException("Patient list is empty");
-//        }
-//        return PatientMapper.INSTANCE.toDto(patientList);
-//    }
-//
-//    @PutMapping("/patient")
-//    public PatientDto updatePatient(@RequestBody PatientUserRole patientDto) {
-//
-//        Patient patient = PatientMapper.INSTANCE.toEntity(patientDto);
-//        //draft, for instance
-//        try {
-//            patientService.savePatient(patient);
-//        } catch (Exception e) {
-//            throw new NoSuchUserException("Patient not updated");
-//        }
-//        return patientDto;
-//    }
-//
-//    @DeleteMapping("/patient")
-//    public void deletePatient(@RequestBody PatientDto patientDto) {
-//
-//        try {
-//            patientService.deletePatient(PatientMapper.INSTANCE.toEntity(patientDto));
-//        } catch (Exception e) {
-//            throw new NoSuchUserException("Patient wasn't delete");
-//        }
-//
-//    }
-//
-//    @PostMapping("/nurse")
-//    public NurseDto addNewNurse(@RequestBody UserDto userDto) {
-//        Nurse nurse = new Nurse(userService.addNewUser(UserMapper.INSTANCE.toEntity(userDto)));
-//
-//        try {
-//            nurseService.saveNurse(nurse);
-//        } catch (Exception e) {
-//            throw new NoSuchUserException("Nurse wasn't saved");
-//        }
-//
-//        roleService.addRole(new Role(userDto.getUsername(), Nurse.ROLE));
-//
-//        return NurseMapper.INSTANCE.toDto(nurse);
-//    }
-//
+    @GetMapping("/patients")
+    public List<PatientDto> getAllPatients() {
+        return patientService.getAllPatients();
+    }
+
+    @PutMapping("/patient")
+    public PatientDto updatePatient(@RequestBody PatientDto patientDto) {
+        return patientService.updatePatient(patientDto);
+    }
+
+    @DeleteMapping("/patient")
+    public void deletePatient(@RequestBody PatientDto patientDto) {
+        patientService.deletePatient(patientDto);
+    }
+
+    @PostMapping("/employee")
+    public HospitalStuffDto addNewEmployee(@RequestBody HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
+        return hospitalStuffService.addNewEmployee(hospitalStuffDtoUserDtoRoleDto);
+    }
+
+    @DeleteMapping("/patient")
+    public void deleteEmployee(@RequestBody HospitalStuffDto hospitalStuffDto) {
+        hospitalStuffService.deleteEmployee(hospitalStuffDto);
+    }
+
 //    @GetMapping("/nurse")
-//    public List<NurseDto> getAllNurses() {
-//        List<Nurse> nurseList = nurseService.getAllNurses();
+//    public List<HospitalStuffDto> getAllNurses() {
 //
-//        if (nurseList == null) {
-//            throw new NoSuchUserException("There is no any nurse");
-//        }
-//
-//        return NurseMapper.INSTANCE.toDto(nurseList);
+//        return  hospitalStuffService.getAllNurse();;
 //    }
 //
 //    @PutMapping("/nurse")
@@ -121,7 +100,7 @@ public class AdministratorController {
 //
 //
 //    @PostMapping("/doctor")
-//    public Doctor addNewDoctor(@RequestBody UserDoctorRequest userDoctorRequest) {
+//    public HospitalStuffDto addNewDoctor(@RequestBody HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
 //
 //        User user = userService.addNewUser(userDoctorRequest.getUser());
 //

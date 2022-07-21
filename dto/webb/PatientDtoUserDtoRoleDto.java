@@ -1,4 +1,4 @@
-package com.khmal.hospital.webb;
+package com.khmal.hospital.dto.webb;
 
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.RoleDto;
@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class PatientUserRole {
+public class PatientDtoUserDtoRoleDto {
     PatientDto patientDto;
     UserDto userDto;
     RoleDto roleDto;

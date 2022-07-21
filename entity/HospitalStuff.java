@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "hospital_stuff")
 public class HospitalStuff {
 

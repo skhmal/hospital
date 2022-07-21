@@ -18,12 +18,12 @@ public class GlobalExceptionHandler {
 
 
     //parameter draft, only for instance
-    @ExceptionHandler
-    public ResponseEntity<IncorrectData> handleSaveException(Exception noSuchUserException){
-        IncorrectData data = new IncorrectData();
-        data.setInfo(noSuchUserException.getMessage());
-
-        // HttpStatus draft
-        return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler
+//    public ResponseEntity<IncorrectData> handleSaveException(Exception noSuchUserException){
+//        IncorrectData data = new IncorrectData();
+//        data.setInfo(noSuchUserException.getMessage());
+//
+//        // HttpStatus draft
+//        return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+//    }
 }
