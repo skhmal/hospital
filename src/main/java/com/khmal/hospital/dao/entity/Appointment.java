@@ -3,6 +3,7 @@ package com.khmal.hospital.dao.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "appointment")
 public class Appointment{
 
@@ -25,6 +27,9 @@ public class Appointment{
     @Column(name = "appointment_type")
     private String appointmentType;
 
+    @Column(name = "summary")
+    private String summary;
+
     @OneToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
@@ -33,6 +38,13 @@ public class Appointment{
     @JoinColumn(name = "hospital_stuff_id", referencedColumnName = "id")
     private HospitalStuff hospitalStuff;
 
+    public Appointment(LocalDate date, String appointmentType, String summary, Patient patient, HospitalStuff hospitalStuff) {
+        this.date = date;
+        this.appointmentType = appointmentType;
+        this.summary = summary;
+        this.patient = patient;
+        this.hospitalStuff = hospitalStuff;
+    }
 
     enum DoctorAppointment{
         PROCEDURES,

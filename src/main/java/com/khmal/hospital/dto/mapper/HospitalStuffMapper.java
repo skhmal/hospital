@@ -5,6 +5,8 @@ import com.khmal.hospital.dto.HospitalStuffDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface HospitalStuffMapper {
 
@@ -13,4 +15,6 @@ public interface HospitalStuffMapper {
     HospitalStuffDto toDto(HospitalStuff hospitalStuff);
 
     HospitalStuff toEntity(HospitalStuffDto hospitalStuffDto);
+
+    List<HospitalStuffDto> toDto(List<HospitalStuff> hospitalStuff);
 }

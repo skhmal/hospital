@@ -19,6 +19,8 @@ import com.khmal.hospital.dto.mapper.UserMapper;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RegistrationService {
 
@@ -78,4 +80,26 @@ public class RegistrationService {
             throw new NoSuchUserException("Employee is not saved");
         }
     }
+
+    public List<PatientDto> getAllPatients(){
+        List<Patient> patientList;
+        try {
+            patientList = patientRepository.findAll();
+        }catch (Exception e){
+            throw new NoSuchUserException("No one patients here");
+        }
+        return PatientMapper.INSTANCE.toDto(patientList);
+    }
+
+    public List<HospitalStuffDto> getAllDoctors(){
+        List<HospitalStuff> doctors;
+        try {
+           doctors = hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull();
+        }catch (Exception e){
+         throw new NoSuchUserException("No one doctors here");
+        }
+        return HospitalStuffMapper.INSTANCE.toDto(doctors);
+    }
+
+
 }
