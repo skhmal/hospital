@@ -1,7 +1,6 @@
 package com.khmal.hospital.dto;
 
-import com.khmal.hospital.entity.HospitalStuff;
-import com.khmal.hospital.entity.Patient;
+import com.khmal.hospital.dao.entity.HospitalStuff;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,7 +17,7 @@ public class AppointmentDto {
 
     private String appointmentType;
 
-    private Patient patient;
+    private PatientDto patient;
 
-    private HospitalStuff hospitalStuff;
+    private HospitalStuffDto hospitalStuff;
 }

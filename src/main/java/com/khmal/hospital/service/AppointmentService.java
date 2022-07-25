@@ -1,6 +1,6 @@
 package com.khmal.hospital.service;
 
-import com.khmal.hospital.entity.Appointment;
+import com.khmal.hospital.dao.entity.Appointment;
 
 import java.util.List;
 

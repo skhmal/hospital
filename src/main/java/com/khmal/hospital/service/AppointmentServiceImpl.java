@@ -1,7 +1,7 @@
 package com.khmal.hospital.service;
 
-import com.khmal.hospital.entity.Appointment;
-import com.khmal.hospital.repository.AppointmentRepository;
+import com.khmal.hospital.dao.entity.Appointment;
+import com.khmal.hospital.dao.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

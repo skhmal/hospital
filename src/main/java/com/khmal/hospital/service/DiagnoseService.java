@@ -1,6 +1,6 @@
 package com.khmal.hospital.service;
 
-import com.khmal.hospital.entity.Diagnose;
+import com.khmal.hospital.dao.entity.Diagnose;
 
 import java.util.List;
 

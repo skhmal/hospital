@@ -1,7 +1,7 @@
 package com.khmal.hospital.service;
 
-import com.khmal.hospital.entity.Diagnose;
-import com.khmal.hospital.repository.DiagnoseRepository;
+import com.khmal.hospital.dao.entity.Diagnose;
+import com.khmal.hospital.dao.repository.DiagnoseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

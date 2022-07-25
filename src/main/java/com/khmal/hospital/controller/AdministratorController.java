@@ -2,70 +2,68 @@ package com.khmal.hospital.controller;
 
 import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
-import com.khmal.hospital.service.HospitalStuffService;
-import com.khmal.hospital.service.PatientService;
-import com.khmal.hospital.service.RoleService;
-import com.khmal.hospital.service.UserServiceImpl;
-import com.khmal.hospital.dto.webb.HospitalStuffDtoUserDtoRoleDto;
-import com.khmal.hospital.dto.webb.PatientDtoUserDtoRoleDto;
+import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
+import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
+import com.khmal.hospital.service.RegistrationService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/administrator")
 public class AdministratorController {
+    private final RegistrationService registrationService;
 
-    private final PatientService patientService;
-    private final UserServiceImpl userService;
-    private final HospitalStuffService hospitalStuffService;
-    private final RoleService roleService;
-
-    public AdministratorController(PatientService patientService, UserServiceImpl userService, HospitalStuffService hospitalStuffService, RoleService roleService) {
-        this.patientService = patientService;
-        this.userService = userService;
-        this.hospitalStuffService = hospitalStuffService;
-        this.roleService = roleService;
+    public AdministratorController(RegistrationService registrationService) {
+        this.registrationService = registrationService;
     }
-
 
     @PostMapping("/patient")
-    public PatientDto addNewPatient(@RequestBody PatientDtoUserDtoRoleDto patient) {
+    public PatientDto addNewPatient(@RequestBody PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
 
-        patientService.addNewPatient(patient.getPatientDto());
+        registrationService.addNewPatient(patientDtoUserDtoRoleDto.getPatientDto());
 
-        userService.saveUser(patient.getUserDto());
+        registrationService.addNewUserToSecurityTable(patientDtoUserDtoRoleDto.getUserDto());
 
-        roleService.addRole(patient.getRoleDto());
+        registrationService.addUserRoleToSecurityTable(patientDtoUserDtoRoleDto.getRoleDto());
 
-        return patient.getPatientDto();
-    }
-
-    @GetMapping("/patients")
-    public List<PatientDto> getAllPatients() {
-        return patientService.getAllPatients();
-    }
-
-    @PutMapping("/patient")
-    public PatientDto updatePatient(@RequestBody PatientDto patientDto) {
-        return patientService.updatePatient(patientDto);
-    }
-
-    @DeleteMapping("/patient")
-    public void deletePatient(@RequestBody PatientDto patientDto) {
-        patientService.deletePatient(patientDto);
+        return patientDtoUserDtoRoleDto.getPatientDto();
     }
 
     @PostMapping("/employee")
     public HospitalStuffDto addNewEmployee(@RequestBody HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
-        return hospitalStuffService.addNewEmployee(hospitalStuffDtoUserDtoRoleDto);
+
+        registrationService.addNewEmployee(hospitalStuffDtoUserDtoRoleDto.getHospitalStuffDto());
+
+        registrationService.addNewUserToSecurityTable(hospitalStuffDtoUserDtoRoleDto.getUserDto());
+
+        registrationService.addUserRoleToSecurityTable(hospitalStuffDtoUserDtoRoleDto.getRoleDto());
+
+        return hospitalStuffDtoUserDtoRoleDto.getHospitalStuffDto();
     }
 
-    @DeleteMapping("/patient")
-    public void deleteEmployee(@RequestBody HospitalStuffDto hospitalStuffDto) {
-        hospitalStuffService.deleteEmployee(hospitalStuffDto);
-    }
+//    @GetMapping("/patients")
+//    public List<PatientDto> getAllPatients() {
+//        return registrationService.getAllPatients();
+//    }
+//
+//    @PutMapping("/patient")
+//    public PatientDto updatePatient(@RequestBody PatientDto patientDto) {
+//        return patientService.updatePatient(patientDto);
+//    }
+
+//    @DeleteMapping("/patient")
+//    public void deletePatient(@RequestBody PatientDto patientDto) {
+//        patientService.deletePatient(patientDto);
+//    }
+//
+//    @PostMapping("/employee")
+//    public HospitalStuffDto addNewEmployee(@RequestBody HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
+//        return hospitalStuffService.addNewEmployee(hospitalStuffDtoUserDtoRoleDto);
+//    }
+//
+//    @DeleteMapping("/employee")
+//    public void deleteEmployee(@RequestBody HospitalStuffDto hospitalStuffDto) {
+//        hospitalStuffService.deleteEmployee(hospitalStuffDto);
+//    }
 
 //    @GetMapping("/nurse")
 //    public List<HospitalStuffDto> getAllNurses() {
