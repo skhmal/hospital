@@ -1,11 +1,10 @@
 package com.khmal.hospital.dto;
 
-import com.khmal.hospital.dao.entity.HospitalStuff;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 public class AppointmentDto {
     private int id;
 
-    private LocalDate date;
+    private LocalDateTime date;
 
     private String appointmentType;
 

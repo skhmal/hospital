@@ -1,5 +1,7 @@
 package com.khmal.hospital.controller;
 
+import com.khmal.hospital.dao.entity.Patient;
+import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.request.EmployeePatientAppointment;
@@ -46,6 +48,12 @@ public class AdministratorController {
         return hospitalStuffDtoUserDtoRoleDto.getHospitalStuffDto();
     }
 
+    @PostMapping("/appoint")
+    public void appointDoctorToPatient(@RequestBody EmployeePatientAppointment employeePatientAppointment){
+        registrationService.appointDoctorToPatient(
+                employeePatientAppointment.getHospitalStuffId(),
+                employeePatientAppointment.getPatientId());
+    }
     @GetMapping("/patients")
     public List<PatientDto> getAllPatients() {
         return registrationService.getAllPatients();
@@ -57,11 +65,18 @@ public class AdministratorController {
     }
 
     @PostMapping("/appointment")
-    public void appointmentForPatient(@RequestBody EmployeePatientAppointment employeePatientAppointment){
-        appointmentService.createAppointment(
+    public AppointmentDto appointmentForPatient( @RequestBody EmployeePatientAppointment employeePatientAppointment){
+       return appointmentService.createAppointment(
                 employeePatientAppointment.getPatientId(),
                 employeePatientAppointment.getHospitalStuffId(),
                 employeePatientAppointment.getAppointmentType(),
-                employeePatientAppointment.getSummary());
+                employeePatientAppointment.getSummary(),
+                employeePatientAppointment.getAppointmentDate());
     }
+
+    @GetMapping("/patients/{id}")
+    public List<Patient> getPatientList(@PathVariable("id") int id){
+      return   appointmentService.getPatientList(id);
+    }
+
 }

@@ -38,6 +38,8 @@ public class RegistrationService {
     }
 
     public void addNewPatient(PatientDto patientDto) {
+
+
         try {
             Patient patient = PatientMapper.INSTANCE.toEntity(patientDto);
 
@@ -60,6 +62,7 @@ public class RegistrationService {
     }
 
     public void addUserRoleToSecurityTable(RoleDto roleDto) {
+
         try {
             Role role = RoleMapper.INSTANCE.toEntity(roleDto);
 
@@ -101,5 +104,14 @@ public class RegistrationService {
         return HospitalStuffMapper.INSTANCE.toDto(doctors);
     }
 
+    public void appointDoctorToPatient(int doctorId, int patientId){
 
+        HospitalStuff hospitalStuff = hospitalStuffRepository.getHospitalStuffById(doctorId);
+
+        List<Patient> patientList = hospitalStuff.getPatientsList();
+
+        patientList.add(patientRepository.getPatientById(patientId));
+
+        hospitalStuffRepository.save(hospitalStuff);
+    }
 }

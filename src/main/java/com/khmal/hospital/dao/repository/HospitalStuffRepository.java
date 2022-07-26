@@ -4,9 +4,12 @@ import com.khmal.hospital.dao.entity.HospitalStuff;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface HospitalStuffRepository extends JpaRepository<HospitalStuff, Integer> {
     List<HospitalStuff> getHospitalStuffByDoctorSpecializationIsNotNull();
 
     HospitalStuff getHospitalStuffById(int id);
+
+    Optional<HospitalStuff> findHospitalStuffById(int id);
 }

@@ -6,11 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
-
-    List<Appointment> getAppointmentsByPatientId(Integer id);
-
-    boolean deleteAppointmentById(Integer id);
-
-    void deleteById(Integer id);
-
+    List<Appointment> findAppointmentByHospitalStuffId(int id);
+    List<Appointment> findAppointmentByPatientId(int id);
 }

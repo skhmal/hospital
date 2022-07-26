@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,7 +43,7 @@ class AppointmentServiceTest {
                 new Patient("thomas", "andersen", "neo", LocalDate.now(), false));
 
         appointmentService.createAppointment(
-                1,1,"medications", "ibuprom");
+                1,1,"medications", "ibuprom", LocalDateTime.now());
 
         ArgumentCaptor<Appointment> appointmentArgumentCaptor = ArgumentCaptor.forClass(Appointment.class);
         Mockito.verify(appointmentRepository).save(appointmentArgumentCaptor.capture());

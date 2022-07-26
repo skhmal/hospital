@@ -6,7 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -21,8 +22,9 @@ public class Appointment{
     @Column(name = "id")
     private int id;
 
+
     @Column(name = "appointment_date")
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Column(name = "appointment_type")
     private String appointmentType;
@@ -38,7 +40,7 @@ public class Appointment{
     @JoinColumn(name = "hospital_stuff_id", referencedColumnName = "id")
     private HospitalStuff hospitalStuff;
 
-    public Appointment(LocalDate date, String appointmentType, String summary, Patient patient, HospitalStuff hospitalStuff) {
+    public Appointment(LocalDateTime date, String appointmentType, String summary, Patient patient, HospitalStuff hospitalStuff) {
         this.date = date;
         this.appointmentType = appointmentType;
         this.summary = summary;
