@@ -22,7 +22,6 @@ public class Appointment{
     @Column(name = "id")
     private int id;
 
-
     @Column(name = "appointment_date")
     private LocalDateTime date;
 

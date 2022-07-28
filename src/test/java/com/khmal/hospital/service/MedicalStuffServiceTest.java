@@ -16,14 +16,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class AppointmentServiceTest {
+class MedicalStuffServiceTest {
 
     @InjectMocks
-    private AppointmentService appointmentService;
+    private MedicalStuffService appointmentService;
 
     @Mock
     private HospitalStuffRepository hospitalStuffRepository;
@@ -37,10 +38,10 @@ class AppointmentServiceTest {
     @Test
     void createAppointmentPositiveCase() {
         Mockito.when(hospitalStuffRepository.getHospitalStuffById(1)).thenReturn(
-                new HospitalStuff("serg", "khm", "sh", "family doctor",
-                        new StuffRole()));
+                Optional.of(new HospitalStuff("serg", "khm", "sh", "family doctor",
+                        new StuffRole())));
         Mockito.when(patientRepository.getPatientById(1)).thenReturn(
-                new Patient("thomas", "andersen", "neo", LocalDate.now(), false));
+                Optional.of(new Patient("thomas", "andersen", "neo", LocalDate.now(), false)));
 
         appointmentService.createAppointment(
                 1,1,"medications", "ibuprom", LocalDateTime.now());

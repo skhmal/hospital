@@ -25,6 +25,9 @@ public class Diagnose{
     @Column(name = "diagnose_date")
     private LocalDate diagnoseDate;
 
+    @Column(name = "edit_date")
+    private LocalDate editDate;
+
     @OneToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
@@ -32,4 +35,11 @@ public class Diagnose{
     @OneToOne
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     private HospitalStuff hospitalStuff;
+
+    public Diagnose(String summary, LocalDate diagnoseDate, Patient patient, HospitalStuff hospitalStuff) {
+        this.summary = summary;
+        this.diagnoseDate = diagnoseDate;
+        this.patient = patient;
+        this.hospitalStuff = hospitalStuff;
+    }
 }

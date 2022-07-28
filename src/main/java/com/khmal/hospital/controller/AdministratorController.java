@@ -1,13 +1,12 @@
 package com.khmal.hospital.controller;
 
 import com.khmal.hospital.dao.entity.Patient;
-import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.request.EmployeePatientAppointment;
 import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
 import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
-import com.khmal.hospital.service.AppointmentService;
+import com.khmal.hospital.service.MedicalStuffService;
 import com.khmal.hospital.service.RegistrationService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +16,9 @@ import java.util.List;
 @RequestMapping("/administrator")
 public class AdministratorController {
     private final RegistrationService registrationService;
-    private final AppointmentService appointmentService;
+    private final MedicalStuffService appointmentService;
 
-    public AdministratorController(RegistrationService registrationService, AppointmentService appointmentService) {
+    public AdministratorController(RegistrationService registrationService, MedicalStuffService appointmentService) {
         this.registrationService = registrationService;
         this.appointmentService = appointmentService;
     }
@@ -64,19 +63,9 @@ public class AdministratorController {
         return registrationService.getAllDoctors();
     }
 
-    @PostMapping("/appointment")
-    public AppointmentDto appointmentForPatient( @RequestBody EmployeePatientAppointment employeePatientAppointment){
-       return appointmentService.createAppointment(
-                employeePatientAppointment.getPatientId(),
-                employeePatientAppointment.getHospitalStuffId(),
-                employeePatientAppointment.getAppointmentType(),
-                employeePatientAppointment.getSummary(),
-                employeePatientAppointment.getAppointmentDate());
-    }
-
     @GetMapping("/patients/{id}")
-    public List<Patient> getPatientList(@PathVariable("id") int id){
-      return   appointmentService.getPatientList(id);
+    public List<Patient> getDoctorsPatientListById(@PathVariable("id") int id){
+      return   appointmentService.getDoctorsPatientListById(id);
     }
 
 }

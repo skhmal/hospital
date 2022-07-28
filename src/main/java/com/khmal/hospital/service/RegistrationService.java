@@ -16,12 +16,17 @@ import com.khmal.hospital.dto.mapper.HospitalStuffMapper;
 import com.khmal.hospital.dto.mapper.PatientMapper;
 import com.khmal.hospital.dto.mapper.RoleMapper;
 import com.khmal.hospital.dto.mapper.UserMapper;
+import com.khmal.hospital.service.exception_handling.IncorrectDateException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Service
+@Validated
 public class RegistrationService {
 
     private final RoleRepository roleRepository;
@@ -37,80 +42,52 @@ public class RegistrationService {
         this.hospitalStuffRepository = hospitalStuffRepository;
     }
 
-    public void addNewPatient(PatientDto patientDto) {
-
-
-        try {
+    public void addNewPatient(@Valid PatientDto patientDto) {
             Patient patient = PatientMapper.INSTANCE.toEntity(patientDto);
-
             patientRepository.save(patient);
-        } catch (Exception e) {
-            throw new NoSuchUserException("Patient is not saved");
-        }
     }
 
-    public void addNewUserToSecurityTable(UserDto userDto) {
-
-        try {
+    public void addNewUserToSecurityTable(@Valid UserDto userDto) {
             User user = UserMapper.INSTANCE.toEntity(userDto);
-
             userRepository.save(user);
-        } catch (Exception e) {
-            throw new NoSuchUserException("User is not saved");
-        }
-
     }
 
-    public void addUserRoleToSecurityTable(RoleDto roleDto) {
-
-        try {
+    public void addUserRoleToSecurityTable(@Valid RoleDto roleDto) {
             Role role = RoleMapper.INSTANCE.toEntity(roleDto);
-
             roleRepository.save(role);
-        } catch (Exception e) {
-            throw new NoSuchUserException("Role is not saved");
-        }
-
     }
 
-    public void addNewEmployee(HospitalStuffDto hospitalStuffDto) {
-        try {
-            HospitalStuff hospitalStuff =
-                    HospitalStuffMapper.INSTANCE.toEntity(hospitalStuffDto);
-
+    public void addNewEmployee(@Valid HospitalStuffDto hospitalStuffDto) {
+            HospitalStuff hospitalStuff = HospitalStuffMapper.INSTANCE.toEntity(hospitalStuffDto);
             hospitalStuffRepository.save(hospitalStuff);
-        } catch (Exception e) {
-            throw new NoSuchUserException("Employee is not saved");
-        }
     }
 
     public List<PatientDto> getAllPatients(){
-        List<Patient> patientList;
-        try {
-            patientList = patientRepository.findAll();
-        }catch (Exception e){
-            throw new NoSuchUserException("No one patients here");
+
+        if(patientRepository.findAll().isEmpty()){
+            throw new IncorrectDateException("No registered patients");
         }
-        return PatientMapper.INSTANCE.toDto(patientList);
+
+        return PatientMapper.INSTANCE.toDto(patientRepository.findAll());
     }
 
-    public List<HospitalStuffDto> getAllDoctors(){
-        List<HospitalStuff> doctors;
-        try {
-           doctors = hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull();
-        }catch (Exception e){
-         throw new NoSuchUserException("No one doctors here");
-        }
-        return HospitalStuffMapper.INSTANCE.toDto(doctors);
+    public List<HospitalStuffDto> getAllDoctors() {
+        return HospitalStuffMapper.INSTANCE.toDto(
+                hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
+                        .orElseThrow(() -> new NoSuchUserException("No registered doctors")));
     }
 
-    public void appointDoctorToPatient(int doctorId, int patientId){
+    public void appointDoctorToPatient(@NotNull(message = "Doctor can't be empty") int doctorId,
+                                       @NotNull(message = "Patient can't be empty") int patientId){
 
-        HospitalStuff hospitalStuff = hospitalStuffRepository.getHospitalStuffById(doctorId);
+        HospitalStuff hospitalStuff = hospitalStuffRepository.getHospitalStuffById(doctorId)
+                .orElseThrow(() -> new NoSuchUserException("Doctor is not found"));
 
         List<Patient> patientList = hospitalStuff.getPatientsList();
 
-        patientList.add(patientRepository.getPatientById(patientId));
+        patientList.add(patientRepository.getPatientById(patientId).orElseThrow(
+                () -> new NoSuchUserException("Patient is not found")
+        ));
 
         hospitalStuffRepository.save(hospitalStuff);
     }

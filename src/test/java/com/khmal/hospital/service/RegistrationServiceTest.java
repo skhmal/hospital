@@ -12,7 +12,6 @@ import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.RoleDto;
 import com.khmal.hospital.dto.UserDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,18 +33,6 @@ class RegistrationServiceTest {
     private UserRepository userRepository;
     @Mock
     private HospitalStuffRepository hospitalStuffRepository;
-
-    @BeforeEach
-    void setUp() {
-//        roleRepository = Mockito.mock(RoleRepository.class);
-//        patientRepository = Mockito.mock(PatientRepository.class);
-//        userRepository = Mockito.mock(UserRepository.class);
-//        hospitalStuffRepository = Mockito.mock(HospitalStuffRepository.class);
-//
-//        registrationService =
-//                new RegistrationService(roleRepository, patientRepository, userRepository, hospitalStuffRepository);
-    }
-
 
     @Test
     void addNewPatientPositiveCase() {

@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HospitalStuffRepository extends JpaRepository<HospitalStuff, Integer> {
-    List<HospitalStuff> getHospitalStuffByDoctorSpecializationIsNotNull();
+    Optional<List<HospitalStuff>> getHospitalStuffByDoctorSpecializationIsNotNull();
 
-    HospitalStuff getHospitalStuffById(int id);
+    Optional<HospitalStuff> getHospitalStuffById(int id);
 
     Optional<HospitalStuff> findHospitalStuffById(int id);
 }
