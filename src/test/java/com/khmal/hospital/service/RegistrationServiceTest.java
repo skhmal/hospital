@@ -1,22 +1,16 @@
 package com.khmal.hospital.service;
 
-import com.khmal.hospital.dao.entity.HospitalStuff;
-import com.khmal.hospital.dao.entity.Patient;
-import com.khmal.hospital.dao.entity.Role;
-import com.khmal.hospital.dao.entity.User;
-import com.khmal.hospital.dao.repository.HospitalStuffRepository;
-import com.khmal.hospital.dao.repository.PatientRepository;
-import com.khmal.hospital.dao.repository.RoleRepository;
-import com.khmal.hospital.dao.repository.UserRepository;
-import com.khmal.hospital.dto.HospitalStuffDto;
-import com.khmal.hospital.dto.PatientDto;
-import com.khmal.hospital.dto.RoleDto;
-import com.khmal.hospital.dto.UserDto;
+import com.khmal.hospital.dao.entity.*;
+import com.khmal.hospital.dao.repository.*;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -34,10 +28,12 @@ class RegistrationServiceTest {
     @Mock
     private HospitalStuffRepository hospitalStuffRepository;
 
+    @Mock
+    private StuffRoleRepository stuffRoleRepository;
+
     @Test
     void addNewPatientPositiveCase() {
-        PatientDto patientDto = new PatientDto("serg", "khm", "sh", LocalDate.now(), false);
-        registrationService.addNewPatient(patientDto);
+        registrationService.addNewPatient("serg", "khm", "sh", LocalDate.now(), false);
 
         ArgumentCaptor<Patient> patientArgumentCaptor = ArgumentCaptor.forClass(Patient.class);
         Mockito.verify(patientRepository).save(patientArgumentCaptor.capture());
@@ -48,8 +44,7 @@ class RegistrationServiceTest {
 
     @Test
     void addNewUserToSecurityTablePositiveCase() {
-        UserDto userDto = new UserDto("sh", "{noop}12345", 1);
-        registrationService.addNewUserToSecurityTable(userDto);
+        registrationService.addNewUserToSecurityTable("sh", "{noop}12345", 1);
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         Mockito.verify(userRepository).save(userArgumentCaptor.capture());
@@ -60,8 +55,13 @@ class RegistrationServiceTest {
 
     @Test
     void addNewUserRoleToSecurityTablePositiveCase() {
-        RoleDto roleDto = new RoleDto("sh","ROLE_PATIENT");
-        registrationService.addUserRoleToSecurityTable(roleDto);
+
+        Mockito.when(userRepository.getUserByUsername("sh")).thenReturn(Optional.of(new User("sh", 4)));
+        Mockito.when(roleRepository.getRoleById(1)).thenReturn(
+                Optional.of(new Role(
+                        new User("sh", 4),
+                        "ROLE_PATIENT")));
+        registrationService.addUserRoleToSecurityTable("sh",1);
 
         ArgumentCaptor<Role> roleArgumentCaptor = ArgumentCaptor.forClass(Role.class);
         Mockito.verify(roleRepository).save(roleArgumentCaptor.capture());
@@ -72,8 +72,9 @@ class RegistrationServiceTest {
 
     @Test
     void addNewEmployeePositiveCase(){
-        HospitalStuffDto hospitalStuffDto = new HospitalStuffDto("serg", "khm", "sh", "surgeon", "ROLE_DOCTOR");
-        registrationService.addNewEmployee(hospitalStuffDto);
+        Mockito.when(stuffRoleRepository.getStuffRoleById(3)).thenReturn(Optional.of(new StuffRole("doctor")));
+
+        registrationService.addNewEmployee("serg", "khm", "sh", "surgeon", 3);
 
         ArgumentCaptor<HospitalStuff> hospitalStuffDtoArgumentCaptor = ArgumentCaptor.forClass(HospitalStuff.class);
         Mockito.verify(hospitalStuffRepository).save(hospitalStuffDtoArgumentCaptor.capture());

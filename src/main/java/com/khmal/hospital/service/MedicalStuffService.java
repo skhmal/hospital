@@ -47,9 +47,9 @@ public class MedicalStuffService {
                                             @NotNull(message = "Date can't be empty") LocalDateTime appointmentDate) {
         Appointment appointment = null;
 
-        if ((validation.checkAppointmentDateForHospitalStuff(patientId, hospitalStuffId, appointmentDate))
-                && (validation.checkPatientId(patientId))
-                && (validation.checkHospitalStuffId(hospitalStuffId))) {
+        if (validation.checkHospitalStuffId(hospitalStuffId) && validation.checkPatientId(patientId) &&
+                validation.checkAppointmentDateForHospitalStuff(patientId, hospitalStuffId, appointmentDate)) {
+
             appointment = new Appointment(
                     appointmentDate,
                     appointmentType,
@@ -60,11 +60,9 @@ public class MedicalStuffService {
                     hospitalStuffRepository.getHospitalStuffById(hospitalStuffId).orElseThrow(
                             () -> new NoSuchUserException("Employee is not found")
                     ));
-
-            appointmentRepository.save(appointment);
-
         }
-        return AppointmentMapper.INSTANCE.toDto(appointment);
+
+        return AppointmentMapper.INSTANCE.toDto(appointmentRepository.save(appointment));
     }
 
     public List<Patient> getDoctorsPatientListById(@NotNull(message = "Doctor id can't be empty") int id) {
@@ -73,17 +71,21 @@ public class MedicalStuffService {
         ).getPatientsList();
     }
 
-    public DiagnoseDto addDiagnose(@NotNull(message = "Patient can't be empty") int patientId,
-                                   @NotNull(message = "Employee can't be empty") int doctorId,
-                                   @NotBlank(message = "Summary can't be empty") String summary) {
+    public DiagnoseDto createDiagnose(@NotNull(message = "Patient can't be empty") int patientId,
+                                      @NotNull(message = "Employee can't be empty") int doctorId,
+                                      @NotBlank(message = "Summary can't be empty") String summary) {
         Diagnose diagnose = null;
 
         if (validation.checkHospitalStuffId(doctorId) && validation.checkPatientId(patientId)) {
             diagnose = new Diagnose(
                     summary,
                     LocalDate.now(),
-                    patientRepository.getPatientById(patientId).get(),
-                    hospitalStuffRepository.findHospitalStuffById(doctorId).get());
+                    patientRepository.getPatientById(patientId).orElseThrow(
+                            () -> new NoSuchUserException("Patient is not found")
+                    ),
+                    hospitalStuffRepository.getHospitalStuffById(doctorId).orElseThrow(
+                            () -> new NoSuchUserException("Doctor is not found")
+                    ));
         }
 
         return DiagnoseMapper.INSTANCE.toDto(diagnoseRepository.save(diagnose));

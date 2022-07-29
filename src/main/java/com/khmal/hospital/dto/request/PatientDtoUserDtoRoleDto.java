@@ -1,15 +1,19 @@
 package com.khmal.hospital.dto.request;
 
-import com.khmal.hospital.dto.PatientDto;
-import com.khmal.hospital.dto.RoleDto;
-import com.khmal.hospital.dto.UserDto;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.time.LocalDate;
 
 @Getter
 @ToString
 public class PatientDtoUserDtoRoleDto {
-    PatientDto patientDto;
-    UserDto userDto;
-    RoleDto roleDto;
+    String firstName;
+    String lastname;
+    String username;
+    String password;
+    LocalDate birthday;
+    int roleId;
+    int enabled;
+    boolean discharged;
 }

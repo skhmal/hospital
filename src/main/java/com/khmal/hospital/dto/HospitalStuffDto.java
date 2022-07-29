@@ -29,12 +29,14 @@ public class HospitalStuffDto {
     @NotBlank(message = "Field username must not be empty")
     private String username;
 
+    @NotBlank(message = "Field role must not be empty")
+    private String stuffRoleName;
+
     private String doctorSpecialization;
 
     private StuffRoleDto stuffRole;
 
-    @NotBlank(message = "Field role must not be empty")
-    private String stuffRoleName;
+
 
     public HospitalStuffDto(String firstname, String lastname, String username, String doctorSpecialization, String stuffRoleName) {
         this.firstname = firstname;

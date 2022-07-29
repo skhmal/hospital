@@ -35,6 +35,10 @@ public class Patient {
     @Column(name = "birthday")
     private LocalDate birthday;
 
+    @OneToOne
+    @JoinColumn(name = "role_id")
+    private StuffRole stuffRole;
+
     @Column(name = "discharged")
     private boolean discharged;
 

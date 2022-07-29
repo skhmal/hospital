@@ -1,6 +1,7 @@
 create database db_hospital;
 use db_hospital;
-create table role_stuff(
+
+create table role(
     id int not null auto_increment,
     role_name varchar(45) not null ,
     primary key (id)
@@ -14,7 +15,7 @@ create table hospital_stuff(
     username varchar(45) not null ,
     doctor_specialization varchar(45) null,
     primary key (id),
-    foreign key (role_id) references role_stuff(id)
+    foreign key (role_id) references role(id)
 );
 
 create table patient(
@@ -24,7 +25,9 @@ create table patient(
     birthday date not null ,
     username varchar(45) not null ,
     discharged boolean default false,
-    primary key (id)
+    role_id int not null ,
+    primary key (id),
+    foreign key (role_id) references role(id)
 );
 
 create table doctor_patient(

@@ -35,6 +35,9 @@ public class PatientDto {
     @NotNull(message = "Field discharged must not be empty")
     private boolean discharged;
 
+    @NotNull(message = "Role must not be empty")
+    private int roleId;
+
     public PatientDto(String firstname, String lastname, String username, LocalDate birthday, boolean discharged) {
         this.firstname = firstname;
         this.lastname = lastname;

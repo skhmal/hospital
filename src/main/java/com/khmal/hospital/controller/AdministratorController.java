@@ -26,25 +26,49 @@ public class AdministratorController {
     @PostMapping("/patient")
     public PatientDto addNewPatient(@RequestBody PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
 
-        registrationService.addNewPatient(patientDtoUserDtoRoleDto.getPatientDto());
+      PatientDto patientDto =  registrationService.addNewPatient(
+                patientDtoUserDtoRoleDto.getFirstName(),
+                patientDtoUserDtoRoleDto.getLastname(),
+                patientDtoUserDtoRoleDto.getUsername(),
+                patientDtoUserDtoRoleDto.getBirthday(),
+                patientDtoUserDtoRoleDto.isDischarged()
+        );
 
-        registrationService.addNewUserToSecurityTable(patientDtoUserDtoRoleDto.getUserDto());
+        registrationService.addNewUserToSecurityTable(
+                patientDtoUserDtoRoleDto.getUsername(),
+                patientDtoUserDtoRoleDto.getPassword(),
+                patientDtoUserDtoRoleDto.getEnabled()
+        );
 
-        registrationService.addUserRoleToSecurityTable(patientDtoUserDtoRoleDto.getRoleDto());
+        registrationService.addUserRoleToSecurityTable(
+                patientDtoUserDtoRoleDto.getUsername(),
+                patientDtoUserDtoRoleDto.getRoleId()
+        );
 
-        return patientDtoUserDtoRoleDto.getPatientDto();
+        return patientDto;
     }
 
     @PostMapping("/employee")
     public HospitalStuffDto addNewEmployee(@RequestBody HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
 
-        registrationService.addNewEmployee(hospitalStuffDtoUserDtoRoleDto.getHospitalStuffDto());
+       HospitalStuffDto hospitalStuffDto = registrationService.addNewEmployee(
+                hospitalStuffDtoUserDtoRoleDto.getFirstName(),
+                hospitalStuffDtoUserDtoRoleDto.getLastname(),
+                hospitalStuffDtoUserDtoRoleDto.getUsername(),
+                hospitalStuffDtoUserDtoRoleDto.getDoctorSpecialization(),
+                hospitalStuffDtoUserDtoRoleDto.getStuffRoleId()
+        );
 
-        registrationService.addNewUserToSecurityTable(hospitalStuffDtoUserDtoRoleDto.getUserDto());
+        registrationService.addNewUserToSecurityTable(
+                hospitalStuffDtoUserDtoRoleDto.getUsername(),
+                hospitalStuffDtoUserDtoRoleDto.getPassword(),
+                hospitalStuffDtoUserDtoRoleDto.getEnabled());
 
-        registrationService.addUserRoleToSecurityTable(hospitalStuffDtoUserDtoRoleDto.getRoleDto());
+        registrationService.addUserRoleToSecurityTable(
+                hospitalStuffDtoUserDtoRoleDto.getUsername(),
+                hospitalStuffDtoUserDtoRoleDto.getStuffRoleId());
 
-        return hospitalStuffDtoUserDtoRoleDto.getHospitalStuffDto();
+        return hospitalStuffDto;
     }
 
     @PostMapping("/appoint")
@@ -53,6 +77,7 @@ public class AdministratorController {
                 employeePatientAppointment.getHospitalStuffId(),
                 employeePatientAppointment.getPatientId());
     }
+
     @GetMapping("/patients")
     public List<PatientDto> getAllPatients() {
         return registrationService.getAllPatients();

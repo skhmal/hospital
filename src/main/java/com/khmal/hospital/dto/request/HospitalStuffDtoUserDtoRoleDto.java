@@ -1,15 +1,16 @@
 package com.khmal.hospital.dto.request;
 
-import com.khmal.hospital.dto.HospitalStuffDto;
-import com.khmal.hospital.dto.RoleDto;
-import com.khmal.hospital.dto.UserDto;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
 public class HospitalStuffDtoUserDtoRoleDto {
-    HospitalStuffDto hospitalStuffDto;
-    UserDto userDto;
-    RoleDto roleDto;
+    String firstName;
+    String lastname;
+    String username;
+    String password;
+    String doctorSpecialization;
+    int stuffRoleId;
+    int enabled;
 }
