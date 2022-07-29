@@ -8,6 +8,7 @@ import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
 import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
 import com.khmal.hospital.service.MedicalStuffService;
 import com.khmal.hospital.service.RegistrationService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class AdministratorController {
         this.appointmentService = appointmentService;
     }
 
+    @Transactional
     @PostMapping("/patient")
     public PatientDto addNewPatient(@RequestBody PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
 
@@ -48,11 +50,12 @@ public class AdministratorController {
         return patientDto;
     }
 
+    @Transactional
     @PostMapping("/employee")
     public HospitalStuffDto addNewEmployee(@RequestBody HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
 
        HospitalStuffDto hospitalStuffDto = registrationService.addNewEmployee(
-                hospitalStuffDtoUserDtoRoleDto.getFirstName(),
+                hospitalStuffDtoUserDtoRoleDto.getFirstname(),
                 hospitalStuffDtoUserDtoRoleDto.getLastname(),
                 hospitalStuffDtoUserDtoRoleDto.getUsername(),
                 hospitalStuffDtoUserDtoRoleDto.getDoctorSpecialization(),
@@ -92,5 +95,4 @@ public class AdministratorController {
     public List<Patient> getDoctorsPatientListById(@PathVariable("id") int id){
       return   appointmentService.getDoctorsPatientListById(id);
     }
-
 }

@@ -6,7 +6,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class HospitalStuffDtoUserDtoRoleDto {
-    String firstName;
+    String firstname;
     String lastname;
     String username;
     String password;

@@ -26,11 +26,7 @@ public class RoleDto {
     @NotBlank(message = "Field username must not be empty")
     private String username;
 
-    @NotBlank(message = "Field role must not be empty")
-    private String roleName;
-
     public RoleDto(String username, String roleName) {
         this.username = username;
-        this.roleName = roleName;
     }
 }

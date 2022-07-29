@@ -61,13 +61,12 @@ public class MedicalStuffService {
                             () -> new NoSuchUserException("Employee is not found")
                     ));
         }
-
         return AppointmentMapper.INSTANCE.toDto(appointmentRepository.save(appointment));
     }
 
     public List<Patient> getDoctorsPatientListById(@NotNull(message = "Doctor id can't be empty") int id) {
         return hospitalStuffRepository.getHospitalStuffById(id).orElseThrow(
-                () -> new NoSuchUserException("No patient in patient list")
+                () -> new NoSuchUserException("No patients registered")
         ).getPatientsList();
     }
 
@@ -96,9 +95,8 @@ public class MedicalStuffService {
 
         if (validation.checkPatientId(id)) {
             diagnoseList = diagnoseRepository.getDiagnoseByPatientId(id).orElseThrow(
-                    () -> new NoSuchUserException("No diagnose"));
+                    () -> new NoSuchUserException("No diagnose for patient"));
         }
-
         return DiagnoseMapper.INSTANCE.toDto(diagnoseList);
     }
 }

@@ -30,7 +30,7 @@ public class MedicalStuffController {
 
     @PostMapping("/diagnose")
     public DiagnoseDto addDiagnose(@RequestBody EmployeePatientAppointment employeePatientAppointment) {
-        return medicalStuffService.addDiagnose(
+        return medicalStuffService.createDiagnose(
                 employeePatientAppointment.getPatientId(),
                 employeePatientAppointment.getHospitalStuffId(),
                 employeePatientAppointment.getSummary()

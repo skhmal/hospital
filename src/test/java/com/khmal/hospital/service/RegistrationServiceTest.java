@@ -2,11 +2,9 @@ package com.khmal.hospital.service;
 
 import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.*;
+import com.khmal.hospital.service.validator.Validation;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
@@ -27,9 +25,10 @@ class RegistrationServiceTest {
     private UserRepository userRepository;
     @Mock
     private HospitalStuffRepository hospitalStuffRepository;
-
     @Mock
     private StuffRoleRepository stuffRoleRepository;
+    @Mock
+    private Validation validation;
 
     @Test
     void addNewPatientPositiveCase() {
@@ -57,10 +56,10 @@ class RegistrationServiceTest {
     void addNewUserRoleToSecurityTablePositiveCase() {
 
         Mockito.when(userRepository.getUserByUsername("sh")).thenReturn(Optional.of(new User("sh", 4)));
-        Mockito.when(roleRepository.getRoleById(1)).thenReturn(
-                Optional.of(new Role(
-                        new User("sh", 4),
-                        "ROLE_PATIENT")));
+        Mockito.when(stuffRoleRepository.getStuffRoleById(1)).thenReturn(
+                Optional.of(new StuffRole("ROLE_PATIENT")));
+        Mockito.when(validation.checkRoleInDataBase(1)).thenReturn(true);
+
         registrationService.addUserRoleToSecurityTable("sh",1);
 
         ArgumentCaptor<Role> roleArgumentCaptor = ArgumentCaptor.forClass(Role.class);
@@ -73,6 +72,7 @@ class RegistrationServiceTest {
     @Test
     void addNewEmployeePositiveCase(){
         Mockito.when(stuffRoleRepository.getStuffRoleById(3)).thenReturn(Optional.of(new StuffRole("doctor")));
+        Mockito.when(validation.checkRoleInDataBase(3)).thenReturn(true);
 
         registrationService.addNewEmployee("serg", "khm", "sh", "surgeon", 3);
 
