@@ -33,6 +33,7 @@ public class AdministratorController {
                 patientDtoUserDtoRoleDto.getLastname(),
                 patientDtoUserDtoRoleDto.getUsername(),
                 patientDtoUserDtoRoleDto.getBirthday(),
+                patientDtoUserDtoRoleDto.getRoleId(),
                 patientDtoUserDtoRoleDto.isDischarged()
         );
 

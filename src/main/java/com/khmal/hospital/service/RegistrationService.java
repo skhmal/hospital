@@ -41,11 +41,18 @@ public class RegistrationService {
                                     String lastname,
                                     String username,
                                     LocalDate birthday,
+                                    int stuffRoleId,
                                     boolean discharged) {
 
-        Patient patient = new Patient(firstname, lastname, username, birthday, discharged);
+        Patient patient = new Patient(firstname,
+                lastname,
+                username,
+                birthday,
+                stuffRoleRepository.getStuffRoleById(4).get(),
+                discharged);
 
-        return PatientMapper.INSTANCE.toDto(patientRepository.save(patient));
+        patientRepository.save(patient);
+        return PatientMapper.INSTANCE.toDto(patient);
     }
 
     public void addNewUserToSecurityTable(String username, String password, int enabled) {

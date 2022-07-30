@@ -3,6 +3,7 @@ package com.khmal.hospital.service;
 import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.*;
 import com.khmal.hospital.service.validator.Validation;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,56 +31,75 @@ class RegistrationServiceTest {
     @Mock
     private Validation validation;
 
+    @BeforeEach
+    public void setUp() {
+        Mockito.when(stuffRoleRepository.getStuffRoleById(4))
+                .thenReturn(Optional.of(new StuffRole("ROLE_PATIENT")));
+        Mockito.when(validation.checkRoleInDataBase(Mockito.anyInt())).thenReturn(true);
+    }
+
     @Test
     void addNewPatientPositiveCase() {
-        registrationService.addNewPatient("serg", "khm", "sh", LocalDate.now(), false);
+        String expectedUserName = "sh";
+        String expectedFirstname = "serg";
+        String expectedStuffRoleName = "ROLE_PATIENT";
+
+
+        registrationService.addNewPatient("serg", "khm", "sh",
+                LocalDate.now(), 4, false);
 
         ArgumentCaptor<Patient> patientArgumentCaptor = ArgumentCaptor.forClass(Patient.class);
         Mockito.verify(patientRepository).save(patientArgumentCaptor.capture());
         Patient patient = patientArgumentCaptor.getValue();
 
-        assertEquals("sh", patient.getUsername());
+        assertEquals(expectedUserName, patient.getUsername());
+        assertEquals(expectedFirstname, patient.getFirstname());
+        assertEquals(expectedStuffRoleName, patient.getStuffRole().getRoleName());
     }
 
     @Test
     void addNewUserToSecurityTablePositiveCase() {
+        String expectedUsername = "sh";
+        int expectedEnabled = 1;
+
         registrationService.addNewUserToSecurityTable("sh", "{noop}12345", 1);
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         Mockito.verify(userRepository).save(userArgumentCaptor.capture());
         User user = userArgumentCaptor.getValue();
 
-        assertEquals("sh", user.getUsername());
+        assertEquals(expectedUsername, user.getUsername());
+        assertEquals(expectedEnabled, user.getEnabled());
     }
 
     @Test
     void addNewUserRoleToSecurityTablePositiveCase() {
+        String expectedStuffRole = "ROLE_PATIENT";
 
         Mockito.when(userRepository.getUserByUsername("sh")).thenReturn(Optional.of(new User("sh", 4)));
-        Mockito.when(stuffRoleRepository.getStuffRoleById(1)).thenReturn(
-                Optional.of(new StuffRole("ROLE_PATIENT")));
-        Mockito.when(validation.checkRoleInDataBase(1)).thenReturn(true);
 
-        registrationService.addUserRoleToSecurityTable("sh",1);
+        registrationService.addUserRoleToSecurityTable("sh", 4);
 
         ArgumentCaptor<Role> roleArgumentCaptor = ArgumentCaptor.forClass(Role.class);
         Mockito.verify(roleRepository).save(roleArgumentCaptor.capture());
         Role role = roleArgumentCaptor.getValue();
 
-        assertEquals("ROLE_PATIENT", role.getRoleName());
-    }
+        assertEquals(expectedStuffRole, role.getRoleName());
+}
 
     @Test
-    void addNewEmployeePositiveCase(){
-        Mockito.when(stuffRoleRepository.getStuffRoleById(3)).thenReturn(Optional.of(new StuffRole("doctor")));
-        Mockito.when(validation.checkRoleInDataBase(3)).thenReturn(true);
+    void addNewEmployeePositiveCase() {
+        String expectedDoctorSpecialization = "surgeon";
 
-        registrationService.addNewEmployee("serg", "khm", "sh", "surgeon", 3);
+        Mockito.when(stuffRoleRepository.getStuffRoleById(3)).thenReturn(Optional.of(new StuffRole("doctor")));
+
+        registrationService.addNewEmployee("serg", "khm", "sh",
+                "surgeon", 3);
 
         ArgumentCaptor<HospitalStuff> hospitalStuffDtoArgumentCaptor = ArgumentCaptor.forClass(HospitalStuff.class);
         Mockito.verify(hospitalStuffRepository).save(hospitalStuffDtoArgumentCaptor.capture());
         HospitalStuff hospitalStuff = hospitalStuffDtoArgumentCaptor.getValue();
 
-        assertEquals("surgeon", hospitalStuff.getDoctorSpecialization());
+        assertEquals(expectedDoctorSpecialization, hospitalStuff.getDoctorSpecialization());
     }
 }

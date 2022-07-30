@@ -38,11 +38,12 @@ public class PatientDto {
     @NotNull(message = "Role must not be empty")
     private int roleId;
 
-    public PatientDto(String firstname, String lastname, String username, LocalDate birthday, boolean discharged) {
+    public PatientDto(String firstname, String lastname, String username, LocalDate birthday, boolean discharged, int roleId) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.birthday = birthday;
         this.discharged = discharged;
+        this.roleId = roleId;
     }
 }
