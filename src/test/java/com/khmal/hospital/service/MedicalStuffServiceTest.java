@@ -54,8 +54,8 @@ class MedicalStuffServiceTest {
     }
 
     private void validationEmployeeAndPatientById() {
-        Mockito.when(validation.checkPatientId(1)).thenReturn(true);
-        Mockito.when(validation.checkHospitalStuffId(1)).thenReturn(true);
+        Mockito.when(validation.checkPatientId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(validation.checkHospitalStuffId(Mockito.anyInt())).thenReturn(true);
     }
 
     @Test

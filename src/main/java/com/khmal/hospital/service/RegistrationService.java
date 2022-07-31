@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,11 +42,11 @@ public class RegistrationService {
         this.validation = validation;
     }
 
-    public PatientDto addNewPatient(@NotBlank(message = "Field firstname must not be empty") String firstname,
-                                    @NotBlank(message = "Field lastname must not be empty") String lastname,
-                                    @NotBlank(message = "Field username must not be empty") String username,
-                                    @NotNull(message = "Field birthday must not be empty") LocalDate birthday,
-                                    @NotNull(message = "Field stuffRoleId must not be empty") int stuffRoleId) {
+    public PatientDto addNewPatient(@NotBlank(message = "Field firstname can't be empty") String firstname,
+                                    @NotBlank(message = "Field lastname can't be empty") String lastname,
+                                    @NotBlank(message = "Field username can't be empty") String username,
+                                    @NotNull(message = "Field birthday can't be empty") LocalDate birthday,
+                                    @NotNull(message = "Field stuffRoleId can't be empty") int stuffRoleId) {
         Patient patient = null;
 
         if (validation.checkStuffRoleInDataBase(stuffRoleId)) {
@@ -62,12 +63,16 @@ public class RegistrationService {
         return PatientMapper.INSTANCE.toDto(patient);
     }
 
-    public void addNewUserToSecurityTable(String username, String password) {
+    public void addNewUserToSecurityTable(@NotBlank(message = "Username can't be empty") String username,
+                                          @NotBlank(message = "Password can't be empty") String password) {
+
         User user = new User(username, password);
         userRepository.save(user);
     }
 
-    public void addUserRoleToSecurityTable(String username, int roleId) {
+    public void addUserRoleToSecurityTable(@NotBlank(message = "Username can't be empty")String username,
+                                           @NotNull(message = "Role id can't be empty") int roleId) {
+
         if (validation.checkStuffRoleInDataBase(roleId)) {
             Role role = new Role(
                     userRepository.getUserByUsername(username)
@@ -82,11 +87,12 @@ public class RegistrationService {
     }
 
 
-    public HospitalStuffDto addNewEmployee(String firstname, String lastname, String username, String doctorSpecialization,
+    public HospitalStuffDto addNewEmployee(@NotBlank(message = "Firstname can't be empty")String firstname,
+                                           @NotBlank(message = "Lastname can't be empty")String lastname,
+                                           @NotBlank(message = "Username can't be empty")String username,
+                                           @NotBlank(message = "Doctor specialization can't be empty")String doctorSpecialization,
                                            int stuffRoleId) {
         HospitalStuff hospitalStuff = null;
-
-
 
         if (validation.checkStuffRoleInDataBase(stuffRoleId)) {
             hospitalStuff = new HospitalStuff(
@@ -118,7 +124,9 @@ public class RegistrationService {
 
     public void appointDoctorToPatient(@NotNull(message = "Doctor can't be empty") int doctorId,
                                        @NotNull(message = "Patient can't be empty") int patientId) {
+
         if (validation.checkPatientId(patientId) && validation.checkHospitalStuffId(doctorId)) {
+
             HospitalStuff hospitalStuff = hospitalStuffRepository.getHospitalStuffById(doctorId)
                     .orElseThrow(() -> new NoSuchUserException("Doctor is not found"));
 

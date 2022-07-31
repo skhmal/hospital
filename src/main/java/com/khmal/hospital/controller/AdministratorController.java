@@ -90,6 +90,6 @@ public class AdministratorController {
 
     @GetMapping("/patients/{id}")
     public List<Patient> getDoctorsPatientListById(@PathVariable("id") int id){
-      return   appointmentService.getDoctorsPatientListById(id);
+      return appointmentService.getDoctorsPatientListById(id);
     }
 }
