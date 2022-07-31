@@ -1,13 +1,18 @@
 package com.khmal.hospital.service.validator;
 
 import com.khmal.hospital.dao.entity.Appointment;
-import com.khmal.hospital.dao.repository.*;
+import com.khmal.hospital.dao.entity.HospitalStuff;
+import com.khmal.hospital.dao.repository.AppointmentRepository;
+import com.khmal.hospital.dao.repository.HospitalStuffRepository;
+import com.khmal.hospital.dao.repository.PatientRepository;
+import com.khmal.hospital.dao.repository.StuffRoleRepository;
 import com.khmal.hospital.service.exception_handling.IncorrectDateException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class Validation {
@@ -66,10 +71,21 @@ public class Validation {
         return true;
     }
 
-    public boolean checkRoleInDataBase(int roleId){
+    public boolean checkStuffRoleInDataBase(int roleId){
         if(stuffRoleRepository.getStuffRoleById(roleId).isEmpty()){
-          throw   new IncorrectDateException("Role with ID = " + roleId + " not found");
+          throw   new IncorrectDateException("Role with ID " + roleId + " not found");
         }
         return true;
+    }
+
+    public boolean checkDoctorSpecialization(String doctorSpecialization){
+        boolean checkResult = Stream.of(HospitalStuff.DoctorSpecialization.values())
+                .anyMatch(s -> s.name().equals(doctorSpecialization));
+
+        if (!checkResult){
+            throw new IncorrectDateException("Specialization " + doctorSpecialization + " is not found");
+        }else {
+            return true;
+        }
     }
 }

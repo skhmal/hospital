@@ -1,17 +1,21 @@
 package com.khmal.hospital.service;
 
-import com.khmal.hospital.dao.entity.*;
+import com.khmal.hospital.dao.entity.HospitalStuff;
+import com.khmal.hospital.dao.entity.Patient;
+import com.khmal.hospital.dao.entity.Role;
+import com.khmal.hospital.dao.entity.User;
 import com.khmal.hospital.dao.repository.*;
 import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
-import com.khmal.hospital.dto.mapper.HospitalStuffMapper;
-import com.khmal.hospital.dto.mapper.PatientMapper;
+import com.khmal.hospital.mapper.HospitalStuffMapper;
+import com.khmal.hospital.mapper.PatientMapper;
 import com.khmal.hospital.service.exception_handling.IncorrectDateException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import com.khmal.hospital.service.validator.Validation;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
@@ -37,31 +41,34 @@ public class RegistrationService {
         this.validation = validation;
     }
 
-    public PatientDto addNewPatient(String firstname,
-                                    String lastname,
-                                    String username,
-                                    LocalDate birthday,
-                                    int stuffRoleId,
-                                    boolean discharged) {
+    public PatientDto addNewPatient(@NotBlank(message = "Field firstname must not be empty") String firstname,
+                                    @NotBlank(message = "Field lastname must not be empty") String lastname,
+                                    @NotBlank(message = "Field username must not be empty") String username,
+                                    @NotNull(message = "Field birthday must not be empty") LocalDate birthday,
+                                    @NotNull(message = "Field stuffRoleId must not be empty") int stuffRoleId) {
+        Patient patient = null;
 
-        Patient patient = new Patient(firstname,
-                lastname,
-                username,
-                birthday,
-                stuffRoleRepository.getStuffRoleById(4).get(),
-                discharged);
+        if (validation.checkStuffRoleInDataBase(stuffRoleId)) {
+
+            patient = new Patient(firstname,
+                    lastname,
+                    username,
+                    birthday,
+                    stuffRoleRepository.getStuffRoleById(stuffRoleId).get());
+        }
 
         patientRepository.save(patient);
+
         return PatientMapper.INSTANCE.toDto(patient);
     }
 
-    public void addNewUserToSecurityTable(String username, String password, int enabled) {
-        User user = new User(username, password, enabled);
+    public void addNewUserToSecurityTable(String username, String password) {
+        User user = new User(username, password);
         userRepository.save(user);
     }
 
     public void addUserRoleToSecurityTable(String username, int roleId) {
-        if (validation.checkRoleInDataBase(roleId)) {
+        if (validation.checkStuffRoleInDataBase(roleId)) {
             Role role = new Role(
                     userRepository.getUserByUsername(username)
                             .orElseThrow(() ->
@@ -78,14 +85,17 @@ public class RegistrationService {
     public HospitalStuffDto addNewEmployee(String firstname, String lastname, String username, String doctorSpecialization,
                                            int stuffRoleId) {
         HospitalStuff hospitalStuff = null;
-        if (validation.checkRoleInDataBase(stuffRoleId)) {
+
+
+
+        if (validation.checkStuffRoleInDataBase(stuffRoleId)) {
             hospitalStuff = new HospitalStuff(
                     firstname,
                     lastname,
                     username,
                     doctorSpecialization,
                     stuffRoleRepository.getStuffRoleById(stuffRoleId).orElseThrow(
-                            () -> new IncorrectDateException("Specialization is not found")
+                            () -> new IncorrectDateException("Role is not found in data base")
                     ));
         }
         return HospitalStuffMapper.INSTANCE.toDto(hospitalStuffRepository.save(hospitalStuff));

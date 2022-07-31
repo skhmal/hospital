@@ -35,7 +35,7 @@ class RegistrationServiceTest {
     public void setUp() {
         Mockito.when(stuffRoleRepository.getStuffRoleById(4))
                 .thenReturn(Optional.of(new StuffRole("ROLE_PATIENT")));
-        Mockito.when(validation.checkRoleInDataBase(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(validation.checkStuffRoleInDataBase(Mockito.anyInt())).thenReturn(true);
     }
 
     @Test
@@ -46,7 +46,7 @@ class RegistrationServiceTest {
 
 
         registrationService.addNewPatient("serg", "khm", "sh",
-                LocalDate.now(), 4, false);
+                LocalDate.now(), 4);
 
         ArgumentCaptor<Patient> patientArgumentCaptor = ArgumentCaptor.forClass(Patient.class);
         Mockito.verify(patientRepository).save(patientArgumentCaptor.capture());
@@ -62,7 +62,7 @@ class RegistrationServiceTest {
         String expectedUsername = "sh";
         int expectedEnabled = 1;
 
-        registrationService.addNewUserToSecurityTable("sh", "{noop}12345", 1);
+        registrationService.addNewUserToSecurityTable("sh", "{noop}12345");
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         Mockito.verify(userRepository).save(userArgumentCaptor.capture());
@@ -76,7 +76,7 @@ class RegistrationServiceTest {
     void addNewUserRoleToSecurityTablePositiveCase() {
         String expectedStuffRole = "ROLE_PATIENT";
 
-        Mockito.when(userRepository.getUserByUsername("sh")).thenReturn(Optional.of(new User("sh", 4)));
+        Mockito.when(userRepository.getUserByUsername("sh")).thenReturn(Optional.of(new User("sh", "{noop}serg")));
 
         registrationService.addUserRoleToSecurityTable("sh", 4);
 

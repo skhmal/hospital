@@ -33,14 +33,11 @@ public class AdministratorController {
                 patientDtoUserDtoRoleDto.getLastname(),
                 patientDtoUserDtoRoleDto.getUsername(),
                 patientDtoUserDtoRoleDto.getBirthday(),
-                patientDtoUserDtoRoleDto.getRoleId(),
-                patientDtoUserDtoRoleDto.isDischarged()
-        );
+                patientDtoUserDtoRoleDto.getRoleId());
 
         registrationService.addNewUserToSecurityTable(
                 patientDtoUserDtoRoleDto.getUsername(),
-                patientDtoUserDtoRoleDto.getPassword(),
-                patientDtoUserDtoRoleDto.getEnabled()
+                patientDtoUserDtoRoleDto.getPassword()
         );
 
         registrationService.addUserRoleToSecurityTable(
@@ -65,8 +62,7 @@ public class AdministratorController {
 
         registrationService.addNewUserToSecurityTable(
                 hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                hospitalStuffDtoUserDtoRoleDto.getPassword(),
-                hospitalStuffDtoUserDtoRoleDto.getEnabled());
+                hospitalStuffDtoUserDtoRoleDto.getPassword());
 
         registrationService.addUserRoleToSecurityTable(
                 hospitalStuffDtoUserDtoRoleDto.getUsername(),

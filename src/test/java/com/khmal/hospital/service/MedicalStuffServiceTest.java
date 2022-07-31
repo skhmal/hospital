@@ -50,8 +50,7 @@ class MedicalStuffServiceTest {
         Mockito.when(patientRepository.getPatientById(1)).thenReturn(
                 Optional.of(new Patient("thomas", "andersen",
                         "neo", LocalDate.of(1990, 3, 1),
-                        new StuffRole("ROLE_PATIENT")
-                        , false)));
+                        new StuffRole("ROLE_PATIENT"))));
     }
 
     private void validationEmployeeAndPatientById() {

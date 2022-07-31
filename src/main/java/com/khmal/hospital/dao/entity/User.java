@@ -28,12 +28,10 @@ public class User {
     @Column(name = "enabled")
     private Integer enabled;
 
-    public User(String username, String password, Integer enabled) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.enabled = enabled;
+        this.enabled = 1;
     }
 
-    public User(String sh, int i) {
-    }
 }

@@ -1,4 +1,4 @@
-package com.khmal.hospital.dto.mapper;
+package com.khmal.hospital.mapper;
 
 import com.khmal.hospital.dao.entity.Patient;
 import com.khmal.hospital.dto.PatientDto;

@@ -52,12 +52,12 @@ public class Patient {
     @JsonIgnore
     private List<HospitalStuff> doctorsList;
 
-    public Patient(String firstname, String lastname, String username, LocalDate birthday, StuffRole stuffRole, boolean discharged) {
+    public Patient(String firstname, String lastname, String username, LocalDate birthday, StuffRole stuffRole) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.birthday = birthday;
         this.stuffRole = stuffRole;
-        this.discharged = discharged;
+        this.discharged = false;
     }
 }

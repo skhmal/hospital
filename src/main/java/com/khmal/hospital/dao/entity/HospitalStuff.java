@@ -4,10 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -48,7 +46,7 @@ public class HospitalStuff {
     @ToString.Exclude
     private List<Patient> patientsList;
 
-    enum DoctorSpecialization{
+    public enum DoctorSpecialization{
         ALLERGIST,
         ANESTHESIOLOGIST,
         CARDIOLOGIST,
