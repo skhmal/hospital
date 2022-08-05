@@ -73,7 +73,7 @@ public class Validation {
 
     public boolean checkStuffRoleInDataBase(int roleId){
         if(stuffRoleRepository.getStuffRoleById(roleId).isEmpty()){
-          throw   new IncorrectDateException("Role with ID " + roleId + " not found");
+          throw   new IncorrectDateException("Role with id " + roleId + " not found");
         }
         return true;
     }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Hospital</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <div class="my-2 my-lg-0">
+            <ul class="navbar-nav"
+                th:switch="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
+                <li class="nav-item pull-sm-0">
+                    <span th:case="${false}">
+                            <a class="nav-link btn btn-outline-primary" href="/login">Войдите</a>
+                    </span>
+                    <span th:case="${true}">
+                        <form th:action="@{/logout}" method="post">
+                            <input class="btn btn-outline-primary" type="submit" value="Выход"/>
+                        </form>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
+        This will only be displayed if authenticated user has role ROLE_ADMIN.
+        <div class="container mt-5">
+         <div class="row">
+            <div class="col">
+                <a class="btn btn-primary" href="/patient" role="button">Add new patient</a>
+                <div th:text="${#authorization.authentication.authorities}"></div>
+            </div>
+
+         </div>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

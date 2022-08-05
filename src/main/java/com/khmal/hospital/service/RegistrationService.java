@@ -1,14 +1,15 @@
 package com.khmal.hospital.service;
 
-import com.khmal.hospital.dao.entity.HospitalStuff;
-import com.khmal.hospital.dao.entity.Patient;
-import com.khmal.hospital.dao.entity.Role;
-import com.khmal.hospital.dao.entity.User;
+import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.*;
 import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
+import com.khmal.hospital.dto.StuffRoleDto;
+import com.khmal.hospital.dto.UserDto;
 import com.khmal.hospital.mapper.HospitalStuffMapper;
 import com.khmal.hospital.mapper.PatientMapper;
+import com.khmal.hospital.mapper.StuffRoleMapper;
+import com.khmal.hospital.mapper.UserMapper;
 import com.khmal.hospital.service.exception_handling.IncorrectDateException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import com.khmal.hospital.service.validator.Validation;
@@ -18,7 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -63,11 +64,13 @@ public class RegistrationService {
         return PatientMapper.INSTANCE.toDto(patient);
     }
 
-    public void addNewUserToSecurityTable(@NotBlank(message = "Username can't be empty") String username,
-                                          @NotBlank(message = "Password can't be empty") String password) {
+    public UserDto addNewUserToSecurityTable(@NotBlank(message = "Username can't be empty") String username,
+                                             @NotBlank(message = "Password can't be empty") String password) {
 
         User user = new User(username, password);
         userRepository.save(user);
+
+        return UserMapper.INSTANCE.toDto(user);
     }
 
     public void addUserRoleToSecurityTable(@NotBlank(message = "Username can't be empty")String username,
@@ -80,17 +83,16 @@ public class RegistrationService {
                                     new NoSuchUserException("User with username " + username + " is not found")),
 
                     stuffRoleRepository.getStuffRoleById(roleId)
-                            .orElseThrow(() -> new IncorrectDateException("Role with id " + roleId + " is not found"))
+                            .orElseThrow(() -> new IncorrectDateException("Role with id " + roleId + " is not found!"))
                             .getRoleName());
             roleRepository.save(role);
         }
     }
 
-
     public HospitalStuffDto addNewEmployee(@NotBlank(message = "Firstname can't be empty")String firstname,
                                            @NotBlank(message = "Lastname can't be empty")String lastname,
                                            @NotBlank(message = "Username can't be empty")String username,
-                                           @NotBlank(message = "Doctor specialization can't be empty")String doctorSpecialization,
+                                           String doctorSpecialization,
                                            int stuffRoleId) {
         HospitalStuff hospitalStuff = null;
 
@@ -138,5 +140,19 @@ public class RegistrationService {
 
             hospitalStuffRepository.save(hospitalStuff);
         }
+    }
+
+    public PatientDto getPatientById(int id){
+       Patient patient = patientRepository.getPatientById(id).get();
+//               .orElseThrow(() -> new NoSuchUserException("User is not found"));
+       return PatientMapper.INSTANCE.toDto(patient);
+    }
+
+    public List<HospitalStuff.DoctorSpecialization> getAllDoctorSpecializations(){
+        return Arrays.asList(HospitalStuff.DoctorSpecialization.values());
+    }
+
+    public List<StuffRoleDto> getAllStaffRoles(){
+        return StuffRoleMapper.INSTANCE.toDto(stuffRoleRepository.findAll());
     }
 }

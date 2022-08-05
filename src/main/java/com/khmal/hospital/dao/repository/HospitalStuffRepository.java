@@ -12,4 +12,6 @@ public interface HospitalStuffRepository extends JpaRepository<HospitalStuff, In
     Optional<HospitalStuff> getHospitalStuffById(int id);
 
     Optional<HospitalStuff> findHospitalStuffById(int id);
+
+    Optional<HospitalStuff> findHospitalStuffByUsername(String username);
 }

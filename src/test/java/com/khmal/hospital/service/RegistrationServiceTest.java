@@ -129,6 +129,7 @@ class RegistrationServiceTest {
     void appointDoctorToPatientPositiveCase(){
 
         Mockito.when(hospitalStuff.getPatientsList()).thenReturn(new ArrayList<Patient>());
+
         registrationService.appointDoctorToPatient(1,1);
 
         ArgumentCaptor<HospitalStuff> hospitalStuffArgumentCaptor = ArgumentCaptor.forClass(HospitalStuff.class);

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Hospital</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="p-3 border-5 ">
+                <div class="col-xl-auto">
+                    <h1 class="text-center"> Guest, welcome to our site!</h1>
+                    <br>
+                    <h1 class="text-center"> Please log in.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="p-3 border-5 ">
+                <div class="col">
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-primary" href="/login" role="button">Log in</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -5,6 +5,8 @@ import com.khmal.hospital.dto.StuffRoleDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface StuffRoleMapper {
 
@@ -13,4 +15,8 @@ public interface StuffRoleMapper {
     StuffRoleDto toDto(StuffRole stuffRole);
 
     StuffRole toEntity(StuffRoleDto stuffRoleDto);
+
+    List<StuffRole> toEntity(List<StuffRoleDto> stuffRoleDtoList);
+
+    List<StuffRoleDto>toDto(List<StuffRole> stuffRoleList);
 }

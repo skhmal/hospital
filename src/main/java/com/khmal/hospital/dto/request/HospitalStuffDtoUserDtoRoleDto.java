@@ -1,9 +1,11 @@
 package com.khmal.hospital.dto.request;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
+@Setter
 @ToString
 public class HospitalStuffDtoUserDtoRoleDto {
     String firstname;
@@ -12,5 +14,4 @@ public class HospitalStuffDtoUserDtoRoleDto {
     String password;
     String doctorSpecialization;
     int stuffRoleId;
-    int enabled;
 }

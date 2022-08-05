@@ -19,8 +19,8 @@ public class UserDto {
     @NotBlank(message = "Field password must not be empty")
     private String password;
 
-    @NotNull(message = "Field enabled must not be empty")
-    private Integer enabled;
+//    @NotNull(message = "Field enabled must not be empty")
+//    private Integer enabled;
 
     public UserDto(String username, String password) {
         this.username = username;
