@@ -96,6 +96,10 @@ public class RegistrationService {
                                            int stuffRoleId) {
         HospitalStuff hospitalStuff = null;
 
+        if (doctorSpecialization.equals("null")){
+            doctorSpecialization = null;
+        }
+
         if (validation.checkStuffRoleInDataBase(stuffRoleId)) {
             hospitalStuff = new HospitalStuff(
                     firstname,

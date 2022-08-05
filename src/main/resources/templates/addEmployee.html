@@ -13,7 +13,9 @@
             <h3 class="text-center">Please fill all fields</h3>
         </div>
     </div>
+
     <form action="#" data-th-action="@{/employee}" data-th-object="${employee}" method="post">
+
         <div class="row">
             <div class="form-group col-md-3 mx-auto">
                 <div class="input-group mb-3">
@@ -21,53 +23,30 @@
                             onchange="showHideImage(this)">
                         <option value="default">Select a role</option>
                         <option th:each="staffRole: ${staffRoles}" th:text="${staffRole.roleName}"
-                                th:value="${staffRole.id}" th:field="*{stuffRoleId}"></option>
+                                th:value="${staffRole.id}"></option>
                     </select>
                 </div>
             </div>
         </div>
 
-
-        <!--    <div class="dropdown">-->
-        <!--        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">-->
-        <!--            Choose role-->
-        <!--        </button>-->
-        <!--        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">-->
-        <!--            <li> <a class="nav-link btn btn-outline-primary" href="/administrator">Administrator</a></li>-->
-        <!--            <li><button class="dropdown-item" type="button">Another action</button></li>-->
-        <!--            <li><button class="dropdown-item" type="button">Something else here</button></li>-->
-        <!--        </ul>-->
-        <!--    </div>-->
-
-
         <script>
             function showHideImage(sel) {
                 console.log("hello");
-
-                var doctorSpecializationStub = document.createElement("input");
-                doctorSpecializationStub.setAttribute("type", "hidden");
-                doctorSpecializationStub.setAttribute("name", "doctorSpecializationStub");
-                doctorSpecializationStub.setAttribute("value", null);
-                doctorSpecializationStub.setAttribute("th:field", "*{doctorSpecialization}")
 
                 var myImage = document.getElementById("doctorSpecialization");
                 var selector = document.getElementById("staffRoleSelector");
                 var a = selector.value;
                 var b = sel.options[sel.selectedIndex].text;
 
-
                 console.log(myImage);
                 console.log(selector);
                 console.log(a);
                 console.log(b);
 
-
                 if (a != 3) {
                     console.log("serg");
-                    document.getElementById("submitButton").appendChild(doctorSpecializationStub);
                     myImage.style.visibility = "hidden";
                 } else {
-                    // myImage.style.visibility = "visible";
                 }
             }
         </script>
@@ -105,8 +84,8 @@
             <div class="row">
                 <div class="form-group col-md-3 mx-auto">
                     <div class="input-group mb-3">
-                        <select class="form-select" id="doctorSpecialization">
-                            <option value="default">Select a specialization</option>
+                        <select class="form-select" id="doctorSpecialization" name="doctorSpecialization">
+                            <option value="null">Select a specialization</option>
                             <option th:each="specialization: ${specializations}" th:text="${specialization.name()}"
                                     th:value="${specialization.name()}"></option>
                         </select>
@@ -123,6 +102,7 @@
         </div>
     </form>
 </div>
+
 
 </body>
 </html>
