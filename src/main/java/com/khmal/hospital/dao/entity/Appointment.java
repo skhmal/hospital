@@ -47,7 +47,7 @@ public class Appointment{
         this.hospitalStuff = hospitalStuff;
     }
 
-    enum DoctorAppointment{
+    public enum DoctorAppointment{
         PROCEDURES,
         MEDICATIONS,
         OPERATIONS

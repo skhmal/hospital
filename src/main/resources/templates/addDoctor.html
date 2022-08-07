@@ -10,55 +10,20 @@
 <div layout:fragment="content">
     <div class="row mt-5">
         <div class="col">
-            <h3 class="text-center">Please fill all fields</h3>
+            <h2 class="text-center mt-sm-3">Create new doctor</h2>
+            <h3 class="text-center mt-sm-3">Please fill all fields</h3>
         </div>
     </div>
 
-    <form action="#" data-th-action="@{/employee}" data-th-object="${employee}" method="post">
+    <form action="#" data-th-action="@{/administrator/doctor}" data-th-object="${doctor}" method="post">
 
-        <div class="row">
-            <div class="form-group col-md-3 mx-auto">
-                <div class="input-group mb-3">
-                    <select class="form-select" id="staffRoleSelector" name="staffRoleSelector"
-                            onchange="showHideImage(this)">
-                        <option value="default">Select a role</option>
-                        <option th:each="staffRole: ${staffRoles}" th:text="${staffRole.roleName}"
-                                th:value="${staffRole.id}"></option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            function showHideImage(sel) {
-                console.log("hello");
-
-                var myImage = document.getElementById("doctorSpecialization");
-                var selector = document.getElementById("staffRoleSelector");
-                var a = selector.value;
-                var b = sel.options[sel.selectedIndex].text;
-
-                console.log(myImage);
-                console.log(selector);
-                console.log(a);
-                console.log(b);
-
-                if (a != 3) {
-                    console.log("serg");
-                    myImage.style.visibility = "hidden";
-                } else {
-                }
-            }
-        </script>
-
-        <div id="firstname" class="form-row">
+        <div id="firstname" class="form-row mt-5" >
             <div class="form-group col-md-3 mx-auto">
                 <div class="input-group mb-3">
                     <span class="input-group-text">Firstname</span>
                     <input type="text" aria-label="Firstname" th:field="*{firstname}">
                 </div>
             </div>
-
 
             <div class="form-group col-md-3 mx-auto">
                 <div class="input-group mb-3">
@@ -93,16 +58,14 @@
                 </div>
             </div>
 
-
             <div class="form-group col-md-3 mx-auto">
                 <div id="submitButton" class="input-group mb-3">
-                    <button class="btn btn-primary" type="submit" name="action" value="save">Submit</button>
+                    <button class="btn btn-primary" type="submit" name="action" value="save">create</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
-
 
 </body>
 </html>

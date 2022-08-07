@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Successful</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="row-cols-auto">
+        <div class="alert alert-primary" role="alert">
+            Successful!
+        </div>
+    </div>
+    <div class="row-cols-auto">
+        You can back to the Main page!
+        <a type="button" class="btn btn-success" href="/main">Back to main page</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Hospital</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row-cols-auto">
+        <div class="col-lg-10 mt-5 mb-5">
+            <table id="user" class="table table-bordered" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Birthday</th>
+                    <th>Username</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="patient : ${patients}">
+                    <td th:text="${patient.firstname}"/>
+                    <td th:text="${patient.lastname}"/>
+                    <td th:text="${patient.birthday}"/>
+                    <td th:text="${patient.username}"/>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

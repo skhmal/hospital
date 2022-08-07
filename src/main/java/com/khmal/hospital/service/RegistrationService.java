@@ -20,7 +20,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Validated
@@ -73,7 +75,7 @@ public class RegistrationService {
         return UserMapper.INSTANCE.toDto(user);
     }
 
-    public void addUserRoleToSecurityTable(@NotBlank(message = "Username can't be empty")String username,
+    public void addUserRoleToSecurityTable(@NotBlank(message = "Username can't be empty") String username,
                                            @NotNull(message = "Role id can't be empty") int roleId) {
 
         if (validation.checkStuffRoleInDataBase(roleId)) {
@@ -89,16 +91,13 @@ public class RegistrationService {
         }
     }
 
-    public HospitalStuffDto addNewEmployee(@NotBlank(message = "Firstname can't be empty")String firstname,
-                                           @NotBlank(message = "Lastname can't be empty")String lastname,
-                                           @NotBlank(message = "Username can't be empty")String username,
+    public HospitalStuffDto addNewEmployee(@NotBlank(message = "Firstname can't be empty") String firstname,
+                                           @NotBlank(message = "Lastname can't be empty") String lastname,
+                                           @NotBlank(message = "Username can't be empty") String username,
                                            String doctorSpecialization,
-                                           int stuffRoleId) {
-        HospitalStuff hospitalStuff = null;
+                                           @NotNull int stuffRoleId) {
 
-        if (doctorSpecialization.equals("null")){
-            doctorSpecialization = null;
-        }
+        HospitalStuff hospitalStuff = null;
 
         if (validation.checkStuffRoleInDataBase(stuffRoleId)) {
             hospitalStuff = new HospitalStuff(
@@ -128,10 +127,30 @@ public class RegistrationService {
                         .orElseThrow(() -> new NoSuchUserException("No registered doctors")));
     }
 
+    public Map<HospitalStuffDto, Integer> getAllDoctorsWithPatientQuantity() {
+        List<HospitalStuff> doctorList = hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
+                .orElseThrow(() -> new NoSuchUserException("No registered doctors"));
+
+
+        Map<HospitalStuffDto, Integer> doctorListWithPatientCounter = new HashMap<>();
+
+        for (HospitalStuff doctor:doctorList
+             ) {
+            doctorListWithPatientCounter.put(HospitalStuffMapper.INSTANCE.toDto(doctor),
+                    doctor.getPatientsList().size());
+        }
+
+        return doctorListWithPatientCounter;
+    }
+
     public void appointDoctorToPatient(@NotNull(message = "Doctor can't be empty") int doctorId,
                                        @NotNull(message = "Patient can't be empty") int patientId) {
 
+
         if (validation.checkPatientId(patientId) && validation.checkHospitalStuffId(doctorId)) {
+
+            if (!validation.checkAppoint(doctorId, patientId))
+                throw new IncorrectDateException("Appoint already exist");
 
             HospitalStuff hospitalStuff = hospitalStuffRepository.getHospitalStuffById(doctorId)
                     .orElseThrow(() -> new NoSuchUserException("Doctor is not found"));
@@ -146,17 +165,17 @@ public class RegistrationService {
         }
     }
 
-    public PatientDto getPatientById(int id){
-       Patient patient = patientRepository.getPatientById(id).get();
-//               .orElseThrow(() -> new NoSuchUserException("User is not found"));
-       return PatientMapper.INSTANCE.toDto(patient);
+    public PatientDto getPatientById(int id) {
+        Patient patient = patientRepository.getPatientById(id)
+                .orElseThrow(() -> new NoSuchUserException("User is not found"));
+        return PatientMapper.INSTANCE.toDto(patient);
     }
 
-    public List<HospitalStuff.DoctorSpecialization> getAllDoctorSpecializations(){
+    public List<HospitalStuff.DoctorSpecialization> getAllDoctorSpecializations() {
         return Arrays.asList(HospitalStuff.DoctorSpecialization.values());
     }
 
-    public List<StuffRoleDto> getAllStaffRoles(){
+    public List<StuffRoleDto> getAllStaffRoles() {
         return StuffRoleMapper.INSTANCE.toDto(stuffRoleRepository.findAll());
     }
 }

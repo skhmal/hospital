@@ -7,39 +7,66 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="container mt-5">
-        <div class="my-2 my-lg-0">
-            <ul class="navbar-nav"
-                th:switch="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
-                <li class="nav-item pull-sm-0">
-                    <span th:case="${false}">
-                            <a class="nav-link btn btn-outline-primary" href="/login">Войдите</a>
-                    </span>
-                    <span th:case="${true}">
-                        <form th:action="@{/logout}" method="post">
-                            <input class="btn btn-outline-primary" type="submit" value="Выход"/>
-                        </form>
-                    </span>
-                </li>
-            </ul>
-        </div>
-    </div>
+<!--        <div class="container mt-5">-->
+<!--            <div class="my-2 my-lg-0">-->
+<!--                <ul class="navbar-nav"-->
+<!--                    th:switch="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">-->
+<!--                    <li class="nav-item pull-sm-0">-->
+<!--                        <span th:case="${false}">-->
+<!--                                <a class="nav-link btn btn-outline-primary" href="/login">Войдите</a>-->
+<!--                        </span>-->
+<!--                        <span th:case="${true}">-->
+<!--                            <form th:action="@{/logout}" method="post">-->
+<!--                                <input class="btn btn-outline-primary" type="submit" value="Выход"/>-->
+<!--                            </form>-->
+<!--                        </span>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
 
     <div sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
-        This will only be displayed if authenticated user has role ROLE_ADMIN.
-        <div class="container mt-5">
-         <div class="row">
+        <h3>Create new user</h3>
+        <div class="row-cols-auto mt-3">
             <div class="col">
-                <a class="btn btn-primary" href="/patient" role="button">Add new patient</a>
-                <div th:text="${#authorization.authentication.authorities}"></div>
+                <div class="btn-group">
+                    <a href="/administrator/administrator" class="btn btn-primary">New
+                        Administrator</a>
+                    <a href="/administrator/patient" class="btn btn-primary">New Patient</a>
+                    <a href="/administrator/doctor" class="btn btn-primary">New Doctor</a>
+                    <a href="/administrator/nurse" class="btn btn-primary">New Nurse</a>
+                </div>
             </div>
 
-         </div>
+            <h3 class="mt-sm-3">Appoint patient to the Doctor</h3>
+            <div class="col mt-3">
+                <a href="/administrator/appoint" class="btn btn-primary">Appoint</a>
+            </div>
+
+            <h3 class="mt-sm-3">Show all patients</h3>
+            <div class="col mt-3">
+                <a href="/administrator/patients" class="btn btn-primary">Patient list</a>
+            </div>
+
+            <h3 class="mt-sm-3">Show all doctors</h3>
+            <div class="col-auto mt-3">
+                <a href="/administrator/doctors" class="btn btn-primary">Doctor list</a>
+            </div>
         </div>
     </div>
 
-</div>
+    <div sec:authorize="hasRole('ROLE_DOCTOR')">
+        <h3 class="mt-sm-3">New appointment</h3>
+        <div class="col mt-3">
+            <a href="/doctor/appointment" class="btn btn-primary">Appoint</a>
+        </div>
 
+        <h3 class="mt-sm-3">New diagnose</h3>
+        <div class="col mt-3">
+            <a href="/doctor/diagnose" class="btn btn-primary">Diagnose</a>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

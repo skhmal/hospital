@@ -3,18 +3,18 @@ package com.khmal.hospital.controller;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.DiagnoseDto;
 import com.khmal.hospital.dto.request.EmployeePatientAppointment;
-import com.khmal.hospital.service.MedicalStuffService;
+import com.khmal.hospital.service.MedicalStaffService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/medic")
-public class MedicalStuffController {
+public class MedicalStaffControllerRest {
 
-    private final MedicalStuffService medicalStuffService;
+    private final MedicalStaffService medicalStuffService;
 
-    public MedicalStuffController(MedicalStuffService medicalStuffService) {
+    public MedicalStaffControllerRest(MedicalStaffService medicalStuffService) {
         this.medicalStuffService = medicalStuffService;
     }
 

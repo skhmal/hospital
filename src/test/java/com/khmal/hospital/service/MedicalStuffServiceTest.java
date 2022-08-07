@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MedicalStuffServiceTest {
 
     @InjectMocks
-    private MedicalStuffService medicalStuffService;
+    private MedicalStaffService medicalStuffService;
 
     @Mock
     private HospitalStuffRepository hospitalStuffRepository;

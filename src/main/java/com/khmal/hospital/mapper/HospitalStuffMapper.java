@@ -1,7 +1,9 @@
 package com.khmal.hospital.mapper;
 
 import com.khmal.hospital.dao.entity.HospitalStuff;
+import com.khmal.hospital.dao.entity.Patient;
 import com.khmal.hospital.dto.HospitalStuffDto;
+import com.khmal.hospital.dto.PatientDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -17,4 +19,5 @@ public interface HospitalStuffMapper {
     HospitalStuff toEntity(HospitalStuffDto hospitalStuffDto);
 
     List<HospitalStuffDto> toDto(List<HospitalStuff> hospitalStuff);
+
 }

@@ -9,24 +9,18 @@
 
 <div layout:fragment="content">
     <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="p-3 border-5 ">
-                <div class="col-xl-auto">
-                    <h1 class="text-center"> Guest, welcome to our site!</h1>
-                    <br>
-                    <h1 class="text-center"> Please log in.</h1>
-                </div>
-            </div>
-        </div>
-    </div>
+        <div class="row justify-content-center"
+             th:switch="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
+            <div class="p-3 border-5">
+           <span th:case="${false}">
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="p-3 border-5 ">
-                <div class="col">
-                    <div class="d-grid gap-2">
-                        <a class="btn btn-primary" href="/login" role="button">Log in</a>
-                    </div>
+                    <h1 class="text-center"> Guest, welcome to our site!</h1>
+                    <h2 class="text-center"> Please log in.</h2>
+
+           </span>
+                <div class="col-xl-auto">
+                     <span th:case="${true}">
+                        <a class="btn btn-primary" href="/main" role="button">Main page</a>
                 </div>
             </div>
         </div>

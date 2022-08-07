@@ -2,6 +2,7 @@ package com.khmal.hospital.service.validator;
 
 import com.khmal.hospital.dao.entity.Appointment;
 import com.khmal.hospital.dao.entity.HospitalStuff;
+import com.khmal.hospital.dao.entity.Patient;
 import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.HospitalStuffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
@@ -73,7 +74,7 @@ public class Validation {
 
     public boolean checkStuffRoleInDataBase(int roleId){
         if(stuffRoleRepository.getStuffRoleById(roleId).isEmpty()){
-          throw   new IncorrectDateException("Role with id " + roleId + " not found");
+          throw new IncorrectDateException("Role with id " + roleId + " not found");
         }
         return true;
     }
@@ -87,5 +88,19 @@ public class Validation {
         }else {
             return true;
         }
+    }
+
+    public boolean checkAppoint(int doctorId, int patientId){
+      HospitalStuff doctor = hospitalStuffRepository.getHospitalStuffById(doctorId).orElseThrow(
+              () -> new NoSuchUserException("Doctor with id = " + doctorId + " is not found"));
+      List<Patient> patientList = doctor.getPatientsList();
+
+        for (Patient patient:patientList
+             ) {
+            if (patient.getId() == patientId){
+                return false;
+            }
+        }
+      return true;
     }
 }

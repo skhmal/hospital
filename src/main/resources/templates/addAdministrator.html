@@ -10,10 +10,12 @@
 <div layout:fragment="content">
     <div class="row mt-5">
         <div class="col">
-            <h3 class="text-center">Please fill all fields</h3>
+            <h2 class="text-center mt-sm-3">Create new administrator</h2>
+            <h3 class="text-center mt-sm-3">Please fill all fields</h3>
         </div>
     </div>
-    <form action="#" data-th-action="@{/administrator}" data-th-object="${admin}" method="post">
+
+    <form action="#" data-th-action="@{/administrator/administrator}" data-th-object="${admin}" method="post">
         <div id="firstname" class="form-row mt-5">
             <div class="form-group col-md-3 mx-auto">
                 <div class="input-group mb-3">
@@ -43,13 +45,9 @@
                 </div>
             </div>
 
-            <input type="hidden" id="stuffRoleId" name="stuffRoleId" value="1" th:field="*{stuffRoleId}">
-            <input type="hidden" th:value="ROLE_DOCTOR" th:field="*{doctorSpecialization}">
-
-
             <div class="form-group col-md-3 mx-auto">
                 <div class="input-group mb-3">
-                    <button type="submit" name="action" value="save">save</button>
+                    <button class="btn btn-primary" type="submit" name="action" value="save">create</button>
                 </div>
             </div>
         </div>
