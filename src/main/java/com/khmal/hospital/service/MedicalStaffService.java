@@ -87,8 +87,11 @@ public class MedicalStaffService {
                     ));
 
             Patient patient = patientRepository.getPatientById(patientId).get();
-            patient.setDischarged(true);
-            patientRepository.save(patient);
+
+            if(patient.getDoctorsList().size() == 1){
+                patient.setDischarged(true);
+                patientRepository.save(patient);
+            }
 
             HospitalStuff doctor = hospitalStuffRepository.getHospitalStuffById(doctorId).get();
             doctor.getPatientsList().remove(patient);

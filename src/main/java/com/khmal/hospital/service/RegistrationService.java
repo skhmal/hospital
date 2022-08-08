@@ -134,8 +134,8 @@ public class RegistrationService {
 
         Map<HospitalStuffDto, Integer> doctorListWithPatientCounter = new HashMap<>();
 
-        for (HospitalStuff doctor:doctorList
-             ) {
+        for (HospitalStuff doctor : doctorList
+        ) {
             doctorListWithPatientCounter.put(HospitalStuffMapper.INSTANCE.toDto(doctor),
                     doctor.getPatientsList().size());
         }
@@ -157,9 +157,12 @@ public class RegistrationService {
 
             List<Patient> patientList = hospitalStuff.getPatientsList();
 
-            patientList.add(patientRepository.getPatientById(patientId).orElseThrow(
-                    () -> new NoSuchUserException("Patient is not found")
-            ));
+            Patient patient = patientRepository.getPatientById(patientId).orElseThrow(
+                    () -> new NoSuchUserException("Patient is not found"));
+
+            patient.setDischarged(false);
+
+            patientList.add(patient);
 
             hospitalStuffRepository.save(hospitalStuff);
         }

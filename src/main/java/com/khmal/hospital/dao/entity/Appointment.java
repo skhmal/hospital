@@ -53,7 +53,7 @@ public class Appointment{
         OPERATIONS
     }
 
-    enum NurseAppointment{
+    public enum NurseAppointment{
         PROCEDURES,
         MEDICATIONS
     }

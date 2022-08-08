@@ -142,6 +142,7 @@ public class AdminController {
         registrationService.addUserRoleToSecurityTable(
                 hospitalStuffDtoUserDtoRoleDto.getUsername(),
                 nurseRoleId);
+
         return "successful";
     }
 
@@ -178,11 +179,9 @@ public class AdminController {
     @GetMapping("/doctors")
     public String getDoctors(Model model) {
 
-        List<HospitalStuffDto> doctorList = registrationService.getAllDoctors();
+        Map<HospitalStuffDto, Integer> doctors = registrationService.getAllDoctorsWithPatientQuantity();
 
-        Map<HospitalStuffDto, Integer> doctors1 = registrationService.getAllDoctorsWithPatientQuantity();
-
-        model.addAttribute("doctors", doctors1);
+        model.addAttribute("doctors", doctors);
 
         return "allDoctors";
     }
