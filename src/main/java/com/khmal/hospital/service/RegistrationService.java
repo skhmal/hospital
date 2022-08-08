@@ -1,11 +1,10 @@
 package com.khmal.hospital.service;
 
+import com.fasterxml.jackson.databind.util.Converter;
 import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.*;
-import com.khmal.hospital.dto.HospitalStuffDto;
-import com.khmal.hospital.dto.PatientDto;
-import com.khmal.hospital.dto.StuffRoleDto;
-import com.khmal.hospital.dto.UserDto;
+import com.khmal.hospital.dto.*;
+import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
 import com.khmal.hospital.mapper.HospitalStuffMapper;
 import com.khmal.hospital.mapper.PatientMapper;
 import com.khmal.hospital.mapper.StuffRoleMapper;
@@ -13,9 +12,14 @@ import com.khmal.hospital.mapper.UserMapper;
 import com.khmal.hospital.service.exception_handling.IncorrectDateException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import com.khmal.hospital.service.validator.Validation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -23,6 +27,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 @Service
 @Validated
@@ -127,10 +132,43 @@ public class RegistrationService {
                         .orElseThrow(() -> new NoSuchUserException("No registered doctors")));
     }
 
+    public Page<HospitalStuff> getAllDoctorsPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        return hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull(pageable);
+    }
+
+    public Page<DoctorDto> getAllDoctorsWithPatientQuantity1(int pageNo, int pageSize, String sortField, String sortDirection) {
+
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
+        Page<HospitalStuff> doctorList = hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull(pageable);
+
+        Page<DoctorDto> dtoPage = doctorList.map(new Function<HospitalStuff, DoctorDto>() {
+            @Override
+            public DoctorDto apply(HospitalStuff hospitalStuff) {
+                DoctorDto doctorDto = new DoctorDto();
+                doctorDto.setId(hospitalStuff.getId());
+                doctorDto.setFirstname(hospitalStuff.getFirstname());
+                doctorDto.setLastname(hospitalStuff.getLastname());
+                doctorDto.setUsername(hospitalStuff.getUsername());
+                doctorDto.setDoctorSpecialization(hospitalStuff.getDoctorSpecialization());
+                doctorDto.setPatientCounter(hospitalStuff.getPatientsList().size());
+                return doctorDto;
+            }
+        });
+
+        return dtoPage;
+    }
+
     public Map<HospitalStuffDto, Integer> getAllDoctorsWithPatientQuantity() {
         List<HospitalStuff> doctorList = hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
                 .orElseThrow(() -> new NoSuchUserException("No registered doctors"));
-
 
         Map<HospitalStuffDto, Integer> doctorListWithPatientCounter = new HashMap<>();
 
@@ -180,5 +218,29 @@ public class RegistrationService {
 
     public List<StuffRoleDto> getAllStaffRoles() {
         return StuffRoleMapper.INSTANCE.toDto(stuffRoleRepository.findAll());
+    }
+
+    @Transactional
+    public HospitalStuffDto addEmployeeToTheSystem(
+            @NotNull(message = "Request to create employee can't be empty")
+            HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
+
+        HospitalStuffDto employee = addNewEmployee(
+                hospitalStuffDtoUserDtoRoleDto.getFirstname(),
+                hospitalStuffDtoUserDtoRoleDto.getLastname(),
+                hospitalStuffDtoUserDtoRoleDto.getUsername(),
+                hospitalStuffDtoUserDtoRoleDto.getDoctorSpecialization(),
+                hospitalStuffDtoUserDtoRoleDto.getStuffRoleId()
+        );
+
+        addNewUserToSecurityTable(
+                hospitalStuffDtoUserDtoRoleDto.getUsername(),
+                hospitalStuffDtoUserDtoRoleDto.getPassword());
+
+        addUserRoleToSecurityTable(
+                hospitalStuffDtoUserDtoRoleDto.getUsername(),
+                hospitalStuffDtoUserDtoRoleDto.getStuffRoleId());
+
+        return employee;
     }
 }

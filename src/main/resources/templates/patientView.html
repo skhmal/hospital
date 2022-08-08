@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Hospital</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="alert alert-primary" role="alert">
+        Status: <th:block th:text="${isDischarge} ? 'healthy' : 'in hospital'"></th:block>
+    </div>
+    <h1 class="text-center">Appointment list</h1>
+    <div class="row-cols-auto">
+        <div class="col-lg-10 mt-5 mb-5">
+            <table class="table table-bordered" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>Full name</th>
+                    <th>Appointment type</th>
+                    <th>Appointment date</th>
+                    <th>Doctor Specialization</th>
+                    <th>Summary</th>
+                </tr>
+                </thead>
+                <tbody >
+                <tr th:each="appointment : ${appointments}">
+                    <td th:text="${appointment.hospitalStuff.firstname + ' ' + appointment.hospitalStuff.lastname}"/>
+                    <td th:text="${appointment.appointmentType}"/>
+                    <td th:text="${#temporals.format(appointment.date, 'HH:mm dd-MMMM-yy')}"/>
+                    <td th:text="${appointment.hospitalStuff.doctorSpecialization} ?: 'NURSE'"/>
+                    <td th:text="${appointment.summary}"/>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row-cols-auto">
+        <div class="col-lg-10 mt-5 mb-5">
+            <table class="table table-bordered" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Doctor Specialization</th>
+                    <th>Diagnose</th>
+                </tr>
+                </thead>
+
+                <tbody >
+                <tr th:each="diagnose : ${diagnoses}">
+                    <td th:text="${diagnose.hospitalStuff.lastname + ' ' + diagnose.hospitalStuff.firstname}"/>
+                    <td th:text="${diagnose.diagnoseDate}"/>
+                    <td th:text="${diagnose.hospitalStuff.doctorSpecialization}"/>
+                    <td th:text="${diagnose.summary}"/>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

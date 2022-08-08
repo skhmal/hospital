@@ -1,6 +1,7 @@
 package com.khmal.hospital.service;
 
 import com.khmal.hospital.dao.entity.HospitalStuff;
+import com.khmal.hospital.dao.entity.Patient;
 import com.khmal.hospital.dao.repository.HospitalStuffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
 import com.khmal.hospital.dao.repository.RoleRepository;
@@ -34,6 +35,16 @@ public class SecurityService {
         );
 
         return employee.getId();
+    }
+
+    public int getPatientId(Principal principal){
+        String username = principal.getName();
+
+        Patient patient =patientRepository.findPatientByUsername(username).orElseThrow(
+                () -> new NoSuchUserException("Patient is not found")
+        );
+
+        return patient.getId();
     }
 
 

@@ -67,7 +67,6 @@
         </div>
     </div>
 
-
     <div sec:authorize="hasRole('ROLE_NURSE')">
         <h3 class="mt-sm-3">New appointment</h3>
         <div class="col mt-3">
@@ -75,9 +74,17 @@
         </div>
     </div>
 
+    <div sec:authorize="hasRole('ROLE_PATIENT')">
+        <h3 class="mt-sm-3">Hospital card</h3>
+        <div class="col mt-3">
+            <a href="/patient/appointments" class="btn btn-primary">Show my appointments</a>
+        </div>
+        <div class="col mt-3">
+            <a href="/patient/diagnoses" class="btn btn-primary">Show my diagnoses</a>
+        </div>
+    </div>
+
 </div>
-
-
 
 </body>
 </html>

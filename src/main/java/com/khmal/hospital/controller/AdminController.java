@@ -1,11 +1,13 @@
 package com.khmal.hospital.controller;
 
 import com.khmal.hospital.dao.entity.HospitalStuff;
+import com.khmal.hospital.dto.DoctorDto;
 import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
 import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
 import com.khmal.hospital.service.RegistrationService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -68,21 +70,11 @@ public class AdminController {
     public String createNewDoctor(@ModelAttribute("doctor") HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto,
                                   @RequestParam(value = "doctorSpecialization") String doctorSpecialization) {
         int doctorRoleId = 3;
-        registrationService.addNewEmployee(
-                hospitalStuffDtoUserDtoRoleDto.getFirstname(),
-                hospitalStuffDtoUserDtoRoleDto.getLastname(),
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                doctorSpecialization,
-                doctorRoleId
-        );
 
-        registrationService.addNewUserToSecurityTable(
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                hospitalStuffDtoUserDtoRoleDto.getPassword());
+        hospitalStuffDtoUserDtoRoleDto.setDoctorSpecialization(doctorSpecialization);
+        hospitalStuffDtoUserDtoRoleDto.setStuffRoleId(doctorRoleId);
 
-        registrationService.addUserRoleToSecurityTable(
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                doctorRoleId);
+        registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
         return "successful";
     }
@@ -99,20 +91,11 @@ public class AdminController {
         int administratorRoleId = 1;
         String doctorSpecialization = null;
 
-        registrationService.addNewEmployee(
-                hospitalStuffDtoUserDtoRoleDto.getFirstname(),
-                hospitalStuffDtoUserDtoRoleDto.getLastname(),
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                doctorSpecialization,
-                administratorRoleId);
+        hospitalStuffDtoUserDtoRoleDto.setStuffRoleId(administratorRoleId);
+        hospitalStuffDtoUserDtoRoleDto.setDoctorSpecialization(doctorSpecialization);
 
-        registrationService.addNewUserToSecurityTable(
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                hospitalStuffDtoUserDtoRoleDto.getPassword());
+        registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
-        registrationService.addUserRoleToSecurityTable(
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                administratorRoleId);
         return "successful";
     }
 
@@ -128,20 +111,10 @@ public class AdminController {
         int nurseRoleId = 2;
         String doctorSpecialization = null;
 
-        registrationService.addNewEmployee(
-                hospitalStuffDtoUserDtoRoleDto.getFirstname(),
-                hospitalStuffDtoUserDtoRoleDto.getLastname(),
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                doctorSpecialization,
-                nurseRoleId);
+        hospitalStuffDtoUserDtoRoleDto.setStuffRoleId(nurseRoleId);
+        hospitalStuffDtoUserDtoRoleDto.setDoctorSpecialization(doctorSpecialization);
 
-        registrationService.addNewUserToSecurityTable(
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                hospitalStuffDtoUserDtoRoleDto.getPassword());
-
-        registrationService.addUserRoleToSecurityTable(
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                nurseRoleId);
+        registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
         return "successful";
     }
@@ -184,5 +157,37 @@ public class AdminController {
         model.addAttribute("doctors", doctors);
 
         return "allDoctors";
+    }
+
+    @GetMapping("/page/{pageNo}")
+    public String findPaginated(@PathVariable (value = "pageNo") int pageNo,
+                                @RequestParam("sortField") String sortField,
+                                @RequestParam("sortDir") String sortDir,
+                                Model model) {
+        int pageSize = 5;
+
+
+        Page<HospitalStuff> page = registrationService.getAllDoctorsPaginated(pageNo, pageSize, sortField, sortDir);
+//        List<HospitalStuff> listEmployees = page.getContent();
+
+        Page<DoctorDto> page1 = registrationService.getAllDoctorsWithPatientQuantity1(pageNo, pageSize, sortField, sortDir);
+        List<DoctorDto> listEmployees = page1.getContent();
+
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+
+        model.addAttribute("listEmployees", listEmployees);
+        return "allDoctors1";
+    }
+
+    @GetMapping("/page")
+    public String viewHomePage(Model model) {
+        return findPaginated(1, "firstname", "asc", model);
     }
 }

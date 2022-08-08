@@ -6,7 +6,7 @@
 //import com.khmal.hospital.dto.request.EmployeePatientAppointment;
 //import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
 //import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
-//import com.khmal.hospital.service.MedicalStuffService;
+//import com.khmal.hospital.service.PatientService;
 //import com.khmal.hospital.service.RegistrationService;
 //import org.springframework.transaction.annotation.Transactional;
 //import org.springframework.web.bind.annotation.*;
@@ -15,14 +15,15 @@
 //
 //@RestController
 //@RequestMapping("/administrator")
-//public class AdministratorController {
+//public class AdministratorControllerRest {
 //    private final RegistrationService registrationService;
-//    private final MedicalStuffService appointmentService;
+//    private final PatientService appointmentService;
 //
-//    public AdministratorController(RegistrationService registrationService, MedicalStuffService appointmentService) {
+//    public AdministratorControllerRest(RegistrationService registrationService, PatientService appointmentService) {
 //        this.registrationService = registrationService;
 //        this.appointmentService = appointmentService;
 //    }
+//
 //
 //    @Transactional
 //    @PostMapping("/patient")
@@ -88,8 +89,4 @@
 //        return registrationService.getAllDoctors();
 //    }
 //
-//    @GetMapping("/patients/{id}")
-//    public List<Patient> getDoctorsPatientListById(@PathVariable("id") int id){
-//      return appointmentService.getDoctorsPatientListById(id);
-//    }
 //}
