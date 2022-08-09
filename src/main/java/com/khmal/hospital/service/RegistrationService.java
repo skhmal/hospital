@@ -90,6 +90,7 @@ public class RegistrationService {
                     stuffRoleRepository.getStuffRoleById(roleId)
                             .orElseThrow(() -> new IncorrectDateException("Role with id " + roleId + " is not found!"))
                             .getRoleName());
+
             roleRepository.save(role);
         }
     }
@@ -127,7 +128,7 @@ public class RegistrationService {
     public List<HospitalStuffDto> getAllDoctors() {
         return HospitalStuffMapper.INSTANCE.toDto(
                 hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
-                        .orElseThrow(() -> new NoSuchUserException("No registered doctors")));
+                        .orElseThrow(() -> new NoSuchUserException("No doctors registered")));
     }
 
 

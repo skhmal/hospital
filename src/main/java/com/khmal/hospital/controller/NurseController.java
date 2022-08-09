@@ -33,7 +33,7 @@ public class NurseController {
 
         List<PatientDto> patientDtoList = registrationService.getAllPatients();
         Appointment.NurseAppointment[] doctorAppointments = Appointment.NurseAppointment.values();
-
+        System.out.println(patientDtoList);
         model.addAttribute("appointmentType", doctorAppointments);
         model.addAttribute("appointments", new AppointmentDto());
         model.addAttribute("patients", patientDtoList);
@@ -41,7 +41,6 @@ public class NurseController {
         return "createAppointmentNurse";
     }
 
-    @Transactional
     @RequestMapping(value = "/appointment", method = RequestMethod.POST, params = "action=save")
     public String getDoctorAppointment(@ModelAttribute("appointments") AppointmentDto appointmentDto,
                                        @RequestParam("patientIdNurseAppointment") int patientId,
