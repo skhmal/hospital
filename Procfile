@@ -1,0 +1,1 @@
+web: java -jar target/hospital-1.0.jar
