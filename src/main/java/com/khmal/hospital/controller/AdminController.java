@@ -1,7 +1,6 @@
 package com.khmal.hospital.controller;
 
 import com.khmal.hospital.dao.entity.HospitalStuff;
-import com.khmal.hospital.dao.entity.Patient;
 import com.khmal.hospital.dto.DoctorDto;
 import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
@@ -33,35 +32,20 @@ public class AdminController {
         return "addPatient";
     }
 
-    @Transactional
     @RequestMapping(value = "/patient", method = RequestMethod.POST, params = "action=save")
     public String createNewPatient(@ModelAttribute("patient") PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
-        int patientRoleId = 4;
 
-        registrationService.addNewPatient(
-                patientDtoUserDtoRoleDto.getFirstName(),
-                patientDtoUserDtoRoleDto.getLastname(),
-                patientDtoUserDtoRoleDto.getUsername(),
-                patientDtoUserDtoRoleDto.getBirthday(),
-                patientRoleId
-        );
+        registrationService.addPatientToTheSystem(patientDtoUserDtoRoleDto);
 
-        registrationService.addNewUserToSecurityTable(
-                patientDtoUserDtoRoleDto.getUsername(),
-                patientDtoUserDtoRoleDto.getPassword()
-        );
-
-        registrationService.addUserRoleToSecurityTable(
-                patientDtoUserDtoRoleDto.getUsername(),
-                patientRoleId
-        );
         return "successful";
     }
 
     @GetMapping("/doctor")
     public String createNewDoctor(Model model) {
+
         model.addAttribute("doctor", new HospitalStuffDtoUserDtoRoleDto());
         model.addAttribute("specializations", HospitalStuff.DoctorSpecialization.values());
+
         return "addDoctor";
     }
 
@@ -85,7 +69,6 @@ public class AdminController {
         return "addAdministrator";
     }
 
-    @Transactional
     @RequestMapping(value = "/administrator", method = RequestMethod.POST, params = "action=save")
     public String createNewAdministrator(@ModelAttribute("admin") HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
         int administratorRoleId = 1;
@@ -105,7 +88,6 @@ public class AdminController {
         return "addNurse";
     }
 
-    @Transactional
     @RequestMapping(value = "/nurse", method = RequestMethod.POST, params = "action=save")
     public String addNewNurse(@ModelAttribute("nurse") HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
         int nurseRoleId = 2;

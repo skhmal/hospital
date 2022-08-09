@@ -4,6 +4,7 @@ import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.*;
 import com.khmal.hospital.dto.*;
 import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
+import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
 import com.khmal.hospital.mapper.*;
 import com.khmal.hospital.service.exception_handling.IncorrectDateException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
@@ -132,7 +133,6 @@ public class RegistrationService {
     }
 
 
-
     public Page<DoctorDto> getAllDoctorsPaginated1(int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
@@ -175,7 +175,7 @@ public class RegistrationService {
 
             Patient patient = patientRepository.getPatientById(patientId).orElseThrow(
                     () -> new NoSuchUserException("Patient is not found"));
-            hospitalStuff.setPatientCount(hospitalStuff.getPatientCount()+1);
+            hospitalStuff.setPatientCount(hospitalStuff.getPatientCount() + 1);
             patient.setDischarged(false);
 
             patientList.add(patient);
@@ -220,5 +220,32 @@ public class RegistrationService {
                 hospitalStuffDtoUserDtoRoleDto.getStuffRoleId());
 
         return employee;
+    }
+
+    @Transactional
+    public PatientDto addPatientToTheSystem(
+            @NotNull(message = "Request to create employee can't be empty")
+            PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
+
+        int patientRoleId = 4;
+
+        PatientDto patient = addNewPatient(
+                patientDtoUserDtoRoleDto.getFirstName(),
+                patientDtoUserDtoRoleDto.getLastname(),
+                patientDtoUserDtoRoleDto.getUsername(),
+                patientDtoUserDtoRoleDto.getBirthday(),
+                patientRoleId
+
+        );
+
+        addNewUserToSecurityTable(
+                patientDtoUserDtoRoleDto.getUsername(),
+                patientDtoUserDtoRoleDto.getPassword());
+
+        addUserRoleToSecurityTable(
+                patientDtoUserDtoRoleDto.getUsername(),
+                patientRoleId);
+
+        return patient;
     }
 }
