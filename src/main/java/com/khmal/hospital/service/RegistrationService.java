@@ -1,14 +1,10 @@
 package com.khmal.hospital.service;
 
-import com.fasterxml.jackson.databind.util.Converter;
 import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.*;
 import com.khmal.hospital.dto.*;
 import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
-import com.khmal.hospital.mapper.HospitalStuffMapper;
-import com.khmal.hospital.mapper.PatientMapper;
-import com.khmal.hospital.mapper.StuffRoleMapper;
-import com.khmal.hospital.mapper.UserMapper;
+import com.khmal.hospital.mapper.*;
 import com.khmal.hospital.service.exception_handling.IncorrectDateException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import com.khmal.hospital.service.validator.Validation;
@@ -16,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -24,10 +21,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 @Service
 @Validated
@@ -39,6 +33,7 @@ public class RegistrationService {
     private final HospitalStuffRepository hospitalStuffRepository;
     private final StuffRoleRepository stuffRoleRepository;
     private final Validation validation;
+    private static final String ENCODE_ALGORITHM = "{bcrypt}";
 
     public RegistrationService(RoleRepository roleRepository, PatientRepository patientRepository,
                                UserRepository userRepository, HospitalStuffRepository hospitalStuffRepository, StuffRoleRepository stuffRoleRepository, Validation validation) {
@@ -74,7 +69,10 @@ public class RegistrationService {
     public UserDto addNewUserToSecurityTable(@NotBlank(message = "Username can't be empty") String username,
                                              @NotBlank(message = "Password can't be empty") String password) {
 
-        User user = new User(username, password);
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encryptedPassword = bCryptPasswordEncoder.encode(password);
+
+        User user = new User(username, ENCODE_ALGORITHM + encryptedPassword);
         userRepository.save(user);
 
         return UserMapper.INSTANCE.toDto(user);
@@ -132,36 +130,32 @@ public class RegistrationService {
                         .orElseThrow(() -> new NoSuchUserException("No registered doctors")));
     }
 
-    public Page<HospitalStuff> getAllDoctorsPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
+
+
+    public Page<DoctorDto> getAllDoctorsPaginated1(int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
-        return hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull(pageable);
+
+        Page<HospitalStuff> hospitalStuffPage = hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull(pageable);
+
+        Page<DoctorDto> doctorDtoPage = DoctorDtoPageMapper.toDto(hospitalStuffPage);
+
+        return doctorDtoPage;
     }
 
-    public Page<Patient> getAllPatientsPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
+    public Page<PatientDto> getAllPatientsPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
-        return patientRepository.findAll(pageable);
-    }
 
+        Page<Patient> patientPage = patientRepository.findAll(pageable);
 
-    public Map<HospitalStuffDto, Integer> getAllDoctorsWithPatientQuantity() {
-        List<HospitalStuff> doctorList = hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
-                .orElseThrow(() -> new NoSuchUserException("No registered doctors"));
+        Page<PatientDto> patientDtoPage = PatientDtoPageMapper.toDto(patientPage);
 
-        Map<HospitalStuffDto, Integer> doctorListWithPatientCounter = new HashMap<>();
-
-        for (HospitalStuff doctor : doctorList
-        ) {
-            doctorListWithPatientCounter.put(HospitalStuffMapper.INSTANCE.toDto(doctor),
-                    doctor.getPatientsList().size());
-        }
-
-        return doctorListWithPatientCounter;
+        return patientDtoPage;
     }
 
     public void appointDoctorToPatient(@NotNull(message = "Doctor can't be empty") int doctorId,

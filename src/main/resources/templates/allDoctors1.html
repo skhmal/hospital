@@ -7,63 +7,66 @@
 </head>
 <body>
 <div layout:fragment="content">
-<table border="1" class = "table table-striped table-responsive-md">
-    <thead>
-    <tr>
-        <th>
-            <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=firstname&sortDir=' + ${reverseSortDir}}">
-                Doctor First Name</a>
-        </th>
-        <th>
-            <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">
-                Doctor Last Name</a>
-        </th>
-        <th>
-            <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=doctorSpecialization&sortDir=' + ${reverseSortDir}}">
-                Doctor Specialization</a>
-        </th>
-        <th>
-            <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=patientCount&sortDir=' + ${reverseSortDir}}">
-               Patient quantity</a>
-        </th>
-        <th> Actions </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="employee : ${listEmployees}">
-        <td th:text="${employee.firstname}"></td>
-        <td th:text="${employee.lastname}"></td>
-        <td th:text="${employee.doctorSpecialization}"></td>
-        <td th:text="${employee.patientCount}"></td>
-        <td> <a th:href="@{/showFormForUpdate/{id}(id=${employee.id})}" class="btn btn-primary">Update</a>
-            <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}" class="btn btn-danger">Delete</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <div class="text-center"><h1>Doctors</h1></div>
+    <table class="table table-striped table-responsive-md mt-3">
+        <thead>
+        <tr>
+            <th>
+                <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=firstname&sortDir=' + ${reverseSortDir}}">
+                    First Name</a>
+            </th>
+            <th>
+                <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">
+                    Last Name</a>
+            </th>
+            <th>
+                <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=doctorSpecialization&sortDir=' + ${reverseSortDir}}">
+                    Specialization</a>
+            </th>
+            <th>
+                <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=patientCount&sortDir=' + ${reverseSortDir}}">
+                    Patient quantity</a>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="doctor : ${listDoctors}">
+            <td th:text="${doctor.firstname}"></td>
+            <td th:text="${doctor.lastname}"></td>
+            <td th:text="${doctor.doctorSpecialization}"></td>
+            <td th:text="${doctor.patientCount}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="pag">
+        <div th:if="${totalPages > 1}">
 
-<div th:if = "${totalPages > 1}">
-    <div class = "row col-sm-10">
-        <div class = "col-sm-2">
-            Total Rows: [[${totalItems}]]
-        </div>
-        <div class = "col-sm-1">
+            <div class="row col-sm-10">
+                <div class="col-sm-2">
+                    Total Rows: [[${totalItems}]]
+                </div>
+
+                <div class="col-sm-1">
+                    <a th:if="${currentPage > 1}"
+                       th:href="@{'/administrator/doctors/' + ${1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">First</a>
+                    <span th:unless="${currentPage == 1}"></span>
+                </div>
+
+                <div class="col-sm-1">
 					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
-						<a th:if="${currentPage != i}" th:href="@{'/administrator/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
-						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+						<a th:if="${currentPage != i}"
+                           th:href="@{'/administrator/doctors/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>
 					</span>
-        </div>
-        <div class = "col-sm-1">
-            <a th:if="${currentPage < totalPages}" th:href="@{'/administrator/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
-            <span th:unless="${currentPage < totalPages}">Next</span>
-        </div>
+                </div>
 
-        <div class="col-sm-1">
-            <a th:if="${currentPage < totalPages}" th:href="@{'/administrator/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
-            <span th:unless="${currentPage < totalPages}">Last</span>
+                <div class="col-sm-1">
+                    <a th:if="${currentPage < totalPages}"
+                       th:href="@{'/administrator/doctors/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+                    <span th:unless="${currentPage < totalPages}"></span>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 </div>
 </body>
 </html>

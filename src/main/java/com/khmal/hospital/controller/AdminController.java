@@ -2,6 +2,7 @@ package com.khmal.hospital.controller;
 
 import com.khmal.hospital.dao.entity.HospitalStuff;
 import com.khmal.hospital.dao.entity.Patient;
+import com.khmal.hospital.dto.DoctorDto;
 import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
@@ -139,26 +140,6 @@ public class AdminController {
         return "successful";
     }
 
-//    @GetMapping("/patients")
-//    public String getPatients(Model model) {
-//        List<PatientDto> patientDtoList = registrationService.getAllPatients();
-//
-//        model.addAttribute("patients", patientDtoList);
-//
-//        return "allPatients";
-//    }
-//
-//    @GetMapping("/doctors")
-//    public String getDoctors(Model model) {
-//
-//        Map<HospitalStuffDto, Integer> doctors = registrationService.getAllDoctorsWithPatientQuantity();
-//
-//        model.addAttribute("doctors", doctors);
-//
-//        return "allDoctors";
-//    }
-
-
     @GetMapping("/patients/{pageNo}")
     public String findPaginatedPatients(@PathVariable(value = "pageNo") int pageNo,
                                         @RequestParam("sortField") String sortField,
@@ -166,9 +147,8 @@ public class AdminController {
                                         Model model) {
         int pageSize = 5;
 
-
-        Page<Patient> page = registrationService.getAllPatientsPaginated(pageNo, pageSize, sortField, sortDir);
-        List<Patient> listEmployees = page.getContent();
+        Page<PatientDto> page = registrationService.getAllPatientsPaginated(pageNo, pageSize, sortField, sortDir);
+        List<PatientDto> listPatients = page.getContent();
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -178,7 +158,7 @@ public class AdminController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
 
-        model.addAttribute("listEmployees", listEmployees);
+        model.addAttribute("listPatients", listPatients);
         return "allPatients";
     }
 
@@ -189,9 +169,8 @@ public class AdminController {
                                        Model model) {
         int pageSize = 5;
 
-
-        Page<HospitalStuff> page = registrationService.getAllDoctorsPaginated(pageNo, pageSize, sortField, sortDir);
-        List<HospitalStuff> listEmployees = page.getContent();
+        Page<DoctorDto> page = registrationService.getAllDoctorsPaginated1(pageNo, pageSize, sortField, sortDir);
+        List<DoctorDto> listDoctors = page.getContent();
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -201,7 +180,7 @@ public class AdminController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
 
-        model.addAttribute("listEmployees", listEmployees);
+        model.addAttribute("listDoctors", listDoctors);
         return "allDoctors1";
     }
 

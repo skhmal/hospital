@@ -13,7 +13,5 @@ public class DoctorDto {
     private String lastname;
     private String username;
     private String doctorSpecialization;
-    private int patientCounter;
-
-
+    private int patientCount;
 }
