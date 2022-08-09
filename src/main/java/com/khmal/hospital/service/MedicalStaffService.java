@@ -30,7 +30,6 @@ import java.util.List;
 @Service
 @Validated
 public class MedicalStaffService {
-
     private final PatientRepository patientRepository;
     private final HospitalStuffRepository hospitalStuffRepository;
     private final AppointmentRepository appointmentRepository;
@@ -95,6 +94,7 @@ public class MedicalStaffService {
 
             HospitalStuff doctor = hospitalStuffRepository.getHospitalStuffById(doctorId).get();
             doctor.getPatientsList().remove(patient);
+            doctor.setPatientCount(doctor.getPatientCount()-1);
         }
         return DiagnoseMapper.INSTANCE.toDto(diagnoseRepository.save(diagnose));
     }

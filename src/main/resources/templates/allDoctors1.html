@@ -11,19 +11,19 @@
     <thead>
     <tr>
         <th>
-            <a th:href="@{'/administrator/page/' + ${currentPage} + '?sortField=firstname&sortDir=' + ${reverseSortDir}}">
+            <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=firstname&sortDir=' + ${reverseSortDir}}">
                 Doctor First Name</a>
         </th>
         <th>
-            <a th:href="@{'/administrator/page/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">
+            <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">
                 Doctor Last Name</a>
         </th>
         <th>
-            <a th:href="@{'/administrator/page/' + ${currentPage} + '?sortField=doctorSpecialization&sortDir=' + ${reverseSortDir}}">
+            <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=doctorSpecialization&sortDir=' + ${reverseSortDir}}">
                 Doctor Specialization</a>
         </th>
         <th>
-            <a th:href="@{'/administrator/page/' + ${currentPage} + '?sortField=patientCounter&sortDir=' + ${reverseSortDir}}">
+            <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=patientCount&sortDir=' + ${reverseSortDir}}">
                Patient quantity</a>
         </th>
         <th> Actions </th>
@@ -34,7 +34,7 @@
         <td th:text="${employee.firstname}"></td>
         <td th:text="${employee.lastname}"></td>
         <td th:text="${employee.doctorSpecialization}"></td>
-        <td th:text="${employee.patientCounter}"></td>
+        <td th:text="${employee.patientCount}"></td>
         <td> <a th:href="@{/showFormForUpdate/{id}(id=${employee.id})}" class="btn btn-primary">Update</a>
             <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}" class="btn btn-danger">Delete</a>
         </td>

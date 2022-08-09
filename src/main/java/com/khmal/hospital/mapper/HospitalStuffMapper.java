@@ -6,6 +6,7 @@ import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -19,5 +20,4 @@ public interface HospitalStuffMapper {
     HospitalStuff toEntity(HospitalStuffDto hospitalStuffDto);
 
     List<HospitalStuffDto> toDto(List<HospitalStuff> hospitalStuff);
-
 }

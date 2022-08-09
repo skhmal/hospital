@@ -1,7 +1,7 @@
 package com.khmal.hospital.controller;
 
 import com.khmal.hospital.dao.entity.HospitalStuff;
-import com.khmal.hospital.dto.DoctorDto;
+import com.khmal.hospital.dao.entity.Patient;
 import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/administrator")
@@ -140,39 +139,59 @@ public class AdminController {
         return "successful";
     }
 
-    @GetMapping("/patients")
-    public String getPatients(Model model) {
-        List<PatientDto> patientDtoList = registrationService.getAllPatients();
+//    @GetMapping("/patients")
+//    public String getPatients(Model model) {
+//        List<PatientDto> patientDtoList = registrationService.getAllPatients();
+//
+//        model.addAttribute("patients", patientDtoList);
+//
+//        return "allPatients";
+//    }
+//
+//    @GetMapping("/doctors")
+//    public String getDoctors(Model model) {
+//
+//        Map<HospitalStuffDto, Integer> doctors = registrationService.getAllDoctorsWithPatientQuantity();
+//
+//        model.addAttribute("doctors", doctors);
+//
+//        return "allDoctors";
+//    }
 
-        model.addAttribute("patients", patientDtoList);
 
+    @GetMapping("/patients/{pageNo}")
+    public String findPaginatedPatients(@PathVariable(value = "pageNo") int pageNo,
+                                        @RequestParam("sortField") String sortField,
+                                        @RequestParam("sortDir") String sortDir,
+                                        Model model) {
+        int pageSize = 5;
+
+
+        Page<Patient> page = registrationService.getAllPatientsPaginated(pageNo, pageSize, sortField, sortDir);
+        List<Patient> listEmployees = page.getContent();
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+
+        model.addAttribute("listEmployees", listEmployees);
         return "allPatients";
     }
 
-    @GetMapping("/doctors")
-    public String getDoctors(Model model) {
-
-        Map<HospitalStuffDto, Integer> doctors = registrationService.getAllDoctorsWithPatientQuantity();
-
-        model.addAttribute("doctors", doctors);
-
-        return "allDoctors";
-    }
-
-    @GetMapping("/page/{pageNo}")
-    public String findPaginated(@PathVariable (value = "pageNo") int pageNo,
-                                @RequestParam("sortField") String sortField,
-                                @RequestParam("sortDir") String sortDir,
-                                Model model) {
+    @GetMapping("/doctors/{pageNo}")
+    public String findPaginatedDoctors(@PathVariable(value = "pageNo") int pageNo,
+                                       @RequestParam("sortField") String sortField,
+                                       @RequestParam("sortDir") String sortDir,
+                                       Model model) {
         int pageSize = 5;
 
 
         Page<HospitalStuff> page = registrationService.getAllDoctorsPaginated(pageNo, pageSize, sortField, sortDir);
-//        List<HospitalStuff> listEmployees = page.getContent();
-
-        Page<DoctorDto> page1 = registrationService.getAllDoctorsWithPatientQuantity1(pageNo, pageSize, sortField, sortDir);
-        List<DoctorDto> listEmployees = page1.getContent();
-
+        List<HospitalStuff> listEmployees = page.getContent();
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -186,8 +205,13 @@ public class AdminController {
         return "allDoctors1";
     }
 
-    @GetMapping("/page")
-    public String viewHomePage(Model model) {
-        return findPaginated(1, "firstname", "asc", model);
+    @GetMapping("/doctors")
+    public String viewDoctorsPage(Model model) {
+        return findPaginatedDoctors(1, "firstname", "asc", model);
+    }
+
+    @GetMapping("/patients")
+    public String viewPatientsPage(Model model) {
+        return findPaginatedPatients(1, "firstname", "asc", model);
     }
 }

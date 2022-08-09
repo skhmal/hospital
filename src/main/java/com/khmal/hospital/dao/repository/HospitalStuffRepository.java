@@ -18,7 +18,5 @@ public interface HospitalStuffRepository extends JpaRepository<HospitalStuff, In
 
     Optional<HospitalStuff> findHospitalStuffByUsername(String username);
 
-
-
     Page<HospitalStuff> getHospitalStuffByDoctorSpecializationIsNotNull(Pageable pageable);
 }

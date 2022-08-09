@@ -44,6 +44,9 @@ public class HospitalStuff {
     @ToString.Exclude
     private List<Patient> patientsList;
 
+    @Column(name = "patient_count")
+    private int patientCount;
+
     public enum DoctorSpecialization{
         ALLERGIST,
         ANESTHESIOLOGIST,

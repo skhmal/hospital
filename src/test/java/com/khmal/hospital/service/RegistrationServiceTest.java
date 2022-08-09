@@ -41,7 +41,7 @@ class RegistrationServiceTest {
                 .thenReturn(Optional.of(new StuffRole("ROLE_PATIENT")));
 
         HospitalStuff doctor = new HospitalStuff(1,"john", "schwarc", "js",
-                "surgeon", new StuffRole("ROLE_DOCTOR"), new ArrayList<Patient>());
+                "surgeon", new StuffRole("ROLE_DOCTOR"), new ArrayList<Patient>(),0);
         Mockito.when(hospitalStuffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(Optional.of(doctor));
 
         Patient patient = new Patient("Jan", "Grabowski", "jb",

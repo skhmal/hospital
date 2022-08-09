@@ -140,31 +140,14 @@ public class RegistrationService {
         return hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull(pageable);
     }
 
-    public Page<DoctorDto> getAllDoctorsWithPatientQuantity1(int pageNo, int pageSize, String sortField, String sortDirection) {
-
+    public Page<Patient> getAllPatientsPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
-
-        Page<HospitalStuff> doctorList = hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull(pageable);
-
-        Page<DoctorDto> dtoPage = doctorList.map(new Function<HospitalStuff, DoctorDto>() {
-            @Override
-            public DoctorDto apply(HospitalStuff hospitalStuff) {
-                DoctorDto doctorDto = new DoctorDto();
-                doctorDto.setId(hospitalStuff.getId());
-                doctorDto.setFirstname(hospitalStuff.getFirstname());
-                doctorDto.setLastname(hospitalStuff.getLastname());
-                doctorDto.setUsername(hospitalStuff.getUsername());
-                doctorDto.setDoctorSpecialization(hospitalStuff.getDoctorSpecialization());
-                doctorDto.setPatientCounter(hospitalStuff.getPatientsList().size());
-                return doctorDto;
-            }
-        });
-
-        return dtoPage;
+        return patientRepository.findAll(pageable);
     }
+
 
     public Map<HospitalStuffDto, Integer> getAllDoctorsWithPatientQuantity() {
         List<HospitalStuff> doctorList = hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
@@ -197,7 +180,7 @@ public class RegistrationService {
 
             Patient patient = patientRepository.getPatientById(patientId).orElseThrow(
                     () -> new NoSuchUserException("Patient is not found"));
-
+            hospitalStuff.setPatientCount(hospitalStuff.getPatientCount()+1);
             patient.setDischarged(false);
 
             patientList.add(patient);

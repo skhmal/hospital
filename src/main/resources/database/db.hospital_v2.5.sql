@@ -14,6 +14,7 @@ create table hospital_stuff(
     lastname varchar(45) not null ,
     username varchar(45) not null ,
     doctor_specialization varchar(45) null,
+    patient_count int,
     primary key (id),
     foreign key (role_id) references role(id)
 );
