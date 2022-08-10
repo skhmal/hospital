@@ -16,7 +16,7 @@
                     <div class="input-group-lg">
                         <select class="form-select-lg" id="doctor" name="doctor">
                             <option value="null" th:text="#{chooseDoctor}">Choose a doctor</option>
-                            <option th:each="doctor: ${doctors}" th:text="${doctor.lastname}"
+                            <option th:each="doctor: ${doctors}" th:text="${doctor.firstname + ' ' + doctor.lastname}"
                                     th:value="${doctor.id}"></option>
                         </select>
                     </div>
@@ -28,7 +28,8 @@
                     <div class="input-group-lg">
                         <select class="form-select-lg" id="patient" name="patient">
                             <option value="null" th:text="#{choosePatient}">Choose a patient</option>
-                            <option th:each="patient: ${patients}" th:text="${patient.lastname}"
+                            <option th:each="patient: ${patients}" th:text="${patient.firstname + ' ' + patient.lastname
+                            + ' ' + patient.birthday}"
                                     th:value="${patient.id}"></option>
                         </select>
                     </div>

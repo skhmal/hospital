@@ -10,12 +10,14 @@ import com.khmal.hospital.service.RegistrationService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @Controller
 @RequestMapping("/administrator")
 public class AdminController {
@@ -35,7 +37,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, params = "action=save")
-    public String createNewPatient(@ModelAttribute("patient") PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
+    public String createNewPatient(@Valid @ModelAttribute("patient") PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
 
         registrationService.addPatientToTheSystem(patientDtoUserDtoRoleDto);
 
@@ -152,7 +154,7 @@ public class AdminController {
                                        Model model) {
         int pageSize = 5;
 
-        Page<DoctorDto> page = registrationService.getAllDoctorsPaginated1(pageNo, pageSize, sortField, sortDir);
+        Page<DoctorDto> page = registrationService.getAllDoctorsPaginated(pageNo, pageSize, sortField, sortDir);
         List<DoctorDto> listDoctors = page.getContent();
 
         model.addAttribute("currentPage", pageNo);

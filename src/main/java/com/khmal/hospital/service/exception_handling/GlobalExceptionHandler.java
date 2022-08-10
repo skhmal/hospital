@@ -6,57 +6,67 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler
-    public String handleGetUserException(NoSuchUserException noSuchUserException){
-        IncorrectData data = new IncorrectData();
-        data.setInfo(noSuchUserException.getMessage());
+    private static final String EXCEPTION = "exception";
+    private static final String ERROR_VIEW_NAME = "error";
 
-        return "error";
+    @ExceptionHandler
+    public ModelAndView handleGetUserException(NoSuchUserException noSuchUserException){
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject(EXCEPTION, noSuchUserException.getMessage());
+
+        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
+        modelAndView.setViewName(ERROR_VIEW_NAME);
+
+        return modelAndView;
     }
 
     @ExceptionHandler
-    public String handleSaveException(IncorrectDateException exception){
-        IncorrectData data = new IncorrectData();
-        data.setInfo(exception.getMessage());
+    public ModelAndView handleSaveException(IncorrectDateException exception){
 
-        return "error";
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject(EXCEPTION, exception.getMessage());
+
+        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
+        modelAndView.setViewName(ERROR_VIEW_NAME);
+
+        return modelAndView;
     }
-
-    @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleConstraintValidationException(ConstraintViolationException exception){
-        final List<Violation> errorResponseList = exception.getConstraintViolations()
-                .stream()
-                .map(violation -> new Violation(
-                        violation.getPropertyPath().toString(),
-                        violation.getMessage()
-                )).collect(Collectors.toList());
+    public ModelAndView handleEmployeeNotFoundException(HttpServletRequest request, Exception ex){
 
-        return "error";
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject(EXCEPTION, ex.getLocalizedMessage());
+        modelAndView.addObject("url", request.getRequestURL());
+
+        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
+        modelAndView.setViewName(ERROR_VIEW_NAME);
+
+
+        return modelAndView;
     }
+
 
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleMethodArgumentNotValidException(MethodArgumentNotValidException  exception){
-        final List<Violation> errorResponseList = exception.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(violation -> new Violation(
-                        violation.getField(),
-                        violation.getDefaultMessage()
-                )).collect(Collectors.toList());
+    public ModelAndView handleMethodArgumentNotValidException(MethodArgumentNotValidException  exception){
 
-        return "error";
+        ModelAndView error = new ModelAndView();
+        error.addObject(EXCEPTION, exception.getMessage());
+
+        error.setStatus(HttpStatus.BAD_REQUEST);
+        error.setViewName(ERROR_VIEW_NAME);
+
+        return error;
     }
 }

@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -49,7 +49,7 @@ public class RegistrationService {
     public PatientDto addNewPatient(@NotBlank(message = "Field firstname can't be empty") String firstname,
                                     @NotBlank(message = "Field lastname can't be empty") String lastname,
                                     @NotBlank(message = "Field username can't be empty") String username,
-                                    @NotNull(message = "Field birthday can't be empty") LocalDate birthday,
+                                    @NotBlank(message = "Field birthday can't be empty") LocalDate birthday,
                                     @NotNull(message = "Field stuffRoleId can't be empty") int stuffRoleId) {
         Patient patient = null;
 
@@ -100,7 +100,7 @@ public class RegistrationService {
                                            @NotBlank(message = "Lastname can't be empty") String lastname,
                                            @NotBlank(message = "Username can't be empty") String username,
                                            String doctorSpecialization,
-                                           @NotNull int stuffRoleId) {
+                                           @NotNull(message = "Role id can't be null") int stuffRoleId) {
 
         HospitalStuff hospitalStuff = null;
 
@@ -133,7 +133,7 @@ public class RegistrationService {
     }
 
 
-    public Page<DoctorDto> getAllDoctorsPaginated1(int pageNo, int pageSize, String sortField, String sortDirection) {
+    public Page<DoctorDto> getAllDoctorsPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
 
@@ -190,21 +190,13 @@ public class RegistrationService {
         return PatientMapper.INSTANCE.toDto(patient);
     }
 
-    public List<HospitalStuff.DoctorSpecialization> getAllDoctorSpecializations() {
-        return Arrays.asList(HospitalStuff.DoctorSpecialization.values());
-    }
-
-    public List<StuffRoleDto> getAllStaffRoles() {
-        return StuffRoleMapper.INSTANCE.toDto(stuffRoleRepository.findAll());
-    }
-
     @Transactional
     public HospitalStuffDto addEmployeeToTheSystem(
             @NotNull(message = "Request to create employee can't be empty")
-            HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
+            @Valid HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
 
-        if (hospitalStuffDtoUserDtoRoleDto.getPassword().isBlank()){
-            throw new IncorrectDateException("Password can't be empty");
+        if (hospitalStuffDtoUserDtoRoleDto.getDoctorSpecialization().equals("nothing")){
+            throw new IncorrectDateException("Field specialization can't be empty for doctor");
         }
 
         HospitalStuffDto employee = addNewEmployee(

@@ -22,7 +22,8 @@
                             <select class="form-select" id="patientIdDoctorDiagnose"
                                     name="patientIdDoctorDiagnose">
                                 <option value="null" th:text="#{choosePatient}">Choose patient</option>
-                                <option th:each="patient: ${patients}" th:text="${patient.lastname}"
+                                <option th:each="patient: ${patients}" th:text="${patient.firstname + ' '
+                                + patient.lastname + ' ' + patient.birthday}"
                                         th:value="${patient.id}"></option>
                             </select>
                         </div>

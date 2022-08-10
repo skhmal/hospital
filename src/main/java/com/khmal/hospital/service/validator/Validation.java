@@ -12,6 +12,7 @@ import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -72,35 +73,44 @@ public class Validation {
         return true;
     }
 
-    public boolean checkStuffRoleInDataBase(int roleId){
-        if(stuffRoleRepository.getStuffRoleById(roleId).isEmpty()){
-          throw new IncorrectDateException("Role with id " + roleId + " not found");
+    public boolean checkStuffRoleInDataBase(int roleId) {
+        if (stuffRoleRepository.getStuffRoleById(roleId).isEmpty()) {
+            throw new IncorrectDateException("Role with id " + roleId + " not found");
         }
         return true;
     }
 
-    public boolean checkDoctorSpecialization(String doctorSpecialization){
+    public boolean checkDoctorSpecialization(String doctorSpecialization) {
         boolean checkResult = Stream.of(HospitalStuff.DoctorSpecialization.values())
                 .anyMatch(s -> s.name().equals(doctorSpecialization));
 
-        if (!checkResult){
+        if (!checkResult) {
             throw new IncorrectDateException("Specialization " + doctorSpecialization + " is not found");
-        }else {
+        } else {
             return true;
         }
     }
 
-    public boolean checkAppoint(int doctorId, int patientId){
-      HospitalStuff doctor = hospitalStuffRepository.getHospitalStuffById(doctorId).orElseThrow(
-              () -> new NoSuchUserException("Doctor with id = " + doctorId + " is not found"));
-      List<Patient> patientList = doctor.getPatientsList();
+    public boolean checkAppoint(int doctorId, int patientId) {
+        HospitalStuff doctor = hospitalStuffRepository.getHospitalStuffById(doctorId).orElseThrow(
+                () -> new NoSuchUserException("Doctor with id = " + doctorId + " is not found"));
+        List<Patient> patientList = doctor.getPatientsList();
 
-        for (Patient patient:patientList
-             ) {
-            if (patient.getId() == patientId){
+        for (Patient patient : patientList
+        ) {
+            if (patient.getId() == patientId) {
                 return false;
             }
         }
-      return true;
+        return true;
+    }
+
+    public boolean checkAppointmentType(String name) {
+        if (Arrays.stream(Appointment.DoctorAppointment.values()).anyMatch(x -> x.name().equals(name))
+                || Arrays.stream(Appointment.NurseAppointment.values()).anyMatch(y -> y.name().equals(name))) {
+            return true;
+        }else {
+            throw new IncorrectDateException("Appointment type can't be empty");
+        }
     }
 }

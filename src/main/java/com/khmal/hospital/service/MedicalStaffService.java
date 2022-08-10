@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -44,12 +45,13 @@ public class MedicalStaffService {
         this.diagnoseRepository = diagnoseRepository;
     }
 
-    public AppointmentDto createAppointment(@NotNull(message = "Patient can't be empty") Integer patientId,
-                                            @NotNull(message = "Employee can't be empty") Integer hospitalStuffId,
+    public AppointmentDto createAppointment(int patientId,
+                                            @NotNull(message = "Employee can't be empty") int hospitalStuffId,
                                             @NotBlank(message = "Appointment type can't be empty") String appointmentType,
                                             @NotBlank(message = "Summary can't be empty") String appointmentSummary,
                                             @NotNull(message = "Date can't be empty") LocalDateTime appointmentDate) {
         Appointment appointment = null;
+        validation.checkAppointmentType(appointmentType);
 
         if (validation.checkHospitalStuffId(hospitalStuffId) && validation.checkPatientId(patientId) &&
                 validation.checkAppointmentDateForHospitalStuff(patientId, hospitalStuffId, appointmentDate)) {
