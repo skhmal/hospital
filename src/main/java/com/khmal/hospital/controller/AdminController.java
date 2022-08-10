@@ -11,9 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Controller
@@ -26,6 +26,7 @@ public class AdminController {
         this.registrationService = registrationService;
     }
 
+    final static String SUCCESSFUL = "redirect:/successful";
 
     @GetMapping("/patient")
     public String createNewPatient(Model model) {
@@ -34,11 +35,11 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, params = "action=save")
-    public RedirectView createNewPatient(@ModelAttribute("patient") PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
+    public String createNewPatient(@ModelAttribute("patient") PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
 
         registrationService.addPatientToTheSystem(patientDtoUserDtoRoleDto);
 
-        return new RedirectView("redirect:/successful");
+        return SUCCESSFUL;
     }
 
     @GetMapping("/doctor")
@@ -60,13 +61,13 @@ public class AdminController {
 
         registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
-        return "redirect:/successful";
+        return SUCCESSFUL;
     }
 
     @GetMapping("/administrator")
     public String createNewAdministrator(Model model) {
         model.addAttribute("admin", new HospitalStuffDtoUserDtoRoleDto());
-        return "redirect:/addAdministrator";
+        return "addAdministrator";
     }
 
     @RequestMapping(value = "/administrator", method = RequestMethod.POST, params = "action=save")
@@ -79,7 +80,7 @@ public class AdminController {
 
         registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
-        return "redirect:/successful";
+        return SUCCESSFUL;
     }
 
     @GetMapping("nurse")
@@ -98,7 +99,7 @@ public class AdminController {
 
         registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
-        return "redirect:/successful";
+        return SUCCESSFUL;
     }
 
     @GetMapping("/appoint")
@@ -119,7 +120,7 @@ public class AdminController {
 
         registrationService.appointDoctorToPatient(doctorId, patientId);
 
-        return "redirect:/successful";
+        return SUCCESSFUL;
     }
 
     @GetMapping("/patients/{pageNo}")
@@ -163,7 +164,7 @@ public class AdminController {
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
 
         model.addAttribute("listDoctors", listDoctors);
-        return "allDoctors1";
+        return "allDoctors";
     }
 
     @GetMapping("/doctors")

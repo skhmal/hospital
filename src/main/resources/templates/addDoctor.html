@@ -36,7 +36,7 @@
                     </div>
                     <div class="input-group-sm mt-3">
                         <select class="form-select-sm" id="doctorSpecialization" name="doctorSpecialization">
-                            <option class="form-control-lg" value="null" th:text="#{doctorSpec}">Select a specialization
+                            <option class="form-control-lg" th:text="#{doctorSpec}">Select a specialization
                             </option>
                             <option class="form-control-lg" th:each="specialization: ${specializations}"
                                     th:text="${specialization.name()}"
