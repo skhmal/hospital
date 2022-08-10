@@ -60,13 +60,13 @@ public class AdminController {
 
         registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
-        return "redirect:successful";
+        return "redirect:/successful";
     }
 
     @GetMapping("/administrator")
     public String createNewAdministrator(Model model) {
         model.addAttribute("admin", new HospitalStuffDtoUserDtoRoleDto());
-        return "addAdministrator";
+        return "redirect:/addAdministrator";
     }
 
     @RequestMapping(value = "/administrator", method = RequestMethod.POST, params = "action=save")
@@ -79,7 +79,7 @@ public class AdminController {
 
         registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
-        return "redirect:successful";
+        return "redirect:/successful";
     }
 
     @GetMapping("nurse")
@@ -98,7 +98,7 @@ public class AdminController {
 
         registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
-        return "redirect:successful";
+        return "redirect:/successful";
     }
 
     @GetMapping("/appoint")
@@ -119,7 +119,7 @@ public class AdminController {
 
         registrationService.appointDoctorToPatient(doctorId, patientId);
 
-        return "successful";
+        return "redirect:/successful";
     }
 
     @GetMapping("/patients/{pageNo}")

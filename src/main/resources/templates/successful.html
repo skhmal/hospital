@@ -8,14 +8,13 @@
 <body>
 
 <div layout:fragment="content">
-    <div class="d-inline-flex p-2">
-        <div class="alert alert-primary" role="alert">
-            Successful!
+    <div class="alert alert-success d-flex align-items-center row-cols-sm-6" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+            <use xlink:href="#exclamation-triangle-fill"/>
+        </svg>
+        <div  class="text-center" th:text="#{Success}">
         </div>
-    </div>
-    <div class="row-cols-auto">
-        You can back to the Main page!
-        <a type="button" class="btn btn-success" href="/main">Back to main page</a>
+        <a class="btn btn-primary text-center" href="/main" role="button" th:text="#{mainpage}">Back to main page</a>
     </div>
 </div>
 </body>
