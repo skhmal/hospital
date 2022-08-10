@@ -203,6 +203,10 @@ public class RegistrationService {
             @NotNull(message = "Request to create employee can't be empty")
             HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
 
+        if (hospitalStuffDtoUserDtoRoleDto.getPassword().isBlank()){
+            throw new IncorrectDateException("Password can't be empty");
+        }
+
         HospitalStuffDto employee = addNewEmployee(
                 hospitalStuffDtoUserDtoRoleDto.getFirstname(),
                 hospitalStuffDtoUserDtoRoleDto.getLastname(),
@@ -226,6 +230,10 @@ public class RegistrationService {
     public PatientDto addPatientToTheSystem(
             @NotNull(message = "Request to create employee can't be empty")
             PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
+
+        if (patientDtoUserDtoRoleDto.getPassword().isBlank()){
+            throw new IncorrectDateException("Password can't be empty");
+        }
 
         int patientRoleId = 4;
 
