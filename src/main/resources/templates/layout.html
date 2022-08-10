@@ -23,7 +23,7 @@
 <!-- Main Navigation -->
 <div class="p3 border-5">
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-        <a class="navbar-brand" th:href="@{/}" th:text="#{home.title}">Hospital "The Road to Heaven"</a>
+        <a class="navbar-brand" th:href="@{/main}" th:text="#{home.title}">Hospital "The Road to Heaven"</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -40,7 +40,7 @@
 
                 <li class="nav-item active">
                  <span th:case="${false}">
-                <a class="nav-link" th:text="#{signin}" th:href="@{/login}"></a>
+                <a class="nav-link" th:text="#{signin}" th:href="@{/main}"></a>
                  </span>
                 </li>
                 <li class="nav-item active ui-corner-right" sec:authorize="isAuthenticated()">
