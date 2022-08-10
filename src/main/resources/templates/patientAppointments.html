@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Hospital</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <h1 class="text-center" th:text="#{appointmentsList}">Appointment list</h1>
+
+    <table class="table table-striped table-responsive-md mt-3">
+        <thead>
+        <tr>
+            <th>
+                <a th:href="@{'/patient/appointments/' + ${currentPage} + '?sortField=appointmentType&sortDir=' + ${reverseSortDir}}"
+                   th:text="#{appointmentType}">
+                    Appointment type</a>
+            </th>
+            <th>
+                <a th:href="@{'/patient/appointments/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}"
+                   th:text="#{appointmentDate}">
+                    Date</a>
+            </th>
+            <th>
+                <a th:href="@{'/patient/appointments/' + ${currentPage} + '?sortField=summary&sortDir=' + ${reverseSortDir}}"
+                   th:text="#{apsummary}">
+                    Summary</a>
+            </th>
+            <th>
+                <a th:href="@{'/patient/appointments/' + ${currentPage} + '?sortField=hospitalStuff&sortDir=' + ${reverseSortDir}}"
+                   th:text="#{medic}">
+                    Full name</a>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="appointment : ${appointmentList}">
+            <td th:text="${appointment.appointmentType}"></td>
+            <td th:text="${#temporals.format(appointment.date, 'HH:mm dd-MMMM-yy')}"></td>
+            <td th:text="${appointment.summary}"></td>
+            <td th:text="${appointment.hospitalStuff.firstname + ' ' + appointment.getHospitalStuff().lastname}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="pag">
+        <div th:if="${totalPages > 1}">
+
+            <div class="row col-sm-10">
+                <div class="col-sm-2" th:text="#{TotalRows} + ': ' + ${totalItems}">
+                </div>
+
+                <div class="col-sm-1">
+                    <a th:if="${currentPage > 1}"
+                       th:href="@{'/patient/appointments/' + ${1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                       th:text="#{First}">First</a>
+                    <span th:unless="${currentPage == 1}"></span>
+                </div>
+
+                <div class="col-sm-1">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}"
+                           th:href="@{'/patient/appointments/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>
+					</span>
+                </div>
+
+                <div class="col-sm-1">
+                    <a th:if="${currentPage < totalPages}"
+                       th:href="@{'/patient/appointments/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                       th:text="#{Last}">Last</a>
+                    <span th:unless="${currentPage < totalPages}"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+</body>
+</html>

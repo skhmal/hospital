@@ -7,20 +7,23 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="text-center"><h1>Patients</h1></div>
+    <div class="text-center"><h1 th:text="#{Patients}">Patients</h1></div>
     <table class="table table-striped table-responsive-md mt-3">
         <thead>
         <tr>
             <th>
-                <a th:href="@{'/administrator/patients/' + ${currentPage} + '?sortField=firstname&sortDir=' + ${reverseSortDir}}">
+                <a th:href="@{'/administrator/patients/' + ${currentPage} + '?sortField=firstname&sortDir=' + ${reverseSortDir}}"
+                   th:text="#{Firstname}">
                     First Name</a>
             </th>
             <th>
-                <a th:href="@{'/administrator/patients/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">
+                <a th:href="@{'/administrator/patients/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}"
+                   th:text="#{LastName}">
                     Last Name</a>
             </th>
             <th>
-                <a th:href="@{'/administrator/patients/' + ${currentPage} + '?sortField=birthday&sortDir=' + ${reverseSortDir}}">
+                <a th:href="@{'/administrator/patients/' + ${currentPage} + '?sortField=birthday&sortDir=' + ${reverseSortDir}}"
+                   th:text="#{Birthday}">
                     Birthday</a>
             </th>
         </tr>
@@ -36,13 +39,12 @@
 
     <div th:if="${totalPages > 1}">
         <div class="row col-sm-10">
-            <div class="col-sm-2">
-                Total Rows: [[${totalItems}]]
+            <div class="col-sm-2" th:text="#{TotalRows} + ': ' + ${totalItems}">
             </div>
-
             <div class="col-sm-1">
                 <a th:if="${currentPage > 1}"
-                   th:href="@{'/administrator/patients/' + ${1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">First</a>
+                   th:href="@{'/administrator/patients/' + ${1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                   th:text="#{First}">First</a>
                 <span th:unless="${currentPage == 1}"></span>
             </div>
 
@@ -56,7 +58,8 @@
 
             <div class="col-sm-1">
                 <a th:if="${currentPage < totalPages}"
-                   th:href="@{'/administrator/patients/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+                   th:href="@{'/administrator/patients/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                   th:text="#{Last}">Last</a>
                 <span th:unless="${currentPage < totalPages}"></span>
             </div>
         </div>

@@ -1,66 +1,55 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="${locale.language}" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
     <title>Hospital</title>
 </head>
-<body>
-
-<div layout:fragment="content">
-    <div class="row mt-5">
-        <div class="col">
-            <h2 class="text-center mt-sm-3">Create new patient</h2>
-            <h3 class="text-center mt-sm-3">Please fill all fields</h3>
+<body class="text-center">
+<main class="form-group">
+    <div layout:fragment="content">
+        <div class="row mt-5">
+            <div class="col">
+                <h2 class="text-center mt-sm-3" th:text="#{create_new_patient}">Create new patient</h2>
+                <h3 class="text-center mt-sm-3" th:text="#{fillAllFields}">Please fill all fields</h3>
+            </div>
         </div>
-    </div>
+        <form action="#" data-th-action="@{/administrator/patient}" data-th-object="${patient}" method="post">
 
+            <form>
+                <div class="form-row mt-5">
+                    <div class="input-group-sm mt-3">
+                        <input type="text" class="form-control-lg" th:placeholder="#{Firstname}"
+                               th:field="*{firstName}">
+                    </div>
 
-    <form action="#" data-th-action="@{/administrator/patient}" data-th-object="${patient}" method="post">
-        <div class="form-row mt-5">
-            <div class="form-group col-md-3 mx-auto">
-                <div class="input-group mb-3">
-                    <span class="input-group-text">Firstname</span>
-                    <input type="text" aria-label="Firstname" th:field="*{firstName}">
+                    <div class="input-group-sm mt-3">
+                        <input type="text" class="form-control-lg" th:placeholder="#{LastName}" th:field="*{lastname}">
+                    </div>
+
+                    <div class="input-group-sm mt-3">
+                        <input type="text" class="form-control-lg" th:placeholder="#{UserName}" th:field="*{username}">
+                    </div>
+                    <div class="input-group-sm mt-3">
+                        <input type="text" class="form-control-lg" th:placeholder="#{Password}" th:field="*{password}">
+                    </div>
+
+                    <div class="input-group-sm mt-3">
+                        <span class="input-text" th:text="#{Birthday}">Birthday</span>
+                        <a class="overflow-hidden"></a>
+                        <input type="date" lang="${locale.language}" th:field="*{birthday}"/>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group-sm mt-3">
+                            <button class="btn btn-primary" type="submit" name="action" value="save"
+                                    th:text="#{Create}">create
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group col-md-3 mx-auto">
-                <div class="input-group mb-3">
-                    <span class="input-group-text">Lastname</span>
-                    <input type="text" aria-label="Lastname" th:field="*{lastname}">
-                </div>
-            </div>
-
-            <div class="form-group col-md-3 mx-auto">
-                <div class="input-group mb-3">
-                    <span class="input-group-text">Username</span>
-                    <input type="text" aria-label="Username" th:field="*{username}">
-                </div>
-            </div>
-
-            <div class="form-group col-md-3 mx-auto">
-                <div class="input-group mb-3">
-                    <span class="input-group-text">Password</span>
-                    <input type="text" aria-label="Password" th:field="*{password}">
-                </div>
-            </div>
-
-            <div class="form-group col-md-3 mx-auto">
-                <div class="input-group mb-3">
-                    <span class="input-group-text">Birthday</span>
-                    <input type="date" th:field="*{birthday}"/>
-                </div>
-            </div>
-
-            <div class="form-group col-md-3 mx-auto">
-                <div id="submitButton" class="input-group mb-3">
-                    <button class="btn btn-primary" type="submit" name="action" value="save">create</button>
-                </div>
-            </div>
-
-        </div>
-    </form>
+            </form>
+        </form>
+</main>
 </div>
 
 </body>

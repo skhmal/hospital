@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="${locale.language}" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
@@ -26,64 +26,66 @@
     <!--        </div>-->
 
     <div sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
-        <h3>Create new user</h3>
+        <h3 th:text="#{create_new_user}">Create new user</h3>
         <div class="row-cols-auto mt-3">
             <div class="col">
                 <div class="btn-group">
-                    <a href="/administrator/administrator" class="btn btn-primary">New
+                    <a href="/administrator/administrator" class="btn btn-primary" th:text="#{new_admin}">New
                         Administrator</a>
-                    <a href="/administrator/patient" class="btn btn-primary">New Patient</a>
-                    <a href="/administrator/doctor" class="btn btn-primary">New Doctor</a>
-                    <a href="/administrator/nurse" class="btn btn-primary">New Nurse</a>
+                    <a href="/administrator/patient" class="btn btn-primary" th:text="#{new_patient}">New Patient</a>
+                    <a href="/administrator/doctor" class="btn btn-primary" th:text="#{new_doctor}">New Doctor</a>
+                    <a href="/administrator/nurse" class="btn btn-primary" th:text="#{new_nurse}">New Nurse</a>
                 </div>
             </div>
 
-            <h3 class="mt-sm-3">Appoint patient to the Doctor</h3>
+            <h3 class="mt-sm-3" th:text="#{appoint_doctor_to_patient}">Appoint patient to the Doctor</h3>
             <div class="col mt-3">
-                <a href="/administrator/appoint" class="btn btn-primary">Appoint</a>
+                <a href="/administrator/appoint" class="btn btn-primary" th:text="#{new_appoint}">Appoint</a>
             </div>
 
-            <h3 class="mt-sm-3">Show all patients</h3>
+            <h3 class="mt-sm-3" th:text="#{show_patients}">Show all patients</h3>
             <div class="col mt-3">
-                <a href="/administrator/patients" class="btn btn-primary">Patient list</a>
+                <a href="/administrator/patients" class="btn btn-primary" th:text="#{btn_show_patients}">Patient
+                    list</a>
             </div>
 
-            <h3 class="mt-sm-3">Show all doctors</h3>
+            <h3 class="mt-sm-3" th:text="#{show_doctors}">Show all doctors</h3>
             <div class="col-auto mt-3">
-                <a href="/administrator/doctors" class="btn btn-primary">Doctor list</a>
+                <a href="/administrator/doctors" class="btn btn-primary" th:text="#{btn_show_doctors}">Doctor list</a>
             </div>
         </div>
     </div>
 
     <div sec:authorize="hasRole('ROLE_DOCTOR')">
-        <h3 class="mt-sm-3">New appointment</h3>
+        <h3 class="mt-sm-3" th:text="#{createAppointmentLabel}">New appointment</h3>
         <div class="col mt-3">
-            <a href="/doctor/appointment" class="btn btn-primary">Create an appointment</a>
+            <a href="/doctor/appointment" class="btn btn-primary" th:text="#{createAppointment}">Create an
+                appointment</a>
         </div>
 
-        <h3 class="mt-sm-3">New diagnose</h3>
+        <h3 class="mt-sm-3" th:text="#{createDiagnoseLabel}">New diagnose</h3>
         <div class="col mt-3">
-            <a href="/doctor/diagnose" class="btn btn-primary">Create a diagnose</a>
+            <a href="/doctor/diagnose" class="btn btn-primary" th:text="#{createDiagnose}">Create a diagnose</a>
         </div>
     </div>
 
     <div sec:authorize="hasRole('ROLE_NURSE')">
-        <h3 class="mt-sm-3">New appointment</h3>
+        <h3 class="mt-sm-3" th:text="#{createAppointmentLabel}">New appointment</h3>
         <div class="col mt-3">
-            <a href="/nurse/appointment" class="btn btn-primary">Create an appointment</a>
+            <a href="/nurse/appointment" class="btn btn-primary" th:text="#{createAppointment}">Create an
+                appointment</a>
         </div>
     </div>
 
     <div sec:authorize="hasRole('ROLE_PATIENT')">
-        <h3 class="mt-sm-3">Hospital card</h3>
+        <h3 class="mt-sm-3" th:text="#{hospitalCard}">Hospital card</h3>
         <div class="col mt-3">
-            <a href="/patient/appointments" class="btn btn-primary">Show my appointments</a>
+            <a href="/patient/appointments" class="btn btn-primary" th:text="#{myAppointments}">Show my appointments</a>
         </div>
         <div class="col mt-3">
-            <a href="/patient/diagnoses" class="btn btn-primary">Show my diagnoses</a>
+            <a href="/patient/diagnoses" class="btn btn-primary" th:text="#{myDiagnoses}">Show my diagnoses</a>
         </div>
     </div>
-
 </div>
 
 </body>

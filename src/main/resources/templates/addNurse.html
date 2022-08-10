@@ -5,53 +5,46 @@
 <head>
   <title>Hospital</title>
 </head>
-<body>
+<body class="text-center">
+<main class="form-control">
 
 <div layout:fragment="content">
   <div class="row mt-5">
     <div class="col">
-      <h2 class="text-center mt-sm-3">Create new nurse</h2>
-      <h3 class="text-center mt-sm-3">Please fill all fields</h3>
+      <h2 class="text-center mt-sm-3" th:text="#{create_new_nurse}">Create new nurse</h2>
+      <h3 class="text-center mt-sm-3" th:text="#{fillAllFields}">Please fill all fields</h3>
     </div>
   </div>
 
   <form action="#" data-th-action="@{/administrator/nurse}" data-th-object="${nurse}" method="post">
-    <div id="firstname" class="form-row mt-5">
-      <div class="form-group col-md-3 mx-auto">
-        <div class="input-group mb-3">
-          <span class="input-group-text">Firstname</span>
-          <input type="text" aria-label="firstname" th:field="*{firstname}">
+    <form>
+      <div class="form-row mt-5">
+        <div class="input-group-sm mt-3">
+          <input type="text" class="form-control-lg" th:placeholder="#{Firstname}"
+                 th:field="*{firstname}">
         </div>
-      </div>
 
-      <div class="form-group col-md-3 mx-auto">
-        <div class="input-group mb-3">
-          <span class="input-group-text">Lastname</span>
-          <input type="text" aria-label="lastname" th:field="*{lastname}">
+        <div class="input-group-sm mt-3">
+          <input type="text" class="form-control-lg" th:placeholder="#{LastName}" th:field="*{lastname}">
         </div>
-      </div>
 
-      <div class="form-group col-md-3 mx-auto">
-        <div class="input-group mb-3">
-          <span class="input-group-text">Username</span>
-          <input type="text" aria-label="username" th:field="*{username}">
+        <div class="input-group-sm mt-3">
+          <input type="text" class="form-control-lg" th:placeholder="#{UserName}" th:field="*{username}">
+        </div>
+        <div class="input-group-sm mt-3">
+          <input type="text" class="form-control-lg" th:placeholder="#{Password}" th:field="*{password}">
+        </div>
+        <div class="form-group">
+          <div class="input-group-sm mt-3">
+            <button class="btn btn-primary" type="submit" name="action" value="save"
+                    th:text="#{Create}">create
+            </button>
+          </div>
         </div>
       </div>
-
-      <div class="form-group col-md-3 mx-auto">
-        <div class="input-group mb-3">
-          <span class="input-group-text">Password</span>
-          <input type="text" aria-label="password" th:field="*{password}">
-        </div>
-      </div>
-
-      <div class="form-group col-md-3 mx-auto">
-        <div class="input-group mb-3">
-          <button class="btn btn-primary" type="submit" name="action" value="save">create</button>
-        </div>
-      </div>
-    </div>
+    </form>
   </form>
 </div>
+</main>
 </body>
 </html>

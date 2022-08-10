@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Hospital</title>
+</head>
+<body class="text-center">
+<main class="form-control">
+
+    <div layout:fragment="content">
+
+        <div class="alert alert-danger d-flex align-items-center row-cols-sm-6" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                <use xlink:href="#exclamation-triangle-fill"/>
+            </svg>
+            <div th:text="#{WhatsWrong}">
+            </div>
+            <a class="btn btn-primary text-center" href="/main" role="button" th:text="#{mainpage}">Back to main page</a>
+        </div>
+
+    </div>
+</main>
+</body>
+</html>

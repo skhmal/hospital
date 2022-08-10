@@ -32,7 +32,7 @@ public class NurseController {
 
         List<PatientDto> patientDtoList = registrationService.getAllPatients();
         Appointment.NurseAppointment[] doctorAppointments = Appointment.NurseAppointment.values();
-        System.out.println(patientDtoList);
+
         model.addAttribute("appointmentType", doctorAppointments);
         model.addAttribute("appointments", new AppointmentDto());
         model.addAttribute("patients", patientDtoList);

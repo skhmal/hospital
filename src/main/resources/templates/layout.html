@@ -23,7 +23,7 @@
 <!-- Main Navigation -->
 <div class="p3 border-5">
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-        <a class="navbar-brand" th:href="@{/}">Hospital "The Road to Heaven"</a>
+        <a class="navbar-brand" th:href="@{/}" th:text="#{home.title}">Hospital "The Road to Heaven"</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -32,23 +32,20 @@
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav ml-auto"
                 th:switch="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
-
                 <li class="nav-item active">
                   <span th:case="${true}">
-                <a class="nav-link" th:href="@{/main}">Main page</a>
+                <a class="nav-link" th:href="@{/main}" th:text="#{mainpage}">Main page</a>
                   </span>
                 </li>
 
                 <li class="nav-item active">
                  <span th:case="${false}">
-                <a class="nav-link" th:href="@{/login}">Log in</a>
+                <a class="nav-link" th:text="#{signin}" th:href="@{/login}"></a>
                  </span>
                 </li>
-
                 <li class="nav-item active ui-corner-right" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" th:href="@{/logout}">Log out</a>
+                    <a class="nav-link" th:text="#{signout}" th:href="@{/logout}">Log out</a>
                 </li>
-
             </ul>
         </div>
     </nav>
@@ -61,8 +58,13 @@
 
 <!-- Footer -->
 <footer>
+
+
+    <!--        <a th:text="#{signout}" href="/signout" role="button" class="btn btn-primary">Sign out</a>-->
+
     <nav role="navigation" class="fixed-bottom">
-        <div class="footer-copyright text-center py-xl-5">&copy; 2022 Copyright: Hospital "The road to heaven"
+
+        <div class="footer-copyright text-center py-xl-5" th:text="#{footer}">&copy; 2022 Copyright: Hospital "The road to heaven"
         </div>
     </nav>
 </footer>

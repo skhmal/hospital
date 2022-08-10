@@ -5,16 +5,17 @@
 <head>
     <title>Hospital</title>
 </head>
-<body>
+<body class="text-center">
+<main class="form-control">
+    <div layout:fragment="content">
+        <form action="#" data-th-action="@{/administrator/appoint}" data-th-object="${appoint}" method="post">
 
-<div layout:fragment="content">
-    <form action="#" data-th-action="@{/administrator/appoint}" data-th-object="${appoint}" method="post">
-        <div class="row">
-            <div class="col">
+
+            <div class="row mt-3">
                 <div class="form-group col-md-3 mx-auto">
-                    <div class="input-group mb-3">
-                        <select class="form-select" id="doctor" name="doctor">
-                            <option value="null">Choose a doctor</option>
+                    <div class="input-group-lg">
+                        <select class="form-select-lg" id="doctor" name="doctor">
+                            <option value="null" th:text="#{chooseDoctor}">Choose a doctor</option>
                             <option th:each="doctor: ${doctors}" th:text="${doctor.lastname}"
                                     th:value="${doctor.id}"></option>
                         </select>
@@ -22,29 +23,29 @@
                 </div>
             </div>
 
-            <div class="col">
+            <div class="row mt-3">
                 <div class="form-group col-md-3 mx-auto">
-                    <div class="input-group mb-3">
-                        <select class="form-select" id="patient" name="patient">
-                            <option value="null">Choose a patient</option>
+                    <div class="input-group-lg">
+                        <select class="form-select-lg" id="patient" name="patient">
+                            <option value="null" th:text="#{choosePatient}">Choose a patient</option>
                             <option th:each="patient: ${patients}" th:text="${patient.lastname}"
                                     th:value="${patient.id}"></option>
                         </select>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="form-group col-md-3 mx-auto">
-                <div id="submitButton" class="input-group mb-3">
-                    <button class="btn btn-primary" type="submit" name="action" value="save">Submit</button>
+            <div class="row mt-3">
+                <div class="form-group col-md-3 mx-auto">
+                    <div id="submitButton" class="input-group-lg">
+                        <button class="btn btn-primary" type="submit" name="action" value="save" th:text="#{Create}">
+                            Create
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-
-
-    </form>
-</div>
+        </form>
+    </div>
+</main>
 </body>
 </html>

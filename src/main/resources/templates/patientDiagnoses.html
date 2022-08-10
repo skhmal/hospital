@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Hospital</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <h1 class="text-center" th:text="#{diagnoseList}">Diagnose list</h1>
+
+    <table class="table table-striped table-responsive-md mt-3">
+
+        <thead>
+        <tr>
+            <th>
+                <a th:href="@{'/patient/diagnoses/' + ${currentPage} + '?sortField=diagnoseDate&sortDir=' + ${reverseSortDir}}"
+                   th:text="#{diagnoseDate}">
+                    Diagnose date</a>
+            </th>
+            <th>
+                <a th:href="@{'/patient/diagnoses/' + ${currentPage} + '?sortField=summary&sortDir=' + ${reverseSortDir}}"
+                   th:text="#{apsummary}">
+                    Date</a>
+            </th>
+            <th>
+                <a th:href="@{'/patient/diagnoses/' + ${currentPage} + '?sortField=hospitalStuff&sortDir=' + ${reverseSortDir}}"
+                   th:text="#{medic}">
+                    Full name</a>
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="diagnose : ${diagnoseList}">
+            <td th:text="${#temporals.format(diagnose.diagnoseDate, 'dd-MMMM-yy')}"></td>
+            <td th:text="${diagnose.summary}"></td>
+            <td th:text="${diagnose.hospitalStuff.firstname + ' ' + diagnose.getHospitalStuff().lastname}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav aria-label="pag">
+        <div th:if="${totalPages > 1}">
+
+            <div class="row col-sm-10">
+                <div class="col-sm-2" th:text="#{TotalRows} + ': ' + ${totalItems}">
+                </div>
+
+                <div class="col-sm-1">
+                    <a th:if="${currentPage > 1}"
+                       th:href="@{'/patient/diagnoses/' + ${1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                       th:text="#{First}">First</a>
+                    <span th:unless="${currentPage == 1}"></span>
+                </div>
+
+                <div class="col-sm-1">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}"
+                           th:href="@{'/patient/diagnoses/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>
+					</span>
+                </div>
+
+                <div class="col-sm-1">
+                    <a th:if="${currentPage < totalPages}"
+                       th:href="@{'/patient/diagnoses/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                       th:text="#{Last}">Last</a>
+                    <span th:unless="${currentPage < totalPages}"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+</body>
+</html>

@@ -27,7 +27,7 @@ public class AppointmentDto {
     @NotBlank(message = "Field appointment type must not be empty")
     private String appointmentType;
 
-    @NotNull(message = "Field patient must not be empty")
+//    @NotNull(message = "Field patient must not be empty")
     private PatientDto patient;
 
     @NotBlank(message = "Field summary must not be empty")
@@ -35,4 +35,6 @@ public class AppointmentDto {
 
     @NotNull(message = "Field employee must not be empty")
     private HospitalStuffDto hospitalStuff;
+
+    private int patientId;
 }

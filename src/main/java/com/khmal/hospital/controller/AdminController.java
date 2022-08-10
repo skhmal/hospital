@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -33,11 +34,11 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, params = "action=save")
-    public String createNewPatient(@ModelAttribute("patient") PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
+    public RedirectView createNewPatient(@ModelAttribute("patient") PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
 
         registrationService.addPatientToTheSystem(patientDtoUserDtoRoleDto);
 
-        return "successful";
+        return new RedirectView("redirect:/successful");
     }
 
     @GetMapping("/doctor")
@@ -49,7 +50,6 @@ public class AdminController {
         return "addDoctor";
     }
 
-    @Transactional
     @RequestMapping(value = "/doctor", method = RequestMethod.POST, params = "action=save")
     public String createNewDoctor(@ModelAttribute("doctor") HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto,
                                   @RequestParam(value = "doctorSpecialization") String doctorSpecialization) {
@@ -60,7 +60,7 @@ public class AdminController {
 
         registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
-        return "successful";
+        return "redirect:successful";
     }
 
     @GetMapping("/administrator")
@@ -79,7 +79,7 @@ public class AdminController {
 
         registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
-        return "successful";
+        return "redirect:successful";
     }
 
     @GetMapping("nurse")
@@ -98,7 +98,7 @@ public class AdminController {
 
         registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
 
-        return "successful";
+        return "redirect:successful";
     }
 
     @GetMapping("/appoint")
