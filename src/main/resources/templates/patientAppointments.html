@@ -29,7 +29,7 @@
                     Summary</a>
             </th>
             <th>
-                <a th:href="@{'/patient/appointments/' + ${currentPage} + '?sortField=hospitalStuff&sortDir=' + ${reverseSortDir}}"
+                <a th:href="@{'/patient/appointments/' + ${currentPage} + '?sortField=hospitalStaff&sortDir=' + ${reverseSortDir}}"
                    th:text="#{medic}">
                     Full name</a>
             </th>
@@ -40,7 +40,7 @@
             <td th:text="${appointment.appointmentType}"></td>
             <td th:text="${#temporals.format(appointment.date, 'HH:mm dd-MMMM-yy')}"></td>
             <td th:text="${appointment.summary}"></td>
-            <td th:text="${appointment.hospitalStuff.firstname + ' ' + appointment.getHospitalStuff().lastname}"></td>
+            <td th:text="${appointment.hospitalStaff.firstname + ' ' + appointment.getHospitalStaff().lastname}"></td>
         </tr>
         </tbody>
     </table>

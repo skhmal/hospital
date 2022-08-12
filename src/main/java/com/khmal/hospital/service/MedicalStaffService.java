@@ -2,11 +2,11 @@ package com.khmal.hospital.service;
 
 import com.khmal.hospital.dao.entity.Appointment;
 import com.khmal.hospital.dao.entity.Diagnose;
-import com.khmal.hospital.dao.entity.HospitalStuff;
+import com.khmal.hospital.dao.entity.HospitalStaff;
 import com.khmal.hospital.dao.entity.Patient;
 import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.DiagnoseRepository;
-import com.khmal.hospital.dao.repository.HospitalStuffRepository;
+import com.khmal.hospital.dao.repository.HospitalStaffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.DiagnoseDto;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -32,14 +31,14 @@ import java.util.List;
 @Validated
 public class MedicalStaffService {
     private final PatientRepository patientRepository;
-    private final HospitalStuffRepository hospitalStuffRepository;
+    private final HospitalStaffRepository hospitalStaffRepository;
     private final AppointmentRepository appointmentRepository;
     private final Validation validation;
     private final DiagnoseRepository diagnoseRepository;
 
-    public MedicalStaffService(PatientRepository patientRepository, HospitalStuffRepository hospitalStuffRepository, AppointmentRepository appointmentRepository, Validation validation, DiagnoseRepository diagnoseRepository) {
+    public MedicalStaffService(PatientRepository patientRepository, HospitalStaffRepository hospitalStaffRepository, AppointmentRepository appointmentRepository, Validation validation, DiagnoseRepository diagnoseRepository) {
         this.patientRepository = patientRepository;
-        this.hospitalStuffRepository = hospitalStuffRepository;
+        this.hospitalStaffRepository = hospitalStaffRepository;
         this.appointmentRepository = appointmentRepository;
         this.validation = validation;
         this.diagnoseRepository = diagnoseRepository;
@@ -63,7 +62,7 @@ public class MedicalStaffService {
                     patientRepository.getPatientById(patientId).orElseThrow(
                             () -> new NoSuchUserException("Patient is not found")
                     ),
-                    hospitalStuffRepository.getHospitalStuffById(hospitalStuffId).orElseThrow(
+                    hospitalStaffRepository.getHospitalStuffById(hospitalStuffId).orElseThrow(
                             () -> new NoSuchUserException("Employee is not found")
                     ));
         }
@@ -83,7 +82,7 @@ public class MedicalStaffService {
                     patientRepository.getPatientById(patientId).orElseThrow(
                             () -> new NoSuchUserException("Patient is not found")
                     ),
-                    hospitalStuffRepository.getHospitalStuffById(doctorId).orElseThrow(
+                    hospitalStaffRepository.getHospitalStuffById(doctorId).orElseThrow(
                             () -> new NoSuchUserException("Doctor is not found")
                     ));
 
@@ -94,26 +93,17 @@ public class MedicalStaffService {
                 patientRepository.save(patient);
             }
 
-            HospitalStuff doctor = hospitalStuffRepository.getHospitalStuffById(doctorId).get();
+            HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(doctorId).get();
             doctor.getPatientsList().remove(patient);
             doctor.setPatientCount(doctor.getPatientCount()-1);
         }
+
         return DiagnoseMapper.INSTANCE.toDto(diagnoseRepository.save(diagnose));
     }
 
-    public List<DiagnoseDto> getPatientDiagnoses(@NotNull(message = "Patient id can't be empty") int id) {
-        List<Diagnose> diagnoseList = null;
-
-        if (validation.checkPatientId(id)) {
-            diagnoseList = diagnoseRepository.getDiagnoseByPatientId(id).orElseThrow(
-                    () -> new NoSuchUserException("No diagnose for patient"));
-        }
-        return DiagnoseMapper.INSTANCE.toDto(diagnoseList);
-    }
-
     public List<PatientDto> getDoctorPatients(int doctorId){
-       if  (hospitalStuffRepository.getHospitalStuffById(doctorId).isPresent()){
-           HospitalStuff doctor = hospitalStuffRepository.getHospitalStuffById(doctorId).get();
+       if  (hospitalStaffRepository.getHospitalStuffById(doctorId).isPresent()){
+           HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(doctorId).get();
            return PatientMapper.INSTANCE.toDto(doctor.getPatientsList());
        }else {
            throw new IncorrectDateException("Doctor doesn't have a patients for appointment");

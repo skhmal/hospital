@@ -37,7 +37,7 @@ public class Patient {
 
     @OneToOne
     @JoinColumn(name = "role_id")
-    private StuffRole stuffRole;
+    private StaffRole staffRole;
 
     @Column(name = "discharged")
     private boolean discharged;
@@ -50,14 +50,14 @@ public class Patient {
     )
     @ToString.Exclude
     @JsonIgnore
-    private List<HospitalStuff> doctorsList;
+    private List<HospitalStaff> doctorsList;
 
-    public Patient(String firstname, String lastname, String username, LocalDate birthday, StuffRole stuffRole) {
+    public Patient(String firstname, String lastname, String username, LocalDate birthday, StaffRole staffRole) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.birthday = birthday;
-        this.stuffRole = stuffRole;
+        this.staffRole = staffRole;
         this.discharged = false;
     }
 }

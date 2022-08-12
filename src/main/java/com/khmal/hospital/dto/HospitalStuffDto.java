@@ -34,7 +34,7 @@ public class HospitalStuffDto {
 
     private String doctorSpecialization;
 
-    private StuffRoleDto stuffRole;
+    private StaffRoleDto stuffRole;
 
 
 

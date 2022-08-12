@@ -3,7 +3,6 @@ package com.khmal.hospital.controller;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.DiagnoseDto;
 import com.khmal.hospital.service.PatientService;
-import com.khmal.hospital.service.RegistrationService;
 import com.khmal.hospital.service.SecurityService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -21,12 +20,10 @@ import java.util.List;
 public class PatientController {
 
     private final SecurityService securityService;
-    private final RegistrationService registrationService;
     private final PatientService patientService;
 
-    public PatientController(SecurityService securityService, RegistrationService registrationService, PatientService patientService) {
+    public PatientController(SecurityService securityService, PatientService patientService) {
         this.securityService = securityService;
-        this.registrationService = registrationService;
         this.patientService = patientService;
     }
 
@@ -38,7 +35,7 @@ public class PatientController {
                                                    Model model, Principal principal) {
         int pageSize = 5;
 
-        int patientId = securityService.getPatientId(principal);
+        int patientId = securityService.getPatientId(principal.getName());
 
         Page<AppointmentDto> page = patientService.getAllPatientAppointmentsPaginated(pageNo, pageSize, sortField, sortDir, patientId);
         List<AppointmentDto> appointmentDtoList = page.getContent();
@@ -62,7 +59,7 @@ public class PatientController {
                                                 Model model, Principal principal) {
         int pageSize = 5;
 
-        int patientId = securityService.getPatientId(principal);
+        int patientId = securityService.getPatientId(principal.getName());
 
         Page<DiagnoseDto> page = patientService.getAllPatientDiagnosesPaginated(pageNo, pageSize, sortField,
                 sortDir, patientId);

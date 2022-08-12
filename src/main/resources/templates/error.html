@@ -6,7 +6,7 @@
     <title>Hospital</title>
 </head>
 <body class="text-center">
-<main class="form-control" >
+<main class="form-control">
 
     <div layout:fragment="content">
 
@@ -16,9 +16,10 @@
             </svg>
             <div th:text="#{WhatsWrong}">
             </div>
-            <a class="btn btn-primary text-center" href="/main" role="button" th:text="#{mainpage}">Back to main page</a>
+            <a class="btn btn-primary text-center" href="/main" role="button" th:text="#{mainpage}">Back to main
+                page</a>
+            <div class="text-center" th:text="${exception}"></div>
         </div>
-        <div th:text="'Exception ' + ${exception}"></div>
     </div>
 </main>
 </body>

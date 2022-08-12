@@ -1,9 +1,11 @@
 package com.khmal.hospital.dao.entity;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -11,8 +13,8 @@ import java.util.List;
 @Entity
 @ToString
 @AllArgsConstructor
-@Table(name = "hospital_stuff")
-public class HospitalStuff {
+@Table(name = "hospital_staff")
+public class HospitalStaff {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +35,7 @@ public class HospitalStuff {
 
     @OneToOne
     @JoinColumn(name = "role_id")
-    private StuffRole stuffRole;
+    private StaffRole staffRole;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
@@ -69,11 +71,24 @@ public class HospitalStuff {
         UROLOGIST
     }
 
-    public HospitalStuff(String firstname, String lastname, String username, String doctorSpecialization, StuffRole stuffRole) {
+    public HospitalStaff(String firstname, String lastname, String username, String doctorSpecialization, StaffRole staffRole) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.doctorSpecialization = doctorSpecialization;
-        this.stuffRole = stuffRole;
+        this.staffRole = staffRole;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        HospitalStaff that = (HospitalStaff) o;
+        return lastname != null && Objects.equals(lastname, that.lastname);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

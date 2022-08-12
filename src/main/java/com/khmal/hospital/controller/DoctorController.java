@@ -7,7 +7,6 @@ import com.khmal.hospital.service.MedicalStaffService;
 import com.khmal.hospital.service.SecurityService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -30,8 +29,9 @@ public class DoctorController {
 
     @GetMapping("/appointment")
     public String getDoctorAppointment(Model model, Principal principal) {
-        int doctorId = securityService.getEmployeeId(principal);
+        int doctorId = securityService.getEmployeeId(principal.getName());
         List<PatientDto> patientDtoList = medicalStaffService.getDoctorPatients(doctorId);
+
         Appointment.DoctorAppointment[] doctorAppointments = Appointment.DoctorAppointment.values();
 
         model.addAttribute("appointmentType", doctorAppointments);
@@ -48,7 +48,7 @@ public class DoctorController {
                                        @RequestParam("appointmentTypeDoctor") String appointmentType,
                                        Principal principal) {
 
-        int doctorId = securityService.getEmployeeId(principal);
+        int doctorId = securityService.getEmployeeId(principal.getName());
 
         medicalStaffService.createAppointment(patientId, doctorId, appointmentType,
                 appointmentDto.getSummary(), appointmentDto.getDate());
@@ -61,6 +61,7 @@ public class DoctorController {
     public String getDiagnose(Model model, Principal principal) {
         int doctorId = getDoctorId(principal);
         List<PatientDto> patientDtoList = medicalStaffService.getDoctorPatients(doctorId);
+
         Appointment.DoctorAppointment[] doctorAppointments = Appointment.DoctorAppointment.values();
 
         model.addAttribute("appointmentType", doctorAppointments);
@@ -72,7 +73,7 @@ public class DoctorController {
     }
 
     public int getDoctorId(Principal principal) {
-        return securityService.getEmployeeId(principal);
+        return securityService.getEmployeeId(principal.getName());
     }
 
     @Transactional

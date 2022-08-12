@@ -12,7 +12,7 @@ import javax.validation.constraints.Null;
 @Getter
 @Setter
 @ToString
-public class StuffRoleDto {
+public class StaffRoleDto {
     @Null(groups = CreateOrUpdateMarker.OnCreate.class)
     @NotNull(groups = CreateOrUpdateMarker.OnUpdate.class)
     private Integer id;

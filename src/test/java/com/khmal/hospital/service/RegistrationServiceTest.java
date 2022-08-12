@@ -5,7 +5,10 @@ import com.khmal.hospital.dao.repository.*;
 import com.khmal.hospital.service.validator.Validation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
@@ -26,32 +29,32 @@ class RegistrationServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private HospitalStuffRepository hospitalStuffRepository;
+    private HospitalStaffRepository hospitalStaffRepository;
     @Mock
-    private StuffRoleRepository stuffRoleRepository;
+    private StaffRoleRepository staffRoleRepository;
     @Mock
     private Validation validation;
-    @Mock
-    private HospitalStuff hospitalStuff;
-
 
     @BeforeEach
     public void setUp() {
-        Mockito.when(stuffRoleRepository.getStuffRoleById(Mockito.anyInt()))
-                .thenReturn(Optional.of(new StuffRole("ROLE_PATIENT")));
+        Mockito.when(staffRoleRepository.getStuffRoleById(Mockito.anyInt()))
+                .thenReturn(Optional.of(new StaffRole("ROLE_PATIENT")));
 
-        HospitalStuff doctor = new HospitalStuff(1,"john", "schwarc", "js",
-                "surgeon", new StuffRole("ROLE_DOCTOR"), new ArrayList<Patient>(),0);
-        Mockito.when(hospitalStuffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(Optional.of(doctor));
+        HospitalStaff doctor = new HospitalStaff("john", "schwarc", "js",
+                "surgeon", new StaffRole("ROLE_DOCTOR"));
+
+        doctor.setPatientsList(new ArrayList<Patient>());
 
         Patient patient = new Patient("Jan", "Grabowski", "jb",
-                LocalDate.now(),
-                new StuffRole("ROLE_PATIENT"));
+                LocalDate.now(), new StaffRole("ROLE_PATIENT"));
+
+        Mockito.when(hospitalStaffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(Optional.of(doctor));
         Mockito.when(patientRepository.getPatientById(Mockito.anyInt())).thenReturn(Optional.of(patient));
 
         Mockito.when(validation.checkHospitalStuffId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(validation.checkPatientId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(validation.checkStuffRoleInDataBase(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(validation.checkDoubleAppoint(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
     }
 
     @Test
@@ -71,7 +74,7 @@ class RegistrationServiceTest {
 
         assertEquals(expectedUserName, patient.getUsername());
         assertEquals(expectedFirstname, patient.getFirstname());
-        assertEquals(expectedStuffRoleName, patient.getStuffRole().getRoleName());
+        assertEquals(expectedStuffRoleName, patient.getStaffRole().getRoleName());
     }
 
     @Test
@@ -113,28 +116,25 @@ class RegistrationServiceTest {
     void addNewEmployeePositiveCase() {
         String expectedDoctorSpecialization = "surgeon";
 
-        Mockito.when(stuffRoleRepository.getStuffRoleById(3)).thenReturn(Optional.of(new StuffRole("doctor")));
+        Mockito.when(staffRoleRepository.getStuffRoleById(3)).thenReturn(Optional.of(new StaffRole("doctor")));
 
         registrationService.addNewEmployee("serg", "khm", "sh",
                 "surgeon", 3);
 
-        ArgumentCaptor<HospitalStuff> hospitalStuffDtoArgumentCaptor = ArgumentCaptor.forClass(HospitalStuff.class);
-        Mockito.verify(hospitalStuffRepository).save(hospitalStuffDtoArgumentCaptor.capture());
-        HospitalStuff hospitalStuff = hospitalStuffDtoArgumentCaptor.getValue();
+        ArgumentCaptor<HospitalStaff> hospitalStuffDtoArgumentCaptor = ArgumentCaptor.forClass(HospitalStaff.class);
+        Mockito.verify(hospitalStaffRepository).save(hospitalStuffDtoArgumentCaptor.capture());
+        HospitalStaff hospitalStuff = hospitalStuffDtoArgumentCaptor.getValue();
 
         assertEquals(expectedDoctorSpecialization, hospitalStuff.getDoctorSpecialization());
     }
 
     @Test
     void appointDoctorToPatientPositiveCase(){
-
-        Mockito.when(hospitalStuff.getPatientsList()).thenReturn(new ArrayList<Patient>());
-
         registrationService.appointDoctorToPatient(1,1);
 
-        ArgumentCaptor<HospitalStuff> hospitalStuffArgumentCaptor = ArgumentCaptor.forClass(HospitalStuff.class);
-        Mockito.verify(hospitalStuffRepository).save(hospitalStuffArgumentCaptor.capture());
-        HospitalStuff hospitalStuff = hospitalStuffArgumentCaptor.getValue();
+        ArgumentCaptor<HospitalStaff> hospitalStuffArgumentCaptor = ArgumentCaptor.forClass(HospitalStaff.class);
+        Mockito.verify(hospitalStaffRepository).save(hospitalStuffArgumentCaptor.capture());
+        HospitalStaff hospitalStuff = hospitalStuffArgumentCaptor.getValue();
 
         assertEquals("Jan", hospitalStuff.getPatientsList().get(0).getFirstname());
     }

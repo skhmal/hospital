@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.function.Function;
 
-public class DiagnoseDtoPageMapper {
+public class DiagnosePaginationMapper {
 
     public static Page<DiagnoseDto> toDto(Page<Diagnose> diagnoses){
         Page<DiagnoseDto> diagnoseDtoPage = diagnoses.map(new Function<Diagnose, DiagnoseDto>() {

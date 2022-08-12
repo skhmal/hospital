@@ -6,8 +6,8 @@ import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.DiagnoseRepository;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.DiagnoseDto;
-import com.khmal.hospital.mapper.AppointmentDtoMapper;
-import com.khmal.hospital.mapper.DiagnoseDtoPageMapper;
+import com.khmal.hospital.mapper.AppointmentPaginationMapper;
+import com.khmal.hospital.mapper.DiagnosePaginationMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +35,7 @@ public class PatientService {
 
         Page<Appointment> appointmentPage = appointmentRepository.findAppointmentByPatientId(patientId, pageable);
 
-        Page<AppointmentDto> appointmentDto = AppointmentDtoMapper.toDto(appointmentPage);
+        Page<AppointmentDto> appointmentDto = AppointmentPaginationMapper.toDto(appointmentPage);
 
         return appointmentDto;
     }
@@ -50,7 +50,7 @@ public class PatientService {
 
         Page<Diagnose> diagnosePage = diagnoseRepository.findDiagnoseByPatientId(patientId, pageable);
 
-        Page<DiagnoseDto> appointmentDto = DiagnoseDtoPageMapper.toDto(diagnosePage);
+        Page<DiagnoseDto> appointmentDto = DiagnosePaginationMapper.toDto(diagnosePage);
 
         return appointmentDto;
     }

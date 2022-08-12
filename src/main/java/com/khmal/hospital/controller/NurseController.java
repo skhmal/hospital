@@ -46,7 +46,7 @@ public class NurseController {
                                        @RequestParam("appointmentTypeNurse") String appointmentType,
                                        Principal principal) {
 
-        int nurseId = securityService.getEmployeeId(principal);
+        int nurseId = securityService.getEmployeeId(principal.getName());
 
         medicalStaffService.createAppointment(patientId, nurseId, appointmentType,
                 appointmentDto.getSummary(), appointmentDto.getDate());

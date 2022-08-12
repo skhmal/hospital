@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
-    Optional<List<Appointment>> findAppointmentByHospitalStuffId(int id);
+    Optional<List<Appointment>> findAppointmentByHospitalStaffId(int id);
     Optional<List<Appointment>> findAppointmentByPatientId(int id);
 
     Page<Appointment> findAppointmentByPatientId(int id, Pageable pageable);

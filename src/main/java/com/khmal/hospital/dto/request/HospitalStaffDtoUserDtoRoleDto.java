@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @ToString
 @Validated
-public class HospitalStuffDtoUserDtoRoleDto {
+public class HospitalStaffDtoUserDtoRoleDto {
     @NotBlank(message = "Firstname can't be empty")
     String firstname;
 

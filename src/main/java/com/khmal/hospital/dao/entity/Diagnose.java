@@ -34,9 +34,9 @@ public class Diagnose{
 
     @OneToOne
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    private HospitalStuff hospitalStuff;
+    private HospitalStaff hospitalStuff;
 
-    public Diagnose(String summary, LocalDate diagnoseDate, Patient patient, HospitalStuff hospitalStuff) {
+    public Diagnose(String summary, LocalDate diagnoseDate, Patient patient, HospitalStaff hospitalStuff) {
         this.summary = summary;
         this.diagnoseDate = diagnoseDate;
         this.patient = patient;

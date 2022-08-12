@@ -20,7 +20,7 @@ public class AppointmentDto {
     @NotNull(groups = CreateOrUpdateMarker.OnUpdate.class)
     private int id;
 
-//    @NotNull(message = "Field date must not be empty")
+    @NotNull(message = "Field date must not be empty")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime date;
 
@@ -34,7 +34,7 @@ public class AppointmentDto {
     private String summary;
 
     @NotNull(message = "Field employee must not be empty")
-    private HospitalStuffDto hospitalStuff;
+    private HospitalStuffDto hospitalStaff;
 
     private int patientId;
 }

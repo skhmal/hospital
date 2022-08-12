@@ -25,7 +25,7 @@
                     Date</a>
             </th>
             <th>
-                <a th:href="@{'/patient/diagnoses/' + ${currentPage} + '?sortField=hospitalStuff&sortDir=' + ${reverseSortDir}}"
+                <a th:href="@{'/patient/diagnoses/' + ${currentPage} + '?sortField=hospitalStaff&sortDir=' + ${reverseSortDir}}"
                    th:text="#{medic}">
                     Full name</a>
             </th>
@@ -36,7 +36,7 @@
         <tr th:each="diagnose : ${diagnoseList}">
             <td th:text="${#temporals.format(diagnose.diagnoseDate, 'dd-MMMM-yy')}"></td>
             <td th:text="${diagnose.summary}"></td>
-            <td th:text="${diagnose.hospitalStuff.firstname + ' ' + diagnose.getHospitalStuff().lastname}"></td>
+            <td th:text="${diagnose.hospitalStaff.firstname + ' ' + diagnose.getHospitalStuff().lastname}"></td>
         </tr>
         </tbody>
     </table>

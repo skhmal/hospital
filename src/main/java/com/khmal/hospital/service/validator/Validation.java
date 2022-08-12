@@ -1,12 +1,12 @@
 package com.khmal.hospital.service.validator;
 
 import com.khmal.hospital.dao.entity.Appointment;
-import com.khmal.hospital.dao.entity.HospitalStuff;
+import com.khmal.hospital.dao.entity.HospitalStaff;
 import com.khmal.hospital.dao.entity.Patient;
 import com.khmal.hospital.dao.repository.AppointmentRepository;
-import com.khmal.hospital.dao.repository.HospitalStuffRepository;
+import com.khmal.hospital.dao.repository.HospitalStaffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
-import com.khmal.hospital.dao.repository.StuffRoleRepository;
+import com.khmal.hospital.dao.repository.StaffRoleRepository;
 import com.khmal.hospital.service.exception_handling.IncorrectDateException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import org.springframework.stereotype.Service;
@@ -19,20 +19,20 @@ import java.util.stream.Stream;
 @Service
 public class Validation {
 
-    private final HospitalStuffRepository hospitalStuffRepository;
+    private final HospitalStaffRepository hospitalStaffRepository;
     private final PatientRepository patientRepository;
     private final AppointmentRepository appointmentRepository;
-    private final StuffRoleRepository stuffRoleRepository;
+    private final StaffRoleRepository staffRoleRepository;
 
-    public Validation(HospitalStuffRepository hospitalStuffRepository, PatientRepository patientRepository, AppointmentRepository appointmentRepository, StuffRoleRepository stuffRoleRepository) {
-        this.hospitalStuffRepository = hospitalStuffRepository;
+    public Validation(HospitalStaffRepository hospitalStaffRepository, PatientRepository patientRepository, AppointmentRepository appointmentRepository, StaffRoleRepository staffRoleRepository) {
+        this.hospitalStaffRepository = hospitalStaffRepository;
         this.patientRepository = patientRepository;
         this.appointmentRepository = appointmentRepository;
-        this.stuffRoleRepository = stuffRoleRepository;
+        this.staffRoleRepository = staffRoleRepository;
     }
 
     public boolean checkHospitalStuffId(int id) {
-        if (hospitalStuffRepository.findHospitalStuffById(id).isEmpty()) {
+        if (hospitalStaffRepository.findHospitalStuffById(id).isEmpty()) {
             throw new NoSuchUserException("Employee is not found");
         }
         return true;
@@ -47,9 +47,9 @@ public class Validation {
 
     public boolean checkAppointmentDateForHospitalStuff(int patientId, int hospitalStuffId, LocalDateTime appointmentDateTime) {
 
-        if (appointmentRepository.findAppointmentByHospitalStuffId(hospitalStuffId).isPresent()) {
+        if (appointmentRepository.findAppointmentByHospitalStaffId(hospitalStuffId).isPresent()) {
             List<Appointment> hospitalStuffAppointmentList =
-                    appointmentRepository.findAppointmentByHospitalStuffId(hospitalStuffId).get();
+                    appointmentRepository.findAppointmentByHospitalStaffId(hospitalStuffId).get();
 
             for (Appointment appointment : hospitalStuffAppointmentList
             ) {
@@ -74,14 +74,14 @@ public class Validation {
     }
 
     public boolean checkStuffRoleInDataBase(int roleId) {
-        if (stuffRoleRepository.getStuffRoleById(roleId).isEmpty()) {
+        if (staffRoleRepository.getStuffRoleById(roleId).isEmpty()) {
             throw new IncorrectDateException("Role with id " + roleId + " not found");
         }
         return true;
     }
 
     public boolean checkDoctorSpecialization(String doctorSpecialization) {
-        boolean checkResult = Stream.of(HospitalStuff.DoctorSpecialization.values())
+        boolean checkResult = Stream.of(HospitalStaff.DoctorSpecialization.values())
                 .anyMatch(s -> s.name().equals(doctorSpecialization));
 
         if (!checkResult) {
@@ -91,8 +91,8 @@ public class Validation {
         }
     }
 
-    public boolean checkAppoint(int doctorId, int patientId) {
-        HospitalStuff doctor = hospitalStuffRepository.getHospitalStuffById(doctorId).orElseThrow(
+    public boolean checkDoubleAppoint(int doctorId, int patientId) {
+        HospitalStaff doctor = hospitalStaffRepository.findHospitalStuffById(doctorId).orElseThrow(
                 () -> new NoSuchUserException("Doctor with id = " + doctorId + " is not found"));
         List<Patient> patientList = doctor.getPatientsList();
 

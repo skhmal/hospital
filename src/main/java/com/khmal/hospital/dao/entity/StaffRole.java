@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @ToString
 @Table(name = "role")
-public class StuffRole {
+public class StaffRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class StuffRole {
     @Column(name = "role_name")
     private String roleName;
 
-    public StuffRole(String roleName) {
+    public StaffRole(String roleName) {
         this.roleName = roleName;
     }
 }

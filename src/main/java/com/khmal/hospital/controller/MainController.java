@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/")
-public class UtilityController {
+public class MainController {
 
     @GetMapping("/")
     public String getIndexPage() {

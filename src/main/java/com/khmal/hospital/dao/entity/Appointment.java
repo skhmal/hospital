@@ -36,15 +36,15 @@ public class Appointment{
     private Patient patient;
 
     @OneToOne
-    @JoinColumn(name = "hospital_stuff_id", referencedColumnName = "id")
-    private HospitalStuff hospitalStuff;
+    @JoinColumn(name = "hospital_staff_id", referencedColumnName = "id")
+    private HospitalStaff hospitalStaff;
 
-    public Appointment(LocalDateTime date, String appointmentType, String summary, Patient patient, HospitalStuff hospitalStuff) {
+    public Appointment(LocalDateTime date, String appointmentType, String summary, Patient patient, HospitalStaff hospitalStaff) {
         this.date = date;
         this.appointmentType = appointmentType;
         this.summary = summary;
         this.patient = patient;
-        this.hospitalStuff = hospitalStuff;
+        this.hospitalStaff = hospitalStaff;
     }
 
     public enum DoctorAppointment{

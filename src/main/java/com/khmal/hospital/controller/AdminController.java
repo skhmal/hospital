@@ -1,10 +1,10 @@
 package com.khmal.hospital.controller;
 
-import com.khmal.hospital.dao.entity.HospitalStuff;
+import com.khmal.hospital.dao.entity.HospitalStaff;
 import com.khmal.hospital.dto.DoctorDto;
 import com.khmal.hospital.dto.HospitalStuffDto;
 import com.khmal.hospital.dto.PatientDto;
-import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
+import com.khmal.hospital.dto.request.HospitalStaffDtoUserDtoRoleDto;
 import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
 import com.khmal.hospital.service.RegistrationService;
 import org.springframework.data.domain.Page;
@@ -47,59 +47,59 @@ public class AdminController {
     @GetMapping("/doctor")
     public String createNewDoctor(Model model) {
 
-        model.addAttribute("doctor", new HospitalStuffDtoUserDtoRoleDto());
-        model.addAttribute("specializations", HospitalStuff.DoctorSpecialization.values());
+        model.addAttribute("doctor", new HospitalStaffDtoUserDtoRoleDto());
+        model.addAttribute("specializations", HospitalStaff.DoctorSpecialization.values());
 
         return "addDoctor";
     }
 
     @RequestMapping(value = "/doctor", method = RequestMethod.POST, params = "action=save")
-    public String createNewDoctor(@ModelAttribute("doctor") HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto,
+    public String createNewDoctor(@ModelAttribute("doctor") HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto,
                                   @RequestParam(value = "doctorSpecialization") String doctorSpecialization) {
         int doctorRoleId = 3;
 
-        hospitalStuffDtoUserDtoRoleDto.setDoctorSpecialization(doctorSpecialization);
-        hospitalStuffDtoUserDtoRoleDto.setStuffRoleId(doctorRoleId);
+        hospitalStaffDtoUserDtoRoleDto.setDoctorSpecialization(doctorSpecialization);
+        hospitalStaffDtoUserDtoRoleDto.setStuffRoleId(doctorRoleId);
 
-        registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
+        registrationService.addEmployeeToTheSystem(hospitalStaffDtoUserDtoRoleDto);
 
         return SUCCESSFUL;
     }
 
     @GetMapping("/administrator")
     public String createNewAdministrator(Model model) {
-        model.addAttribute("admin", new HospitalStuffDtoUserDtoRoleDto());
+        model.addAttribute("admin", new HospitalStaffDtoUserDtoRoleDto());
         return "addAdministrator";
     }
 
     @RequestMapping(value = "/administrator", method = RequestMethod.POST, params = "action=save")
-    public String createNewAdministrator(@ModelAttribute("admin") HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
+    public String createNewAdministrator(@ModelAttribute("admin") HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto) {
         int administratorRoleId = 1;
         String doctorSpecialization = null;
 
-        hospitalStuffDtoUserDtoRoleDto.setStuffRoleId(administratorRoleId);
-        hospitalStuffDtoUserDtoRoleDto.setDoctorSpecialization(doctorSpecialization);
+        hospitalStaffDtoUserDtoRoleDto.setStuffRoleId(administratorRoleId);
+        hospitalStaffDtoUserDtoRoleDto.setDoctorSpecialization(doctorSpecialization);
 
-        registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
+        registrationService.addEmployeeToTheSystem(hospitalStaffDtoUserDtoRoleDto);
 
         return SUCCESSFUL;
     }
 
     @GetMapping("nurse")
     public String addNewNurse(Model model) {
-        model.addAttribute("nurse", new HospitalStuffDtoUserDtoRoleDto());
+        model.addAttribute("nurse", new HospitalStaffDtoUserDtoRoleDto());
         return "addNurse";
     }
 
     @RequestMapping(value = "/nurse", method = RequestMethod.POST, params = "action=save")
-    public String addNewNurse(@ModelAttribute("nurse") HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
+    public String addNewNurse(@ModelAttribute("nurse") HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto) {
         int nurseRoleId = 2;
         String doctorSpecialization = null;
 
-        hospitalStuffDtoUserDtoRoleDto.setStuffRoleId(nurseRoleId);
-        hospitalStuffDtoUserDtoRoleDto.setDoctorSpecialization(doctorSpecialization);
+        hospitalStaffDtoUserDtoRoleDto.setStuffRoleId(nurseRoleId);
+        hospitalStaffDtoUserDtoRoleDto.setDoctorSpecialization(doctorSpecialization);
 
-        registrationService.addEmployeeToTheSystem(hospitalStuffDtoUserDtoRoleDto);
+        registrationService.addEmployeeToTheSystem(hospitalStaffDtoUserDtoRoleDto);
 
         return SUCCESSFUL;
     }

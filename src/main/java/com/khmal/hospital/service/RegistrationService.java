@@ -1,9 +1,15 @@
 package com.khmal.hospital.service;
 
-import com.khmal.hospital.dao.entity.*;
+import com.khmal.hospital.dao.entity.HospitalStaff;
+import com.khmal.hospital.dao.entity.Patient;
+import com.khmal.hospital.dao.entity.Role;
+import com.khmal.hospital.dao.entity.User;
 import com.khmal.hospital.dao.repository.*;
-import com.khmal.hospital.dto.*;
-import com.khmal.hospital.dto.request.HospitalStuffDtoUserDtoRoleDto;
+import com.khmal.hospital.dto.DoctorDto;
+import com.khmal.hospital.dto.HospitalStuffDto;
+import com.khmal.hospital.dto.PatientDto;
+import com.khmal.hospital.dto.UserDto;
+import com.khmal.hospital.dto.request.HospitalStaffDtoUserDtoRoleDto;
 import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
 import com.khmal.hospital.mapper.*;
 import com.khmal.hospital.service.exception_handling.IncorrectDateException;
@@ -31,18 +37,18 @@ public class RegistrationService {
     private final RoleRepository roleRepository;
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
-    private final HospitalStuffRepository hospitalStuffRepository;
-    private final StuffRoleRepository stuffRoleRepository;
+    private final HospitalStaffRepository hospitalStaffRepository;
+    private final StaffRoleRepository staffRoleRepository;
     private final Validation validation;
     private static final String ENCODE_ALGORITHM = "{bcrypt}";
 
     public RegistrationService(RoleRepository roleRepository, PatientRepository patientRepository,
-                               UserRepository userRepository, HospitalStuffRepository hospitalStuffRepository, StuffRoleRepository stuffRoleRepository, Validation validation) {
+                               UserRepository userRepository, HospitalStaffRepository hospitalStaffRepository, StaffRoleRepository staffRoleRepository, Validation validation) {
         this.roleRepository = roleRepository;
         this.patientRepository = patientRepository;
         this.userRepository = userRepository;
-        this.hospitalStuffRepository = hospitalStuffRepository;
-        this.stuffRoleRepository = stuffRoleRepository;
+        this.hospitalStaffRepository = hospitalStaffRepository;
+        this.staffRoleRepository = staffRoleRepository;
         this.validation = validation;
     }
 
@@ -59,7 +65,7 @@ public class RegistrationService {
                     lastname,
                     username,
                     birthday,
-                    stuffRoleRepository.getStuffRoleById(stuffRoleId).get());
+                    staffRoleRepository.getStuffRoleById(stuffRoleId).get());
         }
 
         patientRepository.save(patient);
@@ -88,7 +94,7 @@ public class RegistrationService {
                             .orElseThrow(() ->
                                     new NoSuchUserException("User with username " + username + " is not found")),
 
-                    stuffRoleRepository.getStuffRoleById(roleId)
+                    staffRoleRepository.getStuffRoleById(roleId)
                             .orElseThrow(() -> new IncorrectDateException("Role with id " + roleId + " is not found!"))
                             .getRoleName());
 
@@ -102,19 +108,19 @@ public class RegistrationService {
                                            String doctorSpecialization,
                                            @NotNull(message = "Role id can't be null") int stuffRoleId) {
 
-        HospitalStuff hospitalStuff = null;
+        HospitalStaff hospitalStaff = null;
 
         if (validation.checkStuffRoleInDataBase(stuffRoleId)) {
-            hospitalStuff = new HospitalStuff(
+            hospitalStaff = new HospitalStaff(
                     firstname,
                     lastname,
                     username,
                     doctorSpecialization,
-                    stuffRoleRepository.getStuffRoleById(stuffRoleId).orElseThrow(
+                    staffRoleRepository.getStuffRoleById(stuffRoleId).orElseThrow(
                             () -> new IncorrectDateException("Role is not found in data base")
                     ));
         }
-        return HospitalStuffMapper.INSTANCE.toDto(hospitalStuffRepository.save(hospitalStuff));
+        return HospitalStuffMapper.INSTANCE.toDto(hospitalStaffRepository.save(hospitalStaff));
     }
 
     public List<PatientDto> getAllPatients() {
@@ -128,7 +134,7 @@ public class RegistrationService {
 
     public List<HospitalStuffDto> getAllDoctors() {
         return HospitalStuffMapper.INSTANCE.toDto(
-                hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
+                hospitalStaffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
                         .orElseThrow(() -> new NoSuchUserException("No doctors registered")));
     }
 
@@ -139,9 +145,9 @@ public class RegistrationService {
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
-        Page<HospitalStuff> hospitalStuffPage = hospitalStuffRepository.getHospitalStuffByDoctorSpecializationIsNotNull(pageable);
+        Page<HospitalStaff> hospitalStuffPage = hospitalStaffRepository.getHospitalStaffByDoctorSpecializationIsNotNull(pageable);
 
-        Page<DoctorDto> doctorDtoPage = DoctorDtoPageMapper.toDto(hospitalStuffPage);
+        Page<DoctorDto> doctorDtoPage = DoctorPaginationMapper.toDto(hospitalStuffPage);
 
         return doctorDtoPage;
     }
@@ -154,7 +160,7 @@ public class RegistrationService {
 
         Page<Patient> patientPage = patientRepository.findAll(pageable);
 
-        Page<PatientDto> patientDtoPage = PatientDtoPageMapper.toDto(patientPage);
+        Page<PatientDto> patientDtoPage = PatientPaginationMapper.toDto(patientPage);
 
         return patientDtoPage;
     }
@@ -162,25 +168,25 @@ public class RegistrationService {
     public void appointDoctorToPatient(@NotNull(message = "Doctor can't be empty") int doctorId,
                                        @NotNull(message = "Patient can't be empty") int patientId) {
 
-
         if (validation.checkPatientId(patientId) && validation.checkHospitalStuffId(doctorId)) {
 
-            if (!validation.checkAppoint(doctorId, patientId))
+            if (!validation.checkDoubleAppoint(doctorId, patientId))
                 throw new IncorrectDateException("Appoint already exist");
 
-            HospitalStuff hospitalStuff = hospitalStuffRepository.getHospitalStuffById(doctorId)
+            HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(doctorId)
                     .orElseThrow(() -> new NoSuchUserException("Doctor is not found"));
 
-            List<Patient> patientList = hospitalStuff.getPatientsList();
+            List<Patient> patientList = doctor.getPatientsList();
 
             Patient patient = patientRepository.getPatientById(patientId).orElseThrow(
                     () -> new NoSuchUserException("Patient is not found"));
-            hospitalStuff.setPatientCount(hospitalStuff.getPatientCount() + 1);
+
+            doctor.setPatientCount(doctor.getPatientCount() + 1);
             patient.setDischarged(false);
 
             patientList.add(patient);
 
-            hospitalStuffRepository.save(hospitalStuff);
+            hospitalStaffRepository.save(doctor);
         }
     }
 
@@ -193,27 +199,29 @@ public class RegistrationService {
     @Transactional
     public HospitalStuffDto addEmployeeToTheSystem(
             @NotNull(message = "Request to create employee can't be empty")
-            @Valid HospitalStuffDtoUserDtoRoleDto hospitalStuffDtoUserDtoRoleDto) {
+            @Valid HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto) {
 
-        if (hospitalStuffDtoUserDtoRoleDto.getDoctorSpecialization().equals("nothing")){
+        String doctorSpecialization = hospitalStaffDtoUserDtoRoleDto.getDoctorSpecialization();
+
+        if ((doctorSpecialization != null) && (doctorSpecialization.equals("nothing"))) {
             throw new IncorrectDateException("Field specialization can't be empty for doctor");
         }
 
         HospitalStuffDto employee = addNewEmployee(
-                hospitalStuffDtoUserDtoRoleDto.getFirstname(),
-                hospitalStuffDtoUserDtoRoleDto.getLastname(),
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                hospitalStuffDtoUserDtoRoleDto.getDoctorSpecialization(),
-                hospitalStuffDtoUserDtoRoleDto.getStuffRoleId()
+                hospitalStaffDtoUserDtoRoleDto.getFirstname(),
+                hospitalStaffDtoUserDtoRoleDto.getLastname(),
+                hospitalStaffDtoUserDtoRoleDto.getUsername(),
+                hospitalStaffDtoUserDtoRoleDto.getDoctorSpecialization(),
+                hospitalStaffDtoUserDtoRoleDto.getStuffRoleId()
         );
 
         addNewUserToSecurityTable(
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                hospitalStuffDtoUserDtoRoleDto.getPassword());
+                hospitalStaffDtoUserDtoRoleDto.getUsername(),
+                hospitalStaffDtoUserDtoRoleDto.getPassword());
 
         addUserRoleToSecurityTable(
-                hospitalStuffDtoUserDtoRoleDto.getUsername(),
-                hospitalStuffDtoUserDtoRoleDto.getStuffRoleId());
+                hospitalStaffDtoUserDtoRoleDto.getUsername(),
+                hospitalStaffDtoUserDtoRoleDto.getStuffRoleId());
 
         return employee;
     }
@@ -223,7 +231,7 @@ public class RegistrationService {
             @NotNull(message = "Request to create employee can't be empty")
             PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
 
-        if (patientDtoUserDtoRoleDto.getPassword().isBlank()){
+        if (patientDtoUserDtoRoleDto.getPassword().isBlank()) {
             throw new IncorrectDateException("Password can't be empty");
         }
 
