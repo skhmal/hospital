@@ -12,9 +12,9 @@ public interface HospitalStuffMapper {
 
     HospitalStuffMapper INSTANCE = Mappers.getMapper(HospitalStuffMapper.class);
 
-    HospitalStuffDto toDto(HospitalStaff hospitalStuff);
+    HospitalStuffDto toDto(HospitalStaff hospitalStaff);
 
     HospitalStaff toEntity(HospitalStuffDto hospitalStuffDto);
 
-    List<HospitalStuffDto> toDto(List<HospitalStaff> hospitalStuff);
+    List<HospitalStuffDto> toDto(List<HospitalStaff> hospitalStaff);
 }

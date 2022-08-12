@@ -15,7 +15,6 @@ import com.khmal.hospital.mapper.AppointmentMapper;
 import com.khmal.hospital.mapper.DiagnoseMapper;
 import com.khmal.hospital.mapper.PatientMapper;
 import com.khmal.hospital.service.exception_handling.IncorrectDateException;
-import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import com.khmal.hospital.service.validator.Validation;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -59,12 +58,8 @@ public class MedicalStaffService {
                     appointmentDate,
                     appointmentType,
                     appointmentSummary,
-                    patientRepository.getPatientById(patientId).orElseThrow(
-                            () -> new NoSuchUserException("Patient is not found")
-                    ),
-                    hospitalStaffRepository.getHospitalStuffById(hospitalStuffId).orElseThrow(
-                            () -> new NoSuchUserException("Employee is not found")
-                    ));
+                    patientRepository.getPatientById(patientId).get(),
+                    hospitalStaffRepository.getHospitalStuffById(hospitalStuffId).get());
         }
         return AppointmentMapper.INSTANCE.toDto(appointmentRepository.save(appointment));
     }
@@ -79,12 +74,8 @@ public class MedicalStaffService {
             diagnose = new Diagnose(
                     summary,
                     LocalDate.now(),
-                    patientRepository.getPatientById(patientId).orElseThrow(
-                            () -> new NoSuchUserException("Patient is not found")
-                    ),
-                    hospitalStaffRepository.getHospitalStuffById(doctorId).orElseThrow(
-                            () -> new NoSuchUserException("Doctor is not found")
-                    ));
+                    patientRepository.getPatientById(patientId).get(),
+                    hospitalStaffRepository.getHospitalStuffById(doctorId).get());
 
             Patient patient = patientRepository.getPatientById(patientId).get();
 
@@ -102,11 +93,16 @@ public class MedicalStaffService {
     }
 
     public List<PatientDto> getDoctorPatients(int doctorId){
-       if  (hospitalStaffRepository.getHospitalStuffById(doctorId).isPresent()){
+
+        validation.checkHospitalStuffId(doctorId);
+
+        if  (!hospitalStaffRepository.getHospitalStuffById(doctorId).get().getPatientsList().isEmpty()){
+
            HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(doctorId).get();
+
            return PatientMapper.INSTANCE.toDto(doctor.getPatientsList());
        }else {
-           throw new IncorrectDateException("Doctor doesn't have a patients for appointment");
+           throw new IncorrectDateException("Doctor doesn't have a patients for appointment/diagnose");
        }
     }
 }

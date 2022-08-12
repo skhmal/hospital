@@ -2,6 +2,8 @@ package com.khmal.hospital.service;
 
 import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.*;
+import com.khmal.hospital.service.exception_handling.IncorrectDateException;
+import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import com.khmal.hospital.service.validator.Validation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,11 +13,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.print.Doc;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class RegistrationServiceTest {
@@ -137,5 +142,44 @@ class RegistrationServiceTest {
         HospitalStaff hospitalStuff = hospitalStuffArgumentCaptor.getValue();
 
         assertEquals("Jan", hospitalStuff.getPatientsList().get(0).getFirstname());
+    }
+
+    @Test
+    void getAllPatientsPositiveCase(){
+        List<Patient> patientList = new ArrayList<>();
+        Patient firstPatient = new Patient();
+        Patient secondPatient = new Patient();
+        patientList.add(firstPatient);
+        patientList.add(secondPatient);
+
+        Mockito.when(patientRepository.findAll()).thenReturn(patientList);
+
+        assertEquals(patientList.size(), registrationService.getAllPatients().size());
+    }
+
+    @Test
+    void getAllPatientsNegativeCase(){
+        Mockito.when(patientRepository.findAll()).thenReturn(new ArrayList<>());
+
+        assertThrows(IncorrectDateException.class, () -> registrationService.getAllPatients());
+    }
+
+    @Test
+    void getAllDoctorsPositiveCase(){
+        List<HospitalStaff> doctorList = new ArrayList<>();
+        HospitalStaff firstDoctor = new HospitalStaff();
+        doctorList.add(firstDoctor);
+
+        Mockito.when(hospitalStaffRepository.getHospitalStuffByDoctorSpecializationIsNotNull())
+                .thenReturn(Optional.of(doctorList));
+
+        assertEquals(doctorList.size(), registrationService.getAllDoctors().size());
+    }
+
+    @Test
+    void getAllDoctorsNegativeCase(){
+        Mockito.when(hospitalStaffRepository.findAll()).thenReturn(new ArrayList<>());
+
+        assertThrows(NoSuchUserException.class, () -> registrationService.getAllDoctors());
     }
 }

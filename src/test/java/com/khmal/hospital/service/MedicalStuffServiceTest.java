@@ -5,6 +5,7 @@ import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.DiagnoseRepository;
 import com.khmal.hospital.dao.repository.HospitalStaffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
+import com.khmal.hospital.service.exception_handling.IncorrectDateException;
 import com.khmal.hospital.service.validator.Validation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class MedicalStuffServiceTest {
@@ -69,6 +71,7 @@ class MedicalStuffServiceTest {
         Mockito.when(patientRepository.getPatientById(1)).thenReturn(
                 Optional.of(patient));
 
+        Mockito.when(validation.checkHospitalStuffId(Mockito.anyInt())).thenReturn(true);
     }
 
     private void validationEmployeeAndPatientById() {
@@ -113,13 +116,23 @@ class MedicalStuffServiceTest {
 
         assertEquals(expectedSummary, diagnose.getSummary());
         assertEquals(PATIENT_FIRSTNAME, diagnose.getPatient().getFirstname());
-        assertEquals(expectedSpecialization, diagnose.getHospitalStuff().getDoctorSpecialization());
+        assertEquals(expectedSpecialization, diagnose.getHospitalStaff().getDoctorSpecialization());
     }
 
     @Test
     void getDoctorPatients(){
         String actualPatientName = medicalStaffService.getDoctorPatients(1).get(0).getFirstname();
-
                 assertEquals(PATIENT_FIRSTNAME, actualPatientName);
+    }
+
+    @Test
+    void egtDoctorPatientsWithoutAnyPatient(){
+        HospitalStaff doctor = new HospitalStaff();
+        List<Patient> patientList = new ArrayList<>();
+        doctor.setPatientsList(patientList);
+
+        Mockito.when(hospitalStaffRepository.getHospitalStuffById(7)).thenReturn(Optional.of(doctor));
+
+       assertThrows(IncorrectDateException.class, () -> medicalStaffService.getDoctorPatients(7));
     }
 }

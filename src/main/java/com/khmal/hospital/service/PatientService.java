@@ -8,6 +8,7 @@ import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.DiagnoseDto;
 import com.khmal.hospital.mapper.AppointmentPaginationMapper;
 import com.khmal.hospital.mapper.DiagnosePaginationMapper;
+import com.khmal.hospital.service.exception_handling.IncorrectDateException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +29,11 @@ public class PatientService {
     public Page<AppointmentDto> getAllPatientAppointmentsPaginated(int pageNo, int pageSize, String sortField,
                                                                    String sortDirection,
                                                                    int patientId) {
-        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
-                Sort.by(sortField).descending();
+//        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+//                Sort.by(sortField).descending();
+
+       Sort sort =  getSort( sortField,
+                 sortDirection);
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
@@ -37,21 +41,36 @@ public class PatientService {
 
         Page<AppointmentDto> appointmentDto = AppointmentPaginationMapper.toDto(appointmentPage);
 
+        if (appointmentDto.getContent().size() < 1) {
+            throw new IncorrectDateException("There is no appointment");
+        }
+
         return appointmentDto;
     }
 
     public Page<DiagnoseDto> getAllPatientDiagnosesPaginated(int pageNo, int pageSize, String sortField,
                                                              String sortDirection, int patientId) {
 
-        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
-                Sort.by(sortField).descending();
+        Sort sort =  getSort( sortField,
+                sortDirection);
+
+//        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+//                Sort.by(sortField).descending();
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
-
         Page<Diagnose> diagnosePage = diagnoseRepository.findDiagnoseByPatientId(patientId, pageable);
+        Page<DiagnoseDto> diagnoseDtoPage = DiagnosePaginationMapper.toDto(diagnosePage);
 
-        Page<DiagnoseDto> appointmentDto = DiagnosePaginationMapper.toDto(diagnosePage);
+        if (diagnoseDtoPage.getContent().size() < 1) {
+            throw new IncorrectDateException("There is no diagnose");
+        }
 
-        return appointmentDto;
+        return diagnoseDtoPage;
+    }
+
+    public Sort getSort(String sortField,
+                        String sortDirection){
+        return sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
     }
 }

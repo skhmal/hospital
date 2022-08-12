@@ -190,12 +190,6 @@ public class RegistrationService {
         }
     }
 
-    public PatientDto getPatientById(int id) {
-        Patient patient = patientRepository.getPatientById(id)
-                .orElseThrow(() -> new NoSuchUserException("User is not found"));
-        return PatientMapper.INSTANCE.toDto(patient);
-    }
-
     @Transactional
     public HospitalStuffDto addEmployeeToTheSystem(
             @NotNull(message = "Request to create employee can't be empty")

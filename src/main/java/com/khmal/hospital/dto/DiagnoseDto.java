@@ -34,5 +34,5 @@ public class DiagnoseDto {
     private PatientDto patient;
 
     @NotNull(message = "Field employee must not be empty")
-    private HospitalStuffDto hospitalStuff;
+    private HospitalStuffDto hospitalStaff;
 }

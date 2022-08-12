@@ -21,8 +21,8 @@ public class DiagnosePaginationMapper {
                 diagnoseDto.setPatient(
                         PatientMapper.INSTANCE.toDto(diagnose.getPatient())
                 );
-                diagnoseDto.setHospitalStuff(
-                        HospitalStuffMapper.INSTANCE.toDto(diagnose.getHospitalStuff())
+                diagnoseDto.setHospitalStaff(
+                        HospitalStuffMapper.INSTANCE.toDto(diagnose.getHospitalStaff())
                 );
                 diagnoseDto.setEditDate(diagnose.getEditDate());
 

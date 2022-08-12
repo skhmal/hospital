@@ -34,12 +34,12 @@ public class Diagnose{
 
     @OneToOne
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    private HospitalStaff hospitalStuff;
+    private HospitalStaff hospitalStaff;
 
-    public Diagnose(String summary, LocalDate diagnoseDate, Patient patient, HospitalStaff hospitalStuff) {
+    public Diagnose(String summary, LocalDate diagnoseDate, Patient patient, HospitalStaff hospitalStaff) {
         this.summary = summary;
         this.diagnoseDate = diagnoseDate;
         this.patient = patient;
-        this.hospitalStuff = hospitalStuff;
+        this.hospitalStaff = hospitalStaff;
     }
 }

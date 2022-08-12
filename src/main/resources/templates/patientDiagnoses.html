@@ -36,7 +36,7 @@
         <tr th:each="diagnose : ${diagnoseList}">
             <td th:text="${#temporals.format(diagnose.diagnoseDate, 'dd-MMMM-yy')}"></td>
             <td th:text="${diagnose.summary}"></td>
-            <td th:text="${diagnose.hospitalStaff.firstname + ' ' + diagnose.getHospitalStuff().lastname}"></td>
+            <td th:text="${diagnose.hospitalStaff.firstname + ' ' + diagnose.getHospitalStaff().lastname}"></td>
         </tr>
         </tbody>
     </table>
