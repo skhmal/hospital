@@ -84,6 +84,10 @@ public class Validation {
         boolean checkResult = Stream.of(HospitalStaff.DoctorSpecialization.values())
                 .anyMatch(s -> s.name().equals(doctorSpecialization));
 
+        if(doctorSpecialization == null){
+            return true;
+        }
+
         if (!checkResult) {
             throw new IncorrectDateException("Doctor specialization is incorrect or not chosen");
         } else {
