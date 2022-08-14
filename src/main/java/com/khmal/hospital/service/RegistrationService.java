@@ -6,7 +6,7 @@ import com.khmal.hospital.dao.entity.Role;
 import com.khmal.hospital.dao.entity.User;
 import com.khmal.hospital.dao.repository.*;
 import com.khmal.hospital.dto.DoctorDto;
-import com.khmal.hospital.dto.HospitalStuffDto;
+import com.khmal.hospital.dto.HospitalStaffDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.UserDto;
 import com.khmal.hospital.dto.request.HospitalStaffDtoUserDtoRoleDto;
@@ -102,7 +102,7 @@ public class RegistrationService {
         }
     }
 
-    public HospitalStuffDto addNewEmployee(@NotBlank(message = "Firstname can't be empty") String firstname,
+    public HospitalStaffDto addNewEmployee(@NotBlank(message = "Firstname can't be empty") String firstname,
                                            @NotBlank(message = "Lastname can't be empty") String lastname,
                                            @NotBlank(message = "Username can't be empty") String username,
                                            String doctorSpecialization,
@@ -132,7 +132,7 @@ public class RegistrationService {
         return PatientMapper.INSTANCE.toDto(patientRepository.findAll());
     }
 
-    public List<HospitalStuffDto> getAllDoctors() {
+    public List<HospitalStaffDto> getAllDoctors() {
         return HospitalStuffMapper.INSTANCE.toDto(
                 hospitalStaffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
                         .orElseThrow(() -> new NoSuchUserException("No doctors registered")));
@@ -191,17 +191,13 @@ public class RegistrationService {
     }
 
     @Transactional
-    public HospitalStuffDto addEmployeeToTheSystem(
+    public HospitalStaffDto addEmployeeToTheSystem(
             @NotNull(message = "Request to create employee can't be empty")
             @Valid HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto) {
 
-        String doctorSpecialization = hospitalStaffDtoUserDtoRoleDto.getDoctorSpecialization();
+        validation.checkDoctorSpecialization(hospitalStaffDtoUserDtoRoleDto.getDoctorSpecialization());
 
-        if ((doctorSpecialization != null) && (doctorSpecialization.equals("nothing"))) {
-            throw new IncorrectDateException("Field specialization can't be empty for doctor");
-        }
-
-        HospitalStuffDto employee = addNewEmployee(
+        HospitalStaffDto employee = addNewEmployee(
                 hospitalStaffDtoUserDtoRoleDto.getFirstname(),
                 hospitalStaffDtoUserDtoRoleDto.getLastname(),
                 hospitalStaffDtoUserDtoRoleDto.getUsername(),

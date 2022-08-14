@@ -2,9 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
-<head>
-    <title>Hospital</title>
-</head>
 <body class="text-center">
 <main class="form-control">
 
@@ -15,11 +12,18 @@
                 <use xlink:href="#exclamation-triangle-fill"/>
             </svg>
             <div th:text="#{WhatsWrong}">
+
             </div>
+
             <a class="btn btn-primary text-center" href="/main" role="button" th:text="#{mainpage}">Back to main
                 page</a>
-            <div class="text-center" th:text="${exception}"></div>
+            <div class="table-sm" th:text="${exception}">
+            </div>
+<!--            <div class="text-center" th:text="${exception}"></div>-->
         </div>
+
+
+
     </div>
 </main>
 </body>

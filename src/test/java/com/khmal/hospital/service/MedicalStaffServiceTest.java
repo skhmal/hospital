@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class MedicalStuffServiceTest {
+class MedicalStaffServiceTest {
 
     @InjectMocks
     private MedicalStaffService medicalStaffService;
@@ -65,16 +65,13 @@ class MedicalStuffServiceTest {
         doctorList.add(doctor);
         doctor.setPatientsList(patientList);
 
-        Mockito.when(hospitalStaffRepository.getHospitalStuffById(1)).thenReturn(
+        Mockito.when(hospitalStaffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(
                 Optional.of(doctor));
 
-        Mockito.when(patientRepository.getPatientById(1)).thenReturn(
+        Mockito.when(patientRepository.getPatientById(Mockito.anyInt())).thenReturn(
                 Optional.of(patient));
 
         Mockito.when(validation.checkHospitalStuffId(Mockito.anyInt())).thenReturn(true);
-    }
-
-    private void validationEmployeeAndPatientById() {
         Mockito.when(validation.checkPatientId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(validation.checkHospitalStuffId(Mockito.anyInt())).thenReturn(true);
     }
@@ -85,12 +82,11 @@ class MedicalStuffServiceTest {
         String expectedUsername = "neo";
         String expectedLastname = "khm";
 
-        validationEmployeeAndPatientById();
         Mockito.when(validation.checkAppointmentDateForHospitalStuff(Mockito.anyInt(), Mockito.anyInt(),
                 Mockito.any(LocalDateTime.class))).thenReturn(true);
 
         medicalStaffService.createAppointment(
-                1, 1, "medications", "ibuprom", LocalDateTime.now());
+                1, 1, Mockito.anyString(), expectedSummary, LocalDateTime.now());
 
         ArgumentCaptor<Appointment> appointmentArgumentCaptor = ArgumentCaptor.forClass(Appointment.class);
         Mockito.verify(appointmentRepository).save(appointmentArgumentCaptor.capture());
@@ -106,9 +102,7 @@ class MedicalStuffServiceTest {
         String expectedSummary = "appendicitis";
         String expectedSpecialization = "family doctor";
 
-        validationEmployeeAndPatientById();
-
-        medicalStaffService.createDiagnose(1, 1, "appendicitis");
+        medicalStaffService.createDiagnose(1, 1, expectedSummary);
 
         ArgumentCaptor<Diagnose> diagnoseArgumentCaptor = ArgumentCaptor.forClass(Diagnose.class);
         Mockito.verify(diagnoseRepository).save(diagnoseArgumentCaptor.capture());
@@ -121,8 +115,9 @@ class MedicalStuffServiceTest {
 
     @Test
     void getDoctorPatients(){
-        String actualPatientName = medicalStaffService.getDoctorPatients(1).get(0).getFirstname();
-                assertEquals(PATIENT_FIRSTNAME, actualPatientName);
+        String actualPatientName = medicalStaffService.getDoctorPatients(Mockito.anyInt()).get(0).getFirstname();
+
+        assertEquals(PATIENT_FIRSTNAME, actualPatientName);
     }
 
     @Test
@@ -131,8 +126,8 @@ class MedicalStuffServiceTest {
         List<Patient> patientList = new ArrayList<>();
         doctor.setPatientsList(patientList);
 
-        Mockito.when(hospitalStaffRepository.getHospitalStuffById(7)).thenReturn(Optional.of(doctor));
+        Mockito.when(hospitalStaffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(Optional.of(doctor));
 
-       assertThrows(IncorrectDateException.class, () -> medicalStaffService.getDoctorPatients(7));
+       assertThrows(IncorrectDateException.class, () -> medicalStaffService.getDoctorPatients(Mockito.anyInt()));
     }
 }

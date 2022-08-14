@@ -12,14 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class HospitalStaffTest {
 
+    private final int ID = 333;
+    int PATIENT_COUNT = 2;
     private final String FIRSTNAME = "Pablo";
     private final String LASTNAME = "Escobar";
     private final String USERNAME = "pe";
     private final String SPECIALIZATION = "NARCOS";
-    private final int PATIENT_COUNT = 10;
-
     private final String TEST_STRING = "TEST";
-
     private final StaffRole STAFF_ROLE = new StaffRole("BOSS");
 
     private final HospitalStaff hospitalStaff = new HospitalStaff(
@@ -33,28 +32,27 @@ class HospitalStaffTest {
     @BeforeEach
     void setUp() {
         Patient patient = new Patient();
-        patient.setUsername("OLEG");
+        patient.setUsername(USERNAME);
 
         List<Patient> patientList = new ArrayList<>();
         patientList.add(patient);
 
         hospitalStaff.setPatientsList(patientList);
 
-        hospitalStaff.setPatientCount(10);
+        hospitalStaff.setPatientCount(PATIENT_COUNT);
     }
 
     @Test
     void getId() {
-        int id = 333;
-        hospitalStaff.setId(333);
+        hospitalStaff.setId(ID);
 
-        assertEquals(id, hospitalStaff.getId());
+        assertEquals(ID, hospitalStaff.getId());
 
     }
 
     @Test
     void getFirstname() {
-        assertEquals(FIRSTNAME,hospitalStaff.getFirstname());
+        assertEquals(FIRSTNAME, hospitalStaff.getFirstname());
     }
 
     @Test
@@ -79,7 +77,7 @@ class HospitalStaffTest {
 
     @Test
     void getPatientsList() {
-        assertEquals("OLEG", hospitalStaff.getPatientsList().get(0).getUsername());
+        assertEquals(USERNAME, hospitalStaff.getPatientsList().get(0).getUsername());
     }
 
     @Test
@@ -89,17 +87,13 @@ class HospitalStaffTest {
 
     @Test
     void setId() {
-        int id = 777;
+        hospitalStaff.setId(ID);
 
-        hospitalStaff.setId(777);
-
-        assertEquals(id, hospitalStaff.getId());
+        assertEquals(ID, hospitalStaff.getId());
     }
 
     @Test
     void setFirstname() {
-
-
         hospitalStaff.setFirstname(TEST_STRING);
 
         assertEquals(TEST_STRING, hospitalStaff.getFirstname());
@@ -136,24 +130,19 @@ class HospitalStaffTest {
 
     @Test
     void setPatientsList() {
-        int patientCount = 2;
-
         List<Patient> patientList = new ArrayList<>();
         patientList.add(new Patient());
         patientList.add(new Patient());
 
         hospitalStaff.setPatientsList(patientList);
 
-        assertEquals(patientCount, hospitalStaff.getPatientsList().size());
-
+        assertEquals(PATIENT_COUNT, hospitalStaff.getPatientsList().size());
     }
 
     @Test
     void setPatientCount() {
-        int count = 123;
+        hospitalStaff.setPatientCount(PATIENT_COUNT);
 
-        hospitalStaff.setPatientCount(count);
-
-        assertEquals(count, hospitalStaff.getPatientCount());
+        assertEquals(PATIENT_COUNT, hospitalStaff.getPatientCount());
     }
 }

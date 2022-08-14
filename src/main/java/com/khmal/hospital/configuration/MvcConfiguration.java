@@ -54,10 +54,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
         dateTimeRegistrar.setTimeFormatter(DateTimeFormatter.ofPattern("HH:mm"));
         dateTimeRegistrar.setDateTimeFormatter(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         dateTimeRegistrar.registerFormatters(registry);
-
-//        DateFormatterRegistrar dateRegistrar = new DateFormatterRegistrar();
-//        dateRegistrar.setFormatter(new DateFormatter("yyyy-MM-dd"));
-//        dateRegistrar.registerFormatters(registry);
     }
 }
 

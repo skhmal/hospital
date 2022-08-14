@@ -31,18 +31,22 @@
                     <div class="input-group-sm mt-3">
                         <input type="text" class="form-control-lg" th:placeholder="#{UserName}" th:field="*{username}">
                     </div>
+
                     <div class="input-group-sm mt-3">
                         <input type="text" class="form-control-lg" th:placeholder="#{Password}" th:field="*{password}">
                     </div>
+
                     <div class="input-group-sm mt-3">
                         <select class="form-select-sm" id="doctorSpecialization" name="doctorSpecialization">
-                            <option class="form-control-lg" value="nothing" th:text="#{doctorSpec}">Select a specialization
+                            <option class="form-control-lg" value="nothing" th:text="#{doctorSpec}">
+                                Select a specialization
                             </option>
                             <option class="form-control-lg" th:each="specialization: ${specializations}"
                                     th:text="${specialization.name()}"
                                     th:value="${specialization.name()}"></option>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <div class="input-group-sm mt-3">
                             <button class="btn btn-primary" type="submit" name="action" value="save"
@@ -50,6 +54,7 @@
                             </button>
                         </div>
                     </div>
+
                 </div>
             </form>
         </form>

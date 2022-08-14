@@ -34,7 +34,7 @@ public class AppointmentDto {
     private String summary;
 
     @NotNull(message = "Field employee must not be empty")
-    private HospitalStuffDto hospitalStaff;
+    private HospitalStaffDto hospitalStaff;
 
     private int patientId;
 }

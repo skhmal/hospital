@@ -4,8 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,19 +43,16 @@ public class GlobalExceptionHandler {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject(EXCEPTION, ex.getLocalizedMessage());
-        modelAndView.addObject("url", request.getRequestURL());
+        modelAndView.addObject("url", request);
 
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
         modelAndView.setViewName(ERROR_VIEW_NAME);
-
-
         return modelAndView;
     }
 
 
-    @ResponseBody
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ModelAndView handleMethodArgumentNotValidException(MethodArgumentNotValidException  exception){
 
         ModelAndView error = new ModelAndView();

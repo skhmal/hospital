@@ -12,5 +12,5 @@ public interface DiagnoseRepository extends JpaRepository<Diagnose, Integer> {
 
     Optional<List<Diagnose>> getDiagnoseByPatientId(int id);
 
-    Page<Diagnose> findDiagnoseByPatientId(int id, Pageable pageable);
+    Optional<Page<Diagnose>> findDiagnoseByPatientId(int id, Pageable pageable);
 }

@@ -34,7 +34,7 @@ class SecurityServiceTest {
     private final String INCORRECT_USERNAME = "BEAVIS";
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         HospitalStaff hospitalStaff = new HospitalStaff();
         hospitalStaff.setUsername(USERNAME);
         hospitalStaff.setId(USER_ID);
@@ -42,7 +42,7 @@ class SecurityServiceTest {
         Mockito.when(hospitalStaffRepository.findHospitalStuffByUsername(USERNAME))
                 .thenReturn(Optional.of(hospitalStaff));
 
-        Patient patient =new Patient();
+        Patient patient = new Patient();
         patient.setId(USER_ID);
         patient.setUsername(USERNAME);
 
@@ -68,7 +68,7 @@ class SecurityServiceTest {
     }
 
     @Test
-    void getPatientIdNegativeCase(){
+    void getPatientIdNegativeCase() {
         assertThrows(NoSuchUserException.class, () -> securityService.getPatientId(INCORRECT_USERNAME));
     }
 }

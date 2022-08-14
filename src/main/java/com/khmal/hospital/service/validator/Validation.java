@@ -85,7 +85,7 @@ public class Validation {
                 .anyMatch(s -> s.name().equals(doctorSpecialization));
 
         if (!checkResult) {
-            throw new IncorrectDateException("Specialization " + doctorSpecialization + " is not found");
+            throw new IncorrectDateException("Doctor specialization is incorrect or not chosen");
         } else {
             return true;
         }
@@ -109,8 +109,10 @@ public class Validation {
         if (Arrays.stream(Appointment.DoctorAppointment.values()).anyMatch(x -> x.name().equals(name))
                 || Arrays.stream(Appointment.NurseAppointment.values()).anyMatch(y -> y.name().equals(name))) {
             return true;
-        }else {
+        } else {
             throw new IncorrectDateException("Appointment type can't be empty");
         }
     }
+
+
 }

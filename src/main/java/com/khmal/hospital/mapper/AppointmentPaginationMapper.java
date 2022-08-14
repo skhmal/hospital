@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 public class AppointmentPaginationMapper {
     public static Page<AppointmentDto> toDto(Page<Appointment> appointments){
+
         Page<AppointmentDto> appointmentDto = appointments.map(new Function<Appointment, AppointmentDto>() {
             @Override
             public AppointmentDto apply(Appointment appointment) {

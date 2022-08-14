@@ -2,7 +2,7 @@ package com.khmal.hospital.controller;
 
 import com.khmal.hospital.dao.entity.HospitalStaff;
 import com.khmal.hospital.dto.DoctorDto;
-import com.khmal.hospital.dto.HospitalStuffDto;
+import com.khmal.hospital.dto.HospitalStaffDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.request.HospitalStaffDtoUserDtoRoleDto;
 import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
@@ -106,7 +106,7 @@ public class AdminController {
 
     @GetMapping("/appoint")
     public String getAppoint(Model model) {
-        List<HospitalStuffDto> doctorsList = registrationService.getAllDoctors();
+        List<HospitalStaffDto> doctorsList = registrationService.getAllDoctors();
         List<PatientDto> patientsList = registrationService.getAllPatients();
 
         model.addAttribute("doctors", doctorsList);

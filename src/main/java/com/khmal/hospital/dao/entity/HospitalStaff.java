@@ -12,7 +12,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @ToString
-@AllArgsConstructor
 @Table(name = "hospital_staff")
 public class HospitalStaff {
 
@@ -77,6 +76,14 @@ public class HospitalStaff {
         this.username = username;
         this.doctorSpecialization = doctorSpecialization;
         this.staffRole = staffRole;
+    }
+    public HospitalStaff(int id,String firstname, String lastname, String username, String doctorSpecialization, StaffRole staffRole) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.username = username;
+        this.doctorSpecialization = doctorSpecialization;
+        this.staffRole = staffRole;
+        this.id = id;
     }
 
     @Override

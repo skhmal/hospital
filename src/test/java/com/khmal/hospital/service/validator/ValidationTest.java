@@ -39,6 +39,11 @@ class ValidationTest {
     private StaffRoleRepository staffRoleRepository;
 
 
+    private final LocalDateTime APPOINTMENT_TIME = LocalDateTime.of(2022, 3, 1,
+            13, 15);
+    private final Appointment APPOINTMENT = new Appointment(APPOINTMENT_TIME, "consultation",
+            "temperature check", new Patient(), new HospitalStaff());
+
     @BeforeEach
     public void setUp(){
         HospitalStaff doctor = new HospitalStaff("john", "schwarc", "js",
@@ -95,8 +100,7 @@ class ValidationTest {
 
     @Test
     void checkAppointmentDateForHospitalStuffPositiveCase() {
-        LocalDateTime appointmentTime = LocalDateTime.of(2022, 3, 1,
-                13, 15);
+
 
         Mockito.when(appointmentRepository.findAppointmentByPatientId(Mockito.anyInt()))
                 .thenReturn(Optional.of(new ArrayList<Appointment>()));
@@ -104,13 +108,11 @@ class ValidationTest {
         Mockito.when(appointmentRepository.findAppointmentByHospitalStaffId(Mockito.anyInt()))
                 .thenReturn(Optional.of(new ArrayList<Appointment>()));
 
-        assertTrue(validation.checkAppointmentDateForHospitalStuff(1, 1, appointmentTime));
+        assertTrue(validation.checkAppointmentDateForHospitalStuff(1, 1, APPOINTMENT_TIME));
     }
 
     @Test
     void checkAppointmentDateForHospitalStuffPositiveCaseWithoutAppointmentLists() {
-        LocalDateTime appointmentTime = LocalDateTime.of(2022, 3, 1,
-                13, 15);
 
         Mockito.when(appointmentRepository.findAppointmentByPatientId(Mockito.anyInt()))
                 .thenReturn(Optional.empty());
@@ -118,18 +120,13 @@ class ValidationTest {
         Mockito.when(appointmentRepository.findAppointmentByHospitalStaffId(Mockito.anyInt()))
                 .thenReturn(Optional.empty());
 
-        assertTrue(validation.checkAppointmentDateForHospitalStuff(1, 1, appointmentTime));
+        assertTrue(validation.checkAppointmentDateForHospitalStuff(1, 1, APPOINTMENT_TIME));
     }
 
     @Test
     void checkAppointmentDateForHospitalStaffNegativeCase() {
-        LocalDateTime appointmentTime = LocalDateTime.of(2022, 3, 1,
-                13, 15);
-        Appointment appointment = new Appointment(appointmentTime, "consultation", "temperature check",
-                new Patient(), new HospitalStaff());
-
         List<Appointment> appointmentList = new ArrayList<>();
-        appointmentList.add(appointment);
+        appointmentList.add(APPOINTMENT);
 
         Mockito.when(appointmentRepository.findAppointmentByHospitalStaffId(Mockito.anyInt()))
                 .thenReturn(Optional.of(appointmentList));
@@ -137,19 +134,13 @@ class ValidationTest {
                 .thenReturn(Optional.of(appointmentList));
 
         assertThrows(IncorrectDateException.class, () -> validation.checkAppointmentDateForHospitalStuff(
-                1, 1, appointmentTime));
+                1, 1, APPOINTMENT_TIME));
     }
 
     @Test
     void checkAppointmentDateForHospitalStaffNegativeCaseForPatient() {
-        LocalDateTime appointmentTime = LocalDateTime.of(2022, 3, 1,
-                13, 15);
-
-        Appointment appointmentPatient = new Appointment(appointmentTime, "medications",
-                "ibuprom", new Patient(),new HospitalStaff());
-
         List<Appointment> appointmentListPatient = new ArrayList<>();
-        appointmentListPatient.add(appointmentPatient);
+        appointmentListPatient.add(APPOINTMENT);
 
         List<Appointment> appointmentListMedic = new ArrayList<>();
 
@@ -159,7 +150,7 @@ class ValidationTest {
                 .thenReturn(Optional.of(appointmentListPatient));
 
         assertThrows(IncorrectDateException.class, () -> validation.checkAppointmentDateForHospitalStuff(
-                1, 1, appointmentTime));
+                1, 1, APPOINTMENT_TIME));
     }
 
     @Test
@@ -174,7 +165,7 @@ class ValidationTest {
         Mockito.when(staffRoleRepository.getStuffRoleById(Mockito.anyInt())).thenReturn(Optional.empty());
 
         assertThrows(IncorrectDateException.class,
-                () -> validation.checkStuffRoleInDataBase(Mockito.anyInt()));
+                () -> validation.checkStuffRoleInDataBase(1));
     }
 
     @Test
@@ -220,6 +211,6 @@ class ValidationTest {
     void checkDoubleAppointNegativeCaseDoctorNotFound(){
         Mockito.when(hospitalStaffRepository.findHospitalStuffById(666)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchUserException.class ,() ->validation.checkDoubleAppoint(666,Mockito.anyInt()));
+        assertThrows(NoSuchUserException.class ,() ->validation.checkDoubleAppoint(666,1));
     }
 }

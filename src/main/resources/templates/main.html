@@ -25,6 +25,7 @@
     <!--            </div>-->
     <!--        </div>-->
 
+<div class="text-center" ><h2 th:text="#{hello} + ' ' + ${username}"/></div>
     <div sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
         <h3 th:text="#{create_new_user}">Create new user</h3>
         <div class="row-cols-auto mt-3">

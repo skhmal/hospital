@@ -37,7 +37,8 @@ public class PatientService {
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
-        Page<Appointment> appointmentPage = appointmentRepository.findAppointmentByPatientId(patientId, pageable);
+        Page<Appointment> appointmentPage = appointmentRepository.findAppointmentByPatientId(patientId, pageable)
+                .orElseThrow( () -> new IncorrectDateException("There is no appointment!"));
 
         Page<AppointmentDto> appointmentDto = AppointmentPaginationMapper.toDto(appointmentPage);
 
@@ -54,11 +55,11 @@ public class PatientService {
         Sort sort =  getSort( sortField,
                 sortDirection);
 
-//        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
-//                Sort.by(sortField).descending();
-
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
-        Page<Diagnose> diagnosePage = diagnoseRepository.findDiagnoseByPatientId(patientId, pageable);
+
+        Page<Diagnose> diagnosePage = diagnoseRepository.findDiagnoseByPatientId(patientId, pageable)
+                .orElseThrow(() -> new IncorrectDateException("There is no diagnose!"));
+
         Page<DiagnoseDto> diagnoseDtoPage = DiagnosePaginationMapper.toDto(diagnosePage);
 
         if (diagnoseDtoPage.getContent().size() < 1) {

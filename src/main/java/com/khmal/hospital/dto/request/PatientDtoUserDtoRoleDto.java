@@ -28,6 +28,4 @@ public class PatientDtoUserDtoRoleDto {
     LocalDate birthday;
 
     int roleId;
-    int enabled;
-    boolean discharged;
 }

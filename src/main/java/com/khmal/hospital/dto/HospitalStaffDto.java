@@ -14,7 +14,7 @@ import javax.validation.constraints.Null;
 @Setter
 @ToString
 @NoArgsConstructor
-public class HospitalStuffDto {
+public class HospitalStaffDto {
 
     @Null(groups = CreateOrUpdateMarker.OnCreate.class)
     @NotNull(groups = CreateOrUpdateMarker.OnUpdate.class)
@@ -38,7 +38,7 @@ public class HospitalStuffDto {
 
 
 
-    public HospitalStuffDto(String firstname, String lastname, String username, String doctorSpecialization, String stuffRoleName) {
+    public HospitalStaffDto(String firstname, String lastname, String username, String doctorSpecialization, String stuffRoleName) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
