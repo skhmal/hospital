@@ -2,6 +2,7 @@ package com.khmal.hospital.dto;
 
 import com.khmal.hospital.service.validator.CreateOrUpdateMarker;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
+@RequiredArgsConstructor
 public class AppointmentDto {
 
     @Null(groups = CreateOrUpdateMarker.OnCreate.class)
@@ -37,4 +39,12 @@ public class AppointmentDto {
     private HospitalStaffDto hospitalStaff;
 
     private int patientId;
+
+    public AppointmentDto(LocalDateTime date, String appointmentType, PatientDto patient, String summary, HospitalStaffDto hospitalStaff) {
+        this.date = date;
+        this.appointmentType = appointmentType;
+        this.patient = patient;
+        this.summary = summary;
+        this.hospitalStaff = hospitalStaff;
+    }
 }

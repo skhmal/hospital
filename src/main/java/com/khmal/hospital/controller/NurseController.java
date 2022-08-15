@@ -1,11 +1,14 @@
-package com.khmal.hospital.controller;
 
+package com.khmal.hospital.controller;
 import com.khmal.hospital.dao.entity.Appointment;
+import com.khmal.hospital.dao.entity.User;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.PatientDto;
+import com.khmal.hospital.dto.UserDto;
 import com.khmal.hospital.service.MedicalStaffService;
 import com.khmal.hospital.service.RegistrationService;
 import com.khmal.hospital.service.SecurityService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +31,12 @@ public class NurseController {
     }
 
     @GetMapping("/appointment")
-    public String getDoctorAppointment(Model model, Principal principal) {
+    public String getNurseAppointment(Model model) {
 
         List<PatientDto> patientDtoList = registrationService.getAllPatients();
-        Appointment.NurseAppointment[] doctorAppointments = Appointment.NurseAppointment.values();
+        Appointment.NurseAppointment[] nurseAppointments = Appointment.NurseAppointment.values();
 
-        model.addAttribute("appointmentType", doctorAppointments);
+        model.addAttribute("appointmentType", nurseAppointments);
         model.addAttribute("appointments", new AppointmentDto());
         model.addAttribute("patients", patientDtoList);
 
@@ -41,16 +44,16 @@ public class NurseController {
     }
 
     @RequestMapping(value = "/appointment", method = RequestMethod.POST, params = "action=save")
-    public String getDoctorAppointment(@ModelAttribute("appointments") AppointmentDto appointmentDto,
-                                       @RequestParam("patientIdNurseAppointment") int patientId,
-                                       @RequestParam("appointmentTypeNurse") String appointmentType,
-                                       Principal principal) {
+    public String getNurseAppointment(@ModelAttribute("appointments") AppointmentDto appointmentDto,
+                                      @RequestParam("patientIdNurseAppointment") int patientId,
+                                      @RequestParam("appointmentTypeNurse") String appointmentType,
+                                      Principal principal) {
 
         int nurseId = securityService.getEmployeeId(principal.getName());
 
         medicalStaffService.createAppointment(patientId, nurseId, appointmentType,
                 appointmentDto.getSummary(), appointmentDto.getDate());
 
-        return "successful";
+        return "redirect:/successful";
     }
 }
