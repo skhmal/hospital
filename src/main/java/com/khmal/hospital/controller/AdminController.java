@@ -134,6 +134,10 @@ public class AdminController {
 
         Page<PatientDto> page = registrationService.getAllPatientsPaginated(pageNo, pageSize, sortField, sortDir);
         List<PatientDto> listPatients = page.getContent();
+        for (var a:listPatients
+             ) {
+            System.out.println(a.getUsername() + " " + a.isDischarged());
+        }
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());

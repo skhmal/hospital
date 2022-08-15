@@ -38,7 +38,7 @@
             <td th:text="${patient.firstname}"></td>
             <td th:text="${patient.lastname}"></td>
             <td th:text="${patient.birthday}"></td>
-            <td th:text="${patient.discharged} ? #{healthy} : #{inHospital}"></td>
+            <td th:text="${patient.isDischarged()} ? #{healthy} : #{inHospital}"></td>
         </tr>
         </tbody>
     </table>

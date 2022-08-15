@@ -17,6 +17,7 @@ public class PatientPaginationMapper {
                 patientDto.setLastname(patient.getLastname());
                 patientDto.setUsername(patient.getUsername());
                 patientDto.setBirthday(patient.getBirthday());
+                patientDto.setDischarged(patient.isDischarged());
                 return patientDto;
             }
         });
