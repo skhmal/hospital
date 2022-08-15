@@ -79,9 +79,9 @@ class RegistrationServiceTest {
         Mockito.when(hospitalStaffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(Optional.of(DOCTOR));
         Mockito.when(patientRepository.getPatientById(Mockito.anyInt())).thenReturn(Optional.of(PATIENT));
 
-        Mockito.when(validation.checkHospitalStuffId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(validation.checkHospitalStaffId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(validation.checkPatientId(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(validation.checkStuffRoleInDataBase(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(validation.checkStaffRoleInDataBase(Mockito.anyInt())).thenReturn(true);
         Mockito.when(validation.checkDoubleAppoint(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
     }
 

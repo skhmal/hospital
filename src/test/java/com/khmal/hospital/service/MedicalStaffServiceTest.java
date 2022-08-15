@@ -71,9 +71,9 @@ class MedicalStaffServiceTest {
         Mockito.when(patientRepository.getPatientById(Mockito.anyInt())).thenReturn(
                 Optional.of(patient));
 
-        Mockito.when(validation.checkHospitalStuffId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(validation.checkHospitalStaffId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(validation.checkPatientId(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(validation.checkHospitalStuffId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(validation.checkHospitalStaffId(Mockito.anyInt())).thenReturn(true);
     }
 
     @Test
@@ -82,7 +82,7 @@ class MedicalStaffServiceTest {
         String expectedUsername = "neo";
         String expectedLastname = "khm";
 
-        Mockito.when(validation.checkAppointmentDateForHospitalStuff(Mockito.anyInt(), Mockito.anyInt(),
+        Mockito.when(validation.checkAppointmentDateForHospitalStaff(Mockito.anyInt(), Mockito.anyInt(),
                 Mockito.any(LocalDateTime.class))).thenReturn(true);
 
         medicalStaffService.createAppointment(

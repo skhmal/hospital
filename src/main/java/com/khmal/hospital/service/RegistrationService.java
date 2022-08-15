@@ -59,7 +59,7 @@ public class RegistrationService {
                                     @NotNull(message = "Field stuffRoleId can't be empty") int stuffRoleId) {
         Patient patient = null;
 
-        if (validation.checkStuffRoleInDataBase(stuffRoleId)) {
+        if (validation.checkStaffRoleInDataBase(stuffRoleId)) {
 
             patient = new Patient(firstname,
                     lastname,
@@ -88,7 +88,7 @@ public class RegistrationService {
     public void addUserRoleToSecurityTable(@NotBlank(message = "Username can't be empty") String username,
                                            @NotNull(message = "Role id can't be empty") int roleId) {
 
-        if (validation.checkStuffRoleInDataBase(roleId)) {
+        if (validation.checkStaffRoleInDataBase(roleId)) {
             Role role = new Role(
                     userRepository.getUserByUsername(username)
                             .orElseThrow(() ->
@@ -110,7 +110,7 @@ public class RegistrationService {
 
         HospitalStaff hospitalStaff = null;
 
-        if (validation.checkStuffRoleInDataBase(stuffRoleId)) {
+        if (validation.checkStaffRoleInDataBase(stuffRoleId)) {
             hospitalStaff = new HospitalStaff(
                     firstname,
                     lastname,
@@ -168,7 +168,7 @@ public class RegistrationService {
     public void appointDoctorToPatient(@NotNull(message = "Doctor can't be empty") int doctorId,
                                        @NotNull(message = "Patient can't be empty") int patientId) {
 
-        if (validation.checkPatientId(patientId) && validation.checkHospitalStuffId(doctorId)) {
+        if (validation.checkPatientId(patientId) && validation.checkHospitalStaffId(doctorId)) {
 
             if (!validation.checkDoubleAppoint(doctorId, patientId))
                 throw new IncorrectDateException("Appoint already exist");

@@ -1,14 +1,12 @@
 
 package com.khmal.hospital.controller;
+
 import com.khmal.hospital.dao.entity.Appointment;
-import com.khmal.hospital.dao.entity.User;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.PatientDto;
-import com.khmal.hospital.dto.UserDto;
 import com.khmal.hospital.service.MedicalStaffService;
 import com.khmal.hospital.service.RegistrationService;
 import com.khmal.hospital.service.SecurityService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

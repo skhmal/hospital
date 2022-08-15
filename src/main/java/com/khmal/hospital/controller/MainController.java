@@ -1,6 +1,5 @@
 package com.khmal.hospital.controller;
 
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +39,7 @@ public class MainController {
 
     @GetMapping("/error")
     public String getError(Model model){
-        model.getAttribute("message1");
+        model.addAttribute("message1");
         return "error";
     }
 }
