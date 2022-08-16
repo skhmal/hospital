@@ -7,7 +7,7 @@ import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.HospitalStaffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
 import com.khmal.hospital.dao.repository.StaffRoleRepository;
-import com.khmal.hospital.service.exception_handling.IncorrectDateException;
+import com.khmal.hospital.service.exception_handling.IncorrectDataException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,8 +80,8 @@ public class Validation {
             for (Appointment appointment : hospitalStuffAppointmentList
             ) {
                 if (appointment.getDate().isEqual(appointmentDateTime)) {
-                    logger.error("checkAppointmentDateForHospitalStaff error. Doctor with id {} is busy", hospitalStaffId);
-                    throw new IncorrectDateException("The doctor is busy at that moment");
+                    logger.warn("checkAppointmentDateForHospitalStaff warn. Doctor with id {} is busy", hospitalStaffId);
+                    throw new IncorrectDataException("The doctor is busy at that moment");
                 }
             }
         }
@@ -93,8 +93,8 @@ public class Validation {
             for (Appointment appointment : patientAppointmentList
             ) {
                 if (appointment.getDate().isEqual(appointmentDateTime)) {
-                    logger.error("checkAppointmentDateForHospitalStaff error. Patient with id {} is busy", patientId);
-                    throw new IncorrectDateException("The patient is busy at that moment");
+                    logger.warn("checkAppointmentDateForHospitalStaff warn. Patient with id {} is busy", patientId);
+                    throw new IncorrectDataException("The patient is busy at that moment");
                 }
             }
         }
@@ -108,8 +108,8 @@ public class Validation {
      */
     public boolean checkStaffRoleInDataBase(int roleId) {
         if (staffRoleRepository.getStuffRoleById(roleId).isEmpty()) {
-            logger.error("checkStaffRoleInDataBase error. StaffRole with id {} is not found", roleId);
-            throw new IncorrectDateException("Role with id " + roleId + " not found");
+            logger.warn("checkStaffRoleInDataBase warn. StaffRole with id {} is not found", roleId);
+            throw new IncorrectDataException("Role with id " + roleId + " not found");
         }
         return true;
     }
@@ -130,9 +130,9 @@ public class Validation {
         }
 
         if (!checkResult) {
-            logger.error("checkDoctorSpecialization error. Doctor specialization with name {} is not found",
+            logger.warn("checkDoctorSpecialization warn. Doctor specialization with name {} is not found",
                     doctorSpecialization);
-            throw new IncorrectDateException("Doctor specialization is incorrect or not chosen");
+            throw new IncorrectDataException("Doctor specialization is incorrect or not chosen");
         } else {
             return true;
         }
@@ -170,7 +170,7 @@ public class Validation {
             return true;
         } else {
             logger.warn("checkAppointmentType error {}", name);
-            throw new IncorrectDateException("Appointment type can't be empty");
+            throw new IncorrectDataException("Appointment type can't be empty");
         }
     }
 }

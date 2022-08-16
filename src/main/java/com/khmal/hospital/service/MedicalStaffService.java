@@ -14,7 +14,7 @@ import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.mapper.AppointmentMapper;
 import com.khmal.hospital.mapper.DiagnoseMapper;
 import com.khmal.hospital.mapper.PatientMapper;
-import com.khmal.hospital.service.exception_handling.IncorrectDateException;
+import com.khmal.hospital.service.exception_handling.IncorrectDataException;
 import com.khmal.hospital.service.validator.Validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,7 @@ public class MedicalStaffService {
      *                           Check appointment type to prevent provide incorrect data.
      *                           Check medic and patient id in database.
      *                           Check date to prevent overbooking
-     * @return
+     * @return AppointmentDto
      */
     public AppointmentDto createAppointment(int patientId,
                                             @NotNull(message = "Employee can't be empty") int hospitalStaffId,
@@ -85,7 +85,7 @@ public class MedicalStaffService {
                     hospitalStaffRepository.getHospitalStuffById(hospitalStaffId).get());
             appointmentRepository.save(appointment);
         }
-        logger.info("Method createAppointment stopped");
+        logger.info("Method createAppointment finished");
 
         return AppointmentMapper.INSTANCE.toDto(appointment);
     }
@@ -106,7 +106,9 @@ public class MedicalStaffService {
                                       @NotNull(message = "Employee can't be empty") int doctorId,
                                       @NotBlank(message = "Summary can't be empty") String summary) {
         Diagnose diagnose = null;
+
         logger.info("Method createDiagnose started");
+
         if (validation.checkHospitalStaffId(doctorId) && validation.checkPatientId(patientId)) {
 
             Patient patient = patientRepository.getPatientById(patientId).get();
@@ -124,33 +126,33 @@ public class MedicalStaffService {
                 patientRepository.save(patient);
             }
 
-            logger.info("Method createDiagnose stopped");
+            logger.info("Method createDiagnose finished");
 
             doctor.getPatientsList().remove(patient);
             doctor.setPatientCount(doctor.getPatientCount() - 1);
-        }
-        diagnoseRepository.save(diagnose);
 
+            diagnoseRepository.save(diagnose);
+        }
         return DiagnoseMapper.INSTANCE.toDto(diagnose);
     }
 
     /**
      * Method getDoctorPatients return all assigned patients.
      * @param doctorId doctor id
-     * @return List<PatientDto></PatientDto>
+     * @return List <PatientDto >
      */
     public List<PatientDto> getDoctorPatients(int doctorId) {
-
+        logger.info("Method getDoctorPatients started");
         validation.checkHospitalStaffId(doctorId);
 
         if (!hospitalStaffRepository.getHospitalStuffById(doctorId).get().getPatientsList().isEmpty()) {
 
             HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(doctorId).get();
-
+            logger.info("Method getDoctorPatients finished");
             return PatientMapper.INSTANCE.toDto(doctor.getPatientsList());
         } else {
             logger.warn("getDoctorPatients warn. Doctor doesn't have a patients");
-            throw new IncorrectDateException("Doctor doesn't have a patients for appointment/diagnose");
+            throw new IncorrectDataException("Doctor doesn't have a patients for appointment/diagnose");
         }
     }
 }

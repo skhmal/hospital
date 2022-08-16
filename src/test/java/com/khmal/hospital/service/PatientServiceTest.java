@@ -5,7 +5,7 @@ import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.DiagnoseRepository;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.DiagnoseDto;
-import com.khmal.hospital.service.exception_handling.IncorrectDateException;
+import com.khmal.hospital.service.exception_handling.IncorrectDataException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -92,7 +92,7 @@ class PatientServiceTest {
         Mockito.when(appointmentRepository.findAppointmentByPatientId(USER_ID, APPOINTMENT_PAGEABLE))
                 .thenReturn(Optional.of(page));
 
-        assertThrows(IncorrectDateException.class, () -> patientService
+        assertThrows(IncorrectDataException.class, () -> patientService
                 .getAllPatientAppointmentsPaginated(1, 5, SORT_FIELD_APPOINTMENT, SORT_DIRECTION, USER_ID));
     }
 
@@ -127,7 +127,7 @@ class PatientServiceTest {
 
         Mockito.when(diagnoseRepository.findDiagnoseByPatientId(USER_ID, DIAGNOSE_PAGEABLE)).thenReturn(Optional.of(diagnosePage));
 
-        assertThrows(IncorrectDateException.class, () -> patientService
+        assertThrows(IncorrectDataException.class, () -> patientService
                 .getAllPatientDiagnosesPaginated(1, 5, SORT_FIELD_DIAGNOSE, SORT_DIRECTION, USER_ID));
     }
 
@@ -137,7 +137,7 @@ class PatientServiceTest {
         Mockito.when(diagnoseRepository.findDiagnoseByPatientId(USER_ID, DIAGNOSE_PAGEABLE))
                 .thenReturn(Optional.of(Page.empty()));
 
-        assertThrows(IncorrectDateException.class, () -> patientService
+        assertThrows(IncorrectDataException.class, () -> patientService
                 .getAllPatientDiagnosesPaginated(1, 5, SORT_FIELD_DIAGNOSE, SORT_DIRECTION, USER_ID));
     }
 
@@ -147,7 +147,7 @@ class PatientServiceTest {
         Mockito.when(appointmentRepository.findAppointmentByPatientId(USER_ID, APPOINTMENT_PAGEABLE))
                 .thenReturn(Optional.of(Page.empty()));
 
-        assertThrows(IncorrectDateException.class, () -> patientService
+        assertThrows(IncorrectDataException.class, () -> patientService
                 .getAllPatientAppointmentsPaginated(1, 5, SORT_FIELD_APPOINTMENT, SORT_DIRECTION, USER_ID));
     }
 }

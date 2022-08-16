@@ -6,7 +6,7 @@ import com.khmal.hospital.dto.DoctorDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.request.HospitalStaffDtoUserDtoRoleDto;
 import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
-import com.khmal.hospital.service.exception_handling.IncorrectDateException;
+import com.khmal.hospital.service.exception_handling.IncorrectDataException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import com.khmal.hospital.service.validator.Validation;
 import org.junit.jupiter.api.BeforeEach;
@@ -172,7 +172,7 @@ class RegistrationServiceTest {
     void getAllPatientsNegativeCase() {
         Mockito.when(patientRepository.findAll()).thenReturn(new ArrayList<>());
 
-        assertThrows(IncorrectDateException.class, () -> registrationService.getAllPatients());
+        assertThrows(IncorrectDataException.class, () -> registrationService.getAllPatients());
     }
 
     @Test

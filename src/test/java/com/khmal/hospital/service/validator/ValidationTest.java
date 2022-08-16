@@ -8,7 +8,7 @@ import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.HospitalStaffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
 import com.khmal.hospital.dao.repository.StaffRoleRepository;
-import com.khmal.hospital.service.exception_handling.IncorrectDateException;
+import com.khmal.hospital.service.exception_handling.IncorrectDataException;
 import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -133,7 +133,7 @@ class ValidationTest {
         Mockito.when(appointmentRepository.findAppointmentByPatientId(Mockito.anyInt()))
                 .thenReturn(Optional.of(appointmentList));
 
-        assertThrows(IncorrectDateException.class, () -> validation.checkAppointmentDateForHospitalStaff(
+        assertThrows(IncorrectDataException.class, () -> validation.checkAppointmentDateForHospitalStaff(
                 1, 1, APPOINTMENT_TIME));
     }
 
@@ -149,7 +149,7 @@ class ValidationTest {
         Mockito.when(appointmentRepository.findAppointmentByPatientId(Mockito.anyInt()))
                 .thenReturn(Optional.of(appointmentListPatient));
 
-        assertThrows(IncorrectDateException.class, () -> validation.checkAppointmentDateForHospitalStaff(
+        assertThrows(IncorrectDataException.class, () -> validation.checkAppointmentDateForHospitalStaff(
                 1, 1, APPOINTMENT_TIME));
     }
 
@@ -164,7 +164,7 @@ class ValidationTest {
     void checkStuffRoleInDataBaseNegativeCase() {
         Mockito.when(staffRoleRepository.getStuffRoleById(Mockito.anyInt())).thenReturn(Optional.empty());
 
-        assertThrows(IncorrectDateException.class,
+        assertThrows(IncorrectDataException.class,
                 () -> validation.checkStaffRoleInDataBase(1));
     }
 
@@ -179,7 +179,7 @@ class ValidationTest {
     void checkDoctorSpecializationNegativeCase() {
         String badDoctorSpecializationName = "HOME";
 
-        assertThrows(IncorrectDateException.class,
+        assertThrows(IncorrectDataException.class,
                 () -> validation.checkDoctorSpecialization(badDoctorSpecializationName));
     }
 
@@ -194,7 +194,7 @@ class ValidationTest {
     void checkAppointmentTypeNegativeCase(){
         String appointmentType = "BIEDRONKA";
 
-        assertThrows(IncorrectDateException.class, () -> validation.checkAppointmentType(appointmentType));
+        assertThrows(IncorrectDataException.class, () -> validation.checkAppointmentType(appointmentType));
     }
 
     @Test

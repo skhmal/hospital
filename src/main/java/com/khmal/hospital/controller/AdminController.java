@@ -28,7 +28,7 @@ public class AdminController {
         this.registrationService = registrationService;
     }
 
-    final static String SUCCESSFUL = "redirect:/successful";
+    static final String SUCCESSFUL = "redirect:/successful";
 
     @GetMapping("/patient")
     public String createNewPatient(Model model) {
@@ -134,10 +134,6 @@ public class AdminController {
 
         Page<PatientDto> page = registrationService.getAllPatientsPaginated(pageNo, pageSize, sortField, sortDir);
         List<PatientDto> listPatients = page.getContent();
-        for (var a:listPatients
-             ) {
-            System.out.println(a.getUsername() + " " + a.isDischarged());
-        }
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());

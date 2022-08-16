@@ -5,7 +5,7 @@ import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.DiagnoseRepository;
 import com.khmal.hospital.dao.repository.HospitalStaffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
-import com.khmal.hospital.service.exception_handling.IncorrectDateException;
+import com.khmal.hospital.service.exception_handling.IncorrectDataException;
 import com.khmal.hospital.service.validator.Validation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -128,6 +128,6 @@ class MedicalStaffServiceTest {
 
         Mockito.when(hospitalStaffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(Optional.of(doctor));
 
-       assertThrows(IncorrectDateException.class, () -> medicalStaffService.getDoctorPatients(Mockito.anyInt()));
+       assertThrows(IncorrectDataException.class, () -> medicalStaffService.getDoctorPatients(Mockito.anyInt()));
     }
 }
