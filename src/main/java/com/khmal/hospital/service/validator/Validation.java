@@ -1,5 +1,7 @@
 package com.khmal.hospital.service.validator;
 
+import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
+import com.khmal.hospital.controller.exception.handling.NoSuchUserException;
 import com.khmal.hospital.dao.entity.Appointment;
 import com.khmal.hospital.dao.entity.HospitalStaff;
 import com.khmal.hospital.dao.entity.Patient;
@@ -7,8 +9,6 @@ import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.HospitalStaffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
 import com.khmal.hospital.dao.repository.StaffRoleRepository;
-import com.khmal.hospital.service.exception_handling.IncorrectDataException;
-import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,7 @@
 package com.khmal.hospital.service;
 
+import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
+import com.khmal.hospital.controller.exception.handling.NoSuchUserException;
 import com.khmal.hospital.dao.entity.Appointment;
 import com.khmal.hospital.dao.entity.Diagnose;
 import com.khmal.hospital.dao.entity.HospitalStaff;
@@ -14,7 +16,6 @@ import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.mapper.AppointmentMapper;
 import com.khmal.hospital.mapper.DiagnoseMapper;
 import com.khmal.hospital.mapper.PatientMapper;
-import com.khmal.hospital.service.exception_handling.IncorrectDataException;
 import com.khmal.hospital.service.validator.Validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ public class MedicalStaffService {
     private final AppointmentRepository appointmentRepository;
     private final Validation validation;
     private final DiagnoseRepository diagnoseRepository;
+    private static final String NOT_FOUND = " is not found";
 
     public MedicalStaffService(PatientRepository patientRepository, HospitalStaffRepository hospitalStaffRepository, AppointmentRepository appointmentRepository, Validation validation, DiagnoseRepository diagnoseRepository) {
         this.patientRepository = patientRepository;
@@ -65,27 +67,39 @@ public class MedicalStaffService {
      *                           Check date to prevent overbooking
      * @return AppointmentDto
      */
-    public AppointmentDto createAppointment(int patientId,
-                                            @NotNull(message = "Employee can't be empty") int hospitalStaffId,
+    public AppointmentDto createAppointment(@NotNull(message = "Pastient can't be empty") Integer patientId,
+                                            @NotNull(message = "Employee can't be empty") Integer hospitalStaffId,
                                             @NotBlank(message = "Appointment type can't be empty") String appointmentType,
                                             @NotBlank(message = "Summary can't be empty") String appointmentSummary,
                                             @NotNull(message = "Date can't be empty") LocalDateTime appointmentDate) {
         Appointment appointment = null;
-        logger.info("Method createAppointment started");
+
+        logger.info("Method createAppointment started. Creating appointment for medic id = {}, patient id = {}" +
+                ", date = {}", hospitalStaffId, patientId, appointmentDate);
+
         validation.checkAppointmentType(appointmentType);
 
         if (validation.checkHospitalStaffId(hospitalStaffId) && validation.checkPatientId(patientId) &&
                 validation.checkAppointmentDateForHospitalStaff(patientId, hospitalStaffId, appointmentDate)) {
 
+            Patient patient = patientRepository.getPatientById(patientId).orElseThrow(
+                    () -> new NoSuchUserException("Patient with id = " + patientId + NOT_FOUND)
+            );
+            HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(hospitalStaffId).orElseThrow(
+                    () -> new NoSuchUserException("Medic with id = " + hospitalStaffId + NOT_FOUND));
+
             appointment = new Appointment(
                     appointmentDate,
                     appointmentType,
                     appointmentSummary,
-                    patientRepository.getPatientById(patientId).get(),
-                    hospitalStaffRepository.getHospitalStuffById(hospitalStaffId).get());
-            appointmentRepository.save(appointment);
+                    patient,
+                    doctor);
+
+           int appointmentId =  appointmentRepository.save(appointment).getId();
+
+           logger.info("Method createAppointment finished. Appointment id = {} has been created", appointmentId);
         }
-        logger.info("Method createAppointment finished");
+
 
         return AppointmentMapper.INSTANCE.toDto(appointment);
     }
@@ -97,8 +111,8 @@ public class MedicalStaffService {
      * - Delete patient with diagnose from patient list.
      *
      * @param patientId patient id
-     * @param doctorId doctor id
-     * @param summary diagnose summary
+     * @param doctorId  doctor id
+     * @param summary   diagnose summary
      * @return DiagnoseDto
      */
     @Transactional
@@ -107,12 +121,17 @@ public class MedicalStaffService {
                                       @NotBlank(message = "Summary can't be empty") String summary) {
         Diagnose diagnose = null;
 
-        logger.info("Method createDiagnose started");
+        logger.info("Method createDiagnose started. Creating diagnose for patient id = {}, doctor id = {}", patientId,
+                doctorId);
 
         if (validation.checkHospitalStaffId(doctorId) && validation.checkPatientId(patientId)) {
 
-            Patient patient = patientRepository.getPatientById(patientId).get();
-            HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(doctorId).get();
+            Patient patient = patientRepository.getPatientById(patientId).orElseThrow(
+                    () -> new NoSuchUserException("Patient with id = " + patientId + NOT_FOUND)
+            );
+            HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(doctorId).orElseThrow(
+                    () -> new NoSuchUserException("Doctor with id = " + doctorId + NOT_FOUND)
+            );
 
             diagnose = new Diagnose(
                     summary,
@@ -121,38 +140,51 @@ public class MedicalStaffService {
                     doctor);
 
             if (patient.getDoctorsList().size() == 1) {
-                logger.info("Patient discharged");
+
+                logger.info("Patient id = {} discharged", patient.getId());
+
                 patient.setDischarged(true);
+
                 patientRepository.save(patient);
             }
-
-            logger.info("Method createDiagnose finished");
 
             doctor.getPatientsList().remove(patient);
             doctor.setPatientCount(doctor.getPatientCount() - 1);
 
-            diagnoseRepository.save(diagnose);
+            int diagnoseId = diagnoseRepository.save(diagnose).getId();
+
+            logger.info("Method createDiagnose finished. Diagnose with id {} has been created", diagnoseId);
         }
         return DiagnoseMapper.INSTANCE.toDto(diagnose);
     }
 
     /**
      * Method getDoctorPatients return all assigned patients.
+     *
      * @param doctorId doctor id
      * @return List <PatientDto >
      */
     public List<PatientDto> getDoctorPatients(int doctorId) {
-        logger.info("Method getDoctorPatients started");
+
+        logger.info("Method getDoctorPatients started. Get patient list for doctor id = {}", doctorId);
+
         validation.checkHospitalStaffId(doctorId);
 
-        if (!hospitalStaffRepository.getHospitalStuffById(doctorId).get().getPatientsList().isEmpty()) {
+        List<Patient> patientList = hospitalStaffRepository.getHospitalStuffById(doctorId)
+                .orElseThrow(() -> new IncorrectDataException(
+                        "Doctor id = " + doctorId + " doesn't have patients")).getPatientsList();
 
-            HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(doctorId).get();
+        if (!patientList.isEmpty()) {
+
             logger.info("Method getDoctorPatients finished");
-            return PatientMapper.INSTANCE.toDto(doctor.getPatientsList());
+
+            return PatientMapper.INSTANCE.toDto(patientList);
+
         } else {
-            logger.warn("getDoctorPatients warn. Doctor doesn't have a patients");
-            throw new IncorrectDataException("Doctor doesn't have a patients for appointment/diagnose");
+
+            logger.warn("getDoctorPatients warn. Doctor id = {} doesn't have patients", doctorId);
+
+            throw new IncorrectDataException("Doctor doesn't have a patients for appointment / diagnose");
         }
     }
 }

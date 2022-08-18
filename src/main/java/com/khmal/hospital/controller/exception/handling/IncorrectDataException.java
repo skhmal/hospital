@@ -1,4 +1,4 @@
-package com.khmal.hospital.service.exception_handling;
+package com.khmal.hospital.controller.exception.handling;
 
 public class IncorrectDataException extends RuntimeException{
     public IncorrectDataException(String message) {

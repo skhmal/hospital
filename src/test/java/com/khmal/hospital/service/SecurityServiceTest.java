@@ -4,7 +4,7 @@ import com.khmal.hospital.dao.entity.HospitalStaff;
 import com.khmal.hospital.dao.entity.Patient;
 import com.khmal.hospital.dao.repository.HospitalStaffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
-import com.khmal.hospital.service.exception_handling.NoSuchUserException;
+import com.khmal.hospital.controller.exception.handling.NoSuchUserException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

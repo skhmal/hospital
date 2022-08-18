@@ -1,11 +1,12 @@
 package com.khmal.hospital.dao.entity;
 
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -84,18 +85,5 @@ public class HospitalStaff {
         this.doctorSpecialization = doctorSpecialization;
         this.staffRole = staffRole;
         this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        HospitalStaff that = (HospitalStaff) o;
-        return lastname != null && Objects.equals(lastname, that.lastname);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 }

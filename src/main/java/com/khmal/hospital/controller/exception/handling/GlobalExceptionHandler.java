@@ -1,4 +1,4 @@
-package com.khmal.hospital.service.exception_handling;
+package com.khmal.hospital.controller.exception.handling;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

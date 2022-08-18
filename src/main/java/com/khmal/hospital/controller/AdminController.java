@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -28,8 +27,9 @@ public class AdminController {
         this.registrationService = registrationService;
     }
 
-    static final String SUCCESSFUL = "redirect:/successful";
+    private static final String SUCCESSFUL = "redirect:/successful";
 
+    private final int PAGE_SIZE = 5;
     @GetMapping("/patient")
     public String createNewPatient(Model model) {
         model.addAttribute("patient", new PatientDtoUserDtoRoleDto());
@@ -56,7 +56,9 @@ public class AdminController {
     @RequestMapping(value = "/doctor", method = RequestMethod.POST, params = "action=save")
     public String createNewDoctor(@ModelAttribute("doctor") HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto,
                                   @RequestParam(value = "doctorSpecialization") String doctorSpecialization) {
-        int doctorRoleId = 3;
+
+        String doctorRoleName = "ROLE_DOCTOR";
+        int doctorRoleId = registrationService.getRoleIdByName(doctorRoleName);
 
         hospitalStaffDtoUserDtoRoleDto.setDoctorSpecialization(doctorSpecialization);
         hospitalStaffDtoUserDtoRoleDto.setStuffRoleId(doctorRoleId);
@@ -74,7 +76,10 @@ public class AdminController {
 
     @RequestMapping(value = "/administrator", method = RequestMethod.POST, params = "action=save")
     public String createNewAdministrator(@ModelAttribute("admin") HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto) {
-        int administratorRoleId = 1;
+
+        String administratorRoleName = "ROLE_ADMINISTRATOR";
+        int administratorRoleId = registrationService.getRoleIdByName(administratorRoleName);
+
         String doctorSpecialization = null;
 
         hospitalStaffDtoUserDtoRoleDto.setStuffRoleId(administratorRoleId);
@@ -93,7 +98,10 @@ public class AdminController {
 
     @RequestMapping(value = "/nurse", method = RequestMethod.POST, params = "action=save")
     public String addNewNurse(@ModelAttribute("nurse") HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto) {
-        int nurseRoleId = 2;
+
+        String nurseRoleName = "ROLE_NURSE";
+        int nurseRoleId = registrationService.getRoleIdByName(nurseRoleName);
+
         String doctorSpecialization = null;
 
         hospitalStaffDtoUserDtoRoleDto.setStuffRoleId(nurseRoleId);
@@ -115,7 +123,6 @@ public class AdminController {
         return "appoint";
     }
 
-    @Transactional
     @RequestMapping(value = "/appoint", method = RequestMethod.POST, params = "action=save")
     public String getAppoint(@RequestParam("doctor") int doctorId,
                              @RequestParam("patient") int patientId) {
@@ -130,9 +137,8 @@ public class AdminController {
                                         @RequestParam("sortField") String sortField,
                                         @RequestParam("sortDir") String sortDir,
                                         Model model) {
-        int pageSize = 5;
 
-        Page<PatientDto> page = registrationService.getAllPatientsPaginated(pageNo, pageSize, sortField, sortDir);
+        Page<PatientDto> page = registrationService.getAllPatientsPaginated(pageNo, PAGE_SIZE, sortField, sortDir);
         List<PatientDto> listPatients = page.getContent();
 
         model.addAttribute("currentPage", pageNo);
@@ -152,9 +158,8 @@ public class AdminController {
                                        @RequestParam("sortField") String sortField,
                                        @RequestParam("sortDir") String sortDir,
                                        Model model) {
-        int pageSize = 5;
 
-        Page<DoctorDto> page = registrationService.getAllDoctorsPaginated(pageNo, pageSize, sortField, sortDir);
+        Page<DoctorDto> page = registrationService.getAllDoctorsPaginated(pageNo, PAGE_SIZE, sortField, sortDir);
         List<DoctorDto> listDoctors = page.getContent();
 
         model.addAttribute("currentPage", pageNo);

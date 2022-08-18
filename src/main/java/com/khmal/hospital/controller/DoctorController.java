@@ -1,5 +1,6 @@
 package com.khmal.hospital.controller;
 
+import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
 import com.khmal.hospital.dao.entity.Appointment;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.PatientDto;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.List;
 
@@ -79,13 +79,18 @@ public class DoctorController {
     @Transactional
     @RequestMapping(value = "/diagnose", method = RequestMethod.POST, params = "action=save")
     public String getDiagnose(@NotBlank(message = "Field summary is empty") @RequestParam("diagnoseSummary") String summary,
-                              @NotNull(message = "Field patient is empty")@RequestParam("patientIdDoctorDiagnose") int patientId,
+                              int patientId,
                               Principal principal) {
 
         int doctorId = getDoctorId(principal);
 
-        medicalStaffService.createDiagnose(patientId, doctorId, summary);
+        if (patientId != 0) {
 
+            medicalStaffService.createDiagnose(patientId, doctorId, summary);
+
+        }else {
+            throw new IncorrectDataException("Patient id can't be empty or 0");
+        }
         return "successful";
     }
 }

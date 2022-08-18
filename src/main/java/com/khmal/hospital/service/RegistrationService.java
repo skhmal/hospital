@@ -1,9 +1,8 @@
 package com.khmal.hospital.service;
 
-import com.khmal.hospital.dao.entity.HospitalStaff;
-import com.khmal.hospital.dao.entity.Patient;
-import com.khmal.hospital.dao.entity.Role;
-import com.khmal.hospital.dao.entity.User;
+import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
+import com.khmal.hospital.controller.exception.handling.NoSuchUserException;
+import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.*;
 import com.khmal.hospital.dto.DoctorDto;
 import com.khmal.hospital.dto.HospitalStaffDto;
@@ -12,8 +11,6 @@ import com.khmal.hospital.dto.UserDto;
 import com.khmal.hospital.dto.request.HospitalStaffDtoUserDtoRoleDto;
 import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
 import com.khmal.hospital.mapper.*;
-import com.khmal.hospital.service.exception_handling.IncorrectDataException;
-import com.khmal.hospital.service.exception_handling.NoSuchUserException;
 import com.khmal.hospital.service.validator.Validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,20 +71,23 @@ public class RegistrationService {
                                     @NotBlank(message = "Field birthday can't be empty") LocalDate birthday,
                                     @NotNull(message = "Field stuffRoleId can't be empty") int stuffRoleId) {
         Patient patient = null;
+
         logger.info("Method addNewPatient started");
 
         if (validation.checkStaffRoleInDataBase(stuffRoleId)) {
+
+            StaffRole staffRolePatient = staffRoleRepository.getStuffRoleById(stuffRoleId).get();
 
             patient = new Patient(firstname,
                     lastname,
                     username,
                     birthday,
-                    staffRoleRepository.getStuffRoleById(stuffRoleId).get());
+                    staffRolePatient);
+
+            int patientId = patientRepository.save(patient).getId();
+
+            logger.info("Method addNewPatient finished. Patient with id {} has been created", patientId);
         }
-
-        patientRepository.save(patient);
-
-        logger.info("Method addNewPatient finished");
         return PatientMapper.INSTANCE.toDto(patient);
     }
 
@@ -100,14 +100,15 @@ public class RegistrationService {
     public UserDto addNewUserToSecurityTable(@NotBlank(message = "Username can't be empty") String username,
                                              @NotBlank(message = "Password can't be empty") String password) {
 
-        logger.info("Method addNewuserToSecurityTable started");
+        logger.info("Method addNewUserToSecurityTable started. Username = {}", username);
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String encryptedPassword = bCryptPasswordEncoder.encode(password);
 
         User user = new User(username, ENCODE_ALGORITHM + encryptedPassword);
+
         userRepository.save(user);
 
-        logger.info("Method addNewuserToSecurityTable finished");
+        logger.info("Method addNewUserToSecurityTable finished.");
 
         return UserMapper.INSTANCE.toDto(user);
     }
@@ -122,9 +123,10 @@ public class RegistrationService {
     public void addUserRoleToSecurityTable(@NotBlank(message = "Username can't be empty") String username,
                                            @NotNull(message = "Role id can't be empty") int roleId) {
 
-        logger.info("Method addUserRoleToSecurityTable started");
+        logger.info("Method addUserRoleToSecurityTable started. Username = {}, roleId = {}", username, roleId);
 
         if (validation.checkStaffRoleInDataBase(roleId)) {
+
             Role role = new Role(
                     userRepository.getUserByUsername(username)
                             .orElseThrow(() ->
@@ -134,8 +136,10 @@ public class RegistrationService {
                             .orElseThrow(() -> new IncorrectDataException("Role with id " + roleId + " is not found!"))
                             .getRoleName());
 
-            roleRepository.save(role);
-            logger.info("Method addUserRoleToSecurityTable finished");
+            int authorityId  = roleRepository.save(role).getId();
+
+            logger.info("Method addUserRoleToSecurityTable finished. Username = {} with authorities id = {}", username,
+                    authorityId);
         }
     }
 
@@ -157,19 +161,26 @@ public class RegistrationService {
 
         HospitalStaff hospitalStaff = null;
 
-        logger.info("Method addNewEmployee started");
+        logger.info("Method addNewEmployee started. Employee username = {}", username);
+
         if (validation.checkStaffRoleInDataBase(stuffRoleId)) {
+
+            StaffRole staffRole = staffRoleRepository.getStuffRoleById(stuffRoleId).orElseThrow(
+                    () -> new IncorrectDataException("Role is not found in data base")
+            );
+
             hospitalStaff = new HospitalStaff(
                     firstname,
                     lastname,
                     username,
                     doctorSpecialization,
-                    staffRoleRepository.getStuffRoleById(stuffRoleId).orElseThrow(
-                            () -> new IncorrectDataException("Role is not found in data base")
-                    ));
+                    staffRole);
+
+            int employeeId = hospitalStaffRepository.save(hospitalStaff).getId();
+
+            logger.info("Method addNewEmployee finished. Employee with id = {} has been created", employeeId);
         }
-        logger.info("Method addNewEmployee finished");
-        return HospitalStuffMapper.INSTANCE.toDto(hospitalStaffRepository.save(hospitalStaff));
+        return HospitalStuffMapper.INSTANCE.toDto(hospitalStaff);
     }
 
     /**
@@ -179,13 +190,19 @@ public class RegistrationService {
     public List<PatientDto> getAllPatients() {
 
         logger.info("Method getAllPatients started");
-        if (patientRepository.findAll().isEmpty()) {
+
+        List<Patient> patientList = patientRepository.findAll();
+
+        if (patientList.isEmpty()) {
+
             logger.warn("Method getAllPatients warn: No patients registered");
+
             throw new IncorrectDataException("No patients registered");
         }
 
         logger.info("Method getAllPatients finished");
-        return PatientMapper.INSTANCE.toDto(patientRepository.findAll());
+
+        return PatientMapper.INSTANCE.toDto(patientList);
     }
 
     /**
@@ -194,9 +211,12 @@ public class RegistrationService {
      */
     public List<HospitalStaffDto> getAllDoctors() {
         logger.info("Method getAllDoctors");
-        return HospitalStuffMapper.INSTANCE.toDto(
-                hospitalStaffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
-                        .orElseThrow(() -> new NoSuchUserException("No doctors registered")));
+
+        List<HospitalStaff> doctorList = hospitalStaffRepository.getHospitalStuffByDoctorSpecializationIsNotNull()
+                .orElseThrow(() -> new NoSuchUserException("No doctors registered"));
+
+        return HospitalStuffMapper.INSTANCE.toDto(doctorList);
+
     }
 
     /**
@@ -249,7 +269,7 @@ public class RegistrationService {
     public void appointDoctorToPatient(@NotNull(message = "Doctor can't be empty") int doctorId,
                                        @NotNull(message = "Patient can't be empty") int patientId) {
 
-        logger.info("Method appointDoctorToPatient started");
+        logger.info("Method appointDoctorToPatient started. Doctor id = {}, patient id = {}.", doctorId, patientId);
 
         if (validation.checkPatientId(patientId) && validation.checkHospitalStaffId(doctorId)) {
 
@@ -269,9 +289,9 @@ public class RegistrationService {
 
             patientList.add(patient);
 
-            hospitalStaffRepository.save(doctor);
+            int appointmentId = hospitalStaffRepository.save(doctor).getId();
 
-            logger.info("Method appointDoctorToPatient finished");
+            logger.info("Method appointDoctorToPatient finished. Appointment with id = {} has been created.", appointmentId);
         }
     }
 
@@ -287,7 +307,7 @@ public class RegistrationService {
             @NotNull(message = "Request to create employee can't be empty")
             @Valid HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto) {
 
-        logger.info("Method addEmployeeToTheSystem started");
+        logger.info("Method addEmployeeToTheSystem started. Username = {}.", hospitalStaffDtoUserDtoRoleDto.getUsername());
 
         validation.checkDoctorSpecialization(hospitalStaffDtoUserDtoRoleDto.getDoctorSpecialization());
 
@@ -323,10 +343,12 @@ public class RegistrationService {
             @NotNull(message = "Request to create employee can't be empty")
             PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
 
-        logger.info("Method addPatientToTheSystem started");
+        logger.info("Method addPatientToTheSystem started. Username = {}.", patientDtoUserDtoRoleDto.getUsername());
 
         if (patientDtoUserDtoRoleDto.getPassword().isBlank()) {
+
             logger.warn("Method addPatientToTheSystem warn. Password can't be empty");
+
             throw new IncorrectDataException("Password can't be empty");
         }
 
@@ -352,5 +374,15 @@ public class RegistrationService {
         logger.info("Method addPatientToTheSystem finished");
 
         return patient;
+    }
+
+    public int getRoleIdByName(String name){
+        logger.info("Method getRoleIdByName(name = {}) started.", name);
+
+        StaffRole role = staffRoleRepository.findStaffRoleByRoleName(name).orElseThrow(
+                () -> new IncorrectDataException("Role with name " + name + " is not found"));
+
+        logger.info("Method getRoleIdByName(name = {}) finished.", name);
+        return  role.getId();
     }
 }

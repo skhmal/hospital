@@ -1,5 +1,6 @@
 package com.khmal.hospital.service;
 
+import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
 import com.khmal.hospital.dao.entity.Appointment;
 import com.khmal.hospital.dao.entity.Diagnose;
 import com.khmal.hospital.dao.repository.AppointmentRepository;
@@ -8,7 +9,6 @@ import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.DiagnoseDto;
 import com.khmal.hospital.mapper.AppointmentPaginationMapper;
 import com.khmal.hospital.mapper.DiagnosePaginationMapper;
-import com.khmal.hospital.service.exception_handling.IncorrectDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -38,7 +38,7 @@ public class PatientService {
                                                                    String sortDirection,
                                                                    int patientId) {
 
-        logger.info("Method getAllPatientAppointmentsPaginated started");
+        logger.info("Method getAllPatientAppointmentsPaginated started. Patient id = {}", patientId);
 
         Sort sort = getSort(sortField,
                 sortDirection);
@@ -51,7 +51,9 @@ public class PatientService {
         Page<AppointmentDto> appointmentDto = AppointmentPaginationMapper.toDto(appointmentPage);
 
         if (appointmentDto.getContent().isEmpty()) {
-            logger.info("The Patient doesn't have appointments ");
+
+            logger.info("The Patient with id = {} doesn't have appointments.", patientId);
+
             throw new IncorrectDataException("There is no appointment");
         }
 
@@ -62,7 +64,9 @@ public class PatientService {
 
     public Page<DiagnoseDto> getAllPatientDiagnosesPaginated(int pageNo, int pageSize, String sortField,
                                                              String sortDirection, int patientId) {
-        logger.info("Method getAllPatientDiagnosesPaginated started");
+
+        logger.info("Method getAllPatientDiagnosesPaginated started. Patient id = {}", patientId);
+
         Sort sort = getSort(sortField,
                 sortDirection);
 
@@ -74,7 +78,7 @@ public class PatientService {
         Page<DiagnoseDto> diagnoseDtoPage = DiagnosePaginationMapper.toDto(diagnosePage);
 
         if (diagnoseDtoPage.getContent().isEmpty()) {
-            logger.info("The Patient doesn't have diagnoses");
+            logger.info("The Patient with id = {} doesn't have diagnoses", patientId);
             throw new IncorrectDataException("There is no diagnose");
         }
 
@@ -86,7 +90,7 @@ public class PatientService {
      * Method to choose sort direction (asc or desc).
      * @param sortField field to sort in table.
      * @param sortDirection sort direction
-     * @return
+     * @return Sort
      */
     public Sort getSort(String sortField,
                         String sortDirection) {

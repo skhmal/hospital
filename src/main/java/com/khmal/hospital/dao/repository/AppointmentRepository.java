@@ -8,9 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
+public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     Optional<List<Appointment>> findAppointmentByHospitalStaffId(int id);
     Optional<List<Appointment>> findAppointmentByPatientId(int id);
-
     Optional<Page<Appointment>> findAppointmentByPatientId(int id, Pageable pageable);
 }
