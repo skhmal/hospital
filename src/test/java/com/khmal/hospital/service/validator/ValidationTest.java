@@ -1,5 +1,7 @@
 package com.khmal.hospital.service.validator;
 
+import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
+import com.khmal.hospital.controller.exception.handling.NoSuchUserException;
 import com.khmal.hospital.dao.entity.Appointment;
 import com.khmal.hospital.dao.entity.HospitalStaff;
 import com.khmal.hospital.dao.entity.Patient;
@@ -8,8 +10,6 @@ import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.HospitalStaffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
 import com.khmal.hospital.dao.repository.StaffRoleRepository;
-import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
-import com.khmal.hospital.controller.exception.handling.NoSuchUserException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -44,34 +44,37 @@ class ValidationTest {
     private final Appointment APPOINTMENT = new Appointment(APPOINTMENT_TIME, "consultation",
             "temperature check", new Patient(), new HospitalStaff());
 
-    @BeforeEach
-    public void setUp(){
-        HospitalStaff doctor = new HospitalStaff("john", "schwarc", "js",
-                "surgeon", new StaffRole("ROLE_DOCTOR"));
+    private final HospitalStaff DOCTOR = new HospitalStaff("john", "schwarc", "js",
+            "surgeon", new StaffRole("ROLE_DOCTOR"));
 
-        Patient patient = new Patient();
-        patient.setId(7);
+    private final Patient PATIENT = new Patient();
+    private final String PATIENT_USERNAME = "Bond";
+    private final int PATIENT_ID = 7;
+
+    @BeforeEach
+    public void setUp() {
+
+        PATIENT.setId(PATIENT_ID);
+        PATIENT.setUsername(PATIENT_USERNAME);
 
         List<Patient> patientList = new ArrayList<>();
-        patientList.add(patient);
-        doctor.setPatientsList(patientList);
+        patientList.add(PATIENT);
+        DOCTOR.setPatientsList(patientList);
 
         Mockito.when(hospitalStaffRepository.findHospitalStuffById(Mockito.anyInt()))
-                .thenReturn(Optional.of(doctor));
+                .thenReturn(Optional.of(DOCTOR));
 
         Mockito.when(patientRepository.findPatientById(Mockito.anyInt()))
                 .thenReturn(Optional.of(new Patient()));
     }
 
-
-
     @Test
     void checkHospitalStuffIdPositiveCase() {
 
         Mockito.when(hospitalStaffRepository.findHospitalStuffById(Mockito.anyInt()))
-                .thenReturn(Optional.of(new HospitalStaff()));
+                .thenReturn(Optional.of(DOCTOR));
 
-        assertTrue(validation.checkHospitalStaffId(1));
+        assertEquals(DOCTOR.getUsername(), validation.checkHospitalStaffId(Mockito.anyInt()).getUsername());
     }
 
     @Test
@@ -86,8 +89,11 @@ class ValidationTest {
     @Test
     void checkPatientIdPositiveCase() {
 
+        Mockito.when(patientRepository.findPatientById(Mockito.anyInt())).thenReturn(Optional.of(PATIENT));
+        Patient patient = validation.checkPatientId(Mockito.anyInt());
 
-        assertTrue(validation.checkPatientId(1));
+        assertEquals(PATIENT_ID, patient.getId());
+        assertEquals(PATIENT_USERNAME, patient.getUsername());
     }
 
     @Test
@@ -100,7 +106,6 @@ class ValidationTest {
 
     @Test
     void checkAppointmentDateForHospitalStuffPositiveCase() {
-
 
         Mockito.when(appointmentRepository.findAppointmentByPatientId(Mockito.anyInt()))
                 .thenReturn(Optional.of(new ArrayList<Appointment>()));
@@ -155,9 +160,11 @@ class ValidationTest {
 
     @Test
     void checkStuffRoleInDataBasePositiveCase() {
-        Mockito.when(staffRoleRepository.getStuffRoleById(Mockito.anyInt())).thenReturn(Optional.of(new StaffRole()));
+        String roleName = "ROLE_NURSE";
+        Mockito.when(staffRoleRepository.getStuffRoleById(Mockito.anyInt()))
+                .thenReturn(Optional.of(new StaffRole(roleName)));
 
-        assertTrue(validation.checkStaffRoleInDataBase(Mockito.anyInt()));
+        assertEquals(roleName, validation.checkStaffRoleInDataBase(Mockito.anyInt()).getRoleName());
     }
 
     @Test
@@ -184,33 +191,33 @@ class ValidationTest {
     }
 
     @Test
-    void checkAppointmentTypePositiveCase(){
+    void checkAppointmentTypePositiveCase() {
         String appointmentType = "MEDICATIONS";
 
         assertTrue(validation.checkAppointmentType(appointmentType));
     }
 
     @Test
-    void checkAppointmentTypeNegativeCase(){
+    void checkAppointmentTypeNegativeCase() {
         String appointmentType = "BIEDRONKA";
 
         assertThrows(IncorrectDataException.class, () -> validation.checkAppointmentType(appointmentType));
     }
 
     @Test
-    void checkDoubleAppointPositiveCase(){
-        assertTrue(validation.checkDoubleAppoint(Mockito.anyInt(),1));
+    void checkDoubleAppointPositiveCase() {
+        assertTrue(validation.checkDoubleAppoint(Mockito.anyInt(), 1));
     }
 
     @Test
-    void checkDoubleAppointNegativeCase(){
-        assertFalse(validation.checkDoubleAppoint(Mockito.anyInt(),7));
+    void checkDoubleAppointNegativeCase() {
+        assertFalse(validation.checkDoubleAppoint(Mockito.anyInt(), 7));
     }
 
     @Test
-    void checkDoubleAppointNegativeCaseDoctorNotFound(){
+    void checkDoubleAppointNegativeCaseDoctorNotFound() {
         Mockito.when(hospitalStaffRepository.findHospitalStuffById(666)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchUserException.class ,() ->validation.checkDoubleAppoint(666,1));
+        assertThrows(NoSuchUserException.class, () -> validation.checkDoubleAppoint(666, 1));
     }
 }

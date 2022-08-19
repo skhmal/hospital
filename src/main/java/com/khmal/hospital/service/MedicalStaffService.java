@@ -1,7 +1,6 @@
 package com.khmal.hospital.service;
 
 import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
-import com.khmal.hospital.controller.exception.handling.NoSuchUserException;
 import com.khmal.hospital.dao.entity.Appointment;
 import com.khmal.hospital.dao.entity.Diagnose;
 import com.khmal.hospital.dao.entity.HospitalStaff;
@@ -46,7 +45,6 @@ public class MedicalStaffService {
     private final AppointmentRepository appointmentRepository;
     private final Validation validation;
     private final DiagnoseRepository diagnoseRepository;
-    private static final String NOT_FOUND = " is not found";
 
     public MedicalStaffService(PatientRepository patientRepository, HospitalStaffRepository hospitalStaffRepository, AppointmentRepository appointmentRepository, Validation validation, DiagnoseRepository diagnoseRepository) {
         this.patientRepository = patientRepository;
@@ -81,25 +79,21 @@ public class MedicalStaffService {
 
         validation.checkAppointmentType(appointmentType);
 
-        if (validation.checkHospitalStaffId(hospitalStaffId) && validation.checkPatientId(patientId) &&
-                validation.checkAppointmentDateForHospitalStaff(patientId, hospitalStaffId, appointmentDate)) {
+        HospitalStaff hospitalStaff = validation.checkHospitalStaffId(hospitalStaffId);
+        Patient patient = validation.checkPatientId(patientId);
 
-            Patient patient = patientRepository.getPatientById(patientId).orElseThrow(
-                    () -> new NoSuchUserException("Patient with id = " + patientId + NOT_FOUND)
-            );
-            HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(hospitalStaffId).orElseThrow(
-                    () -> new NoSuchUserException("Medic with id = " + hospitalStaffId + NOT_FOUND));
+        if (validation.checkAppointmentDateForHospitalStaff(patientId, hospitalStaffId, appointmentDate)) {
 
             appointment = new Appointment(
                     appointmentDate,
                     appointmentType,
                     appointmentSummary,
                     patient,
-                    doctor);
+                    hospitalStaff);
 
             appointmentRepository.save(appointment);
 
-           logger.info("Method createAppointment finished. Appointment id = {} has been created", appointment.getId());
+            logger.info("Method createAppointment finished. Appointment id = {} has been created", appointment.getId());
         }
 
 
@@ -119,44 +113,38 @@ public class MedicalStaffService {
      */
     @Transactional
     public DiagnoseDto createDiagnose(@Valid @Min(value = 1, message = "Patient not selected") Integer patientId,
-                                      @Valid @Min(value = 1, message = "Medic not selected")Integer doctorId,
+                                      @Valid @Min(value = 1, message = "Medic not selected") Integer doctorId,
                                       @Valid @NotBlank(message = "Summary can't be empty") String summary) {
-        Diagnose diagnose = null;
+
 
         logger.info("Method createDiagnose started. Creating diagnose for patient id = {}, doctor id = {}", patientId,
                 doctorId);
 
-        if (validation.checkHospitalStaffId(doctorId) && validation.checkPatientId(patientId)) {
+        HospitalStaff doctor = validation.checkHospitalStaffId(doctorId);
+        Patient patient = validation.checkPatientId(patientId);
 
-            Patient patient = patientRepository.getPatientById(patientId).orElseThrow(
-                    () -> new NoSuchUserException("Patient with id = " + patientId + NOT_FOUND)
-            );
-            HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(doctorId).orElseThrow(
-                    () -> new NoSuchUserException("Doctor with id = " + doctorId + NOT_FOUND)
-            );
+        Diagnose diagnose = new Diagnose(
+                summary,
+                LocalDate.now(),
+                patient,
+                doctor);
 
-            diagnose = new Diagnose(
-                    summary,
-                    LocalDate.now(),
-                    patient,
-                    doctor);
+        if (patient.getDoctorsList().size() == 1) {
 
-            if (patient.getDoctorsList().size() == 1) {
+            logger.info("Patient id = {} discharged", patient.getId());
 
-                logger.info("Patient id = {} discharged", patient.getId());
+            patient.setDischarged(true);
 
-                patient.setDischarged(true);
-
-                patientRepository.save(patient);
-            }
-
-            doctor.getPatientsList().remove(patient);
-            doctor.setPatientCount(doctor.getPatientCount() - 1);
-
-            diagnoseRepository.save(diagnose);
-
-            logger.info("Method createDiagnose finished. Diagnose with id {} has been created", diagnose.getId());
+            patientRepository.save(patient);
         }
+
+        doctor.getPatientsList().remove(patient);
+        doctor.setPatientCount(doctor.getPatientCount() - 1);
+
+        diagnoseRepository.save(diagnose);
+
+        logger.info("Method createDiagnose finished. Diagnose with id {} has been created", diagnose.getId());
+
         return DiagnoseMapper.INSTANCE.toDto(diagnose);
     }
 

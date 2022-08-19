@@ -1,11 +1,11 @@
 package com.khmal.hospital.service;
 
+import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
 import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.DiagnoseRepository;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.DiagnoseDto;
-import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

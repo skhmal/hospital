@@ -1,11 +1,11 @@
 package com.khmal.hospital.service;
 
+import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
 import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.AppointmentRepository;
 import com.khmal.hospital.dao.repository.DiagnoseRepository;
 import com.khmal.hospital.dao.repository.HospitalStaffRepository;
 import com.khmal.hospital.dao.repository.PatientRepository;
-import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
 import com.khmal.hospital.service.validator.Validation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,34 +46,29 @@ class MedicalStaffServiceTest {
     private DiagnoseRepository diagnoseRepository;
 
     private final String PATIENT_FIRSTNAME = "thomas";
+    private final Patient PATIENT = new Patient(PATIENT_FIRSTNAME, "andersen", "neo", LocalDate.now(),
+            new StaffRole("ROLE_PATIENT"));
+
+    private final HospitalStaff DOCTOR = new HospitalStaff("serg", "khm", "sh", "family doctor",
+            new StaffRole("ROLE_DOCTOR"));
 
     @BeforeEach
-    public void setup(){
-
-        Patient patient = new Patient(PATIENT_FIRSTNAME, "andersen", "neo", LocalDate.now(),
-                new StaffRole("ROLE_PATIENT"));
-
-        HospitalStaff doctor = new HospitalStaff("serg", "khm", "sh", "family doctor",
-                new StaffRole("ROLE_DOCTOR"));
+    public void setup() {
 
         List<Patient> patientList = new ArrayList<>();
         List<HospitalStaff> doctorList = new ArrayList<>();
 
-        patientList.add(patient);
-        patient.setDoctorsList(doctorList);
+        patientList.add(PATIENT);
+        PATIENT.setDoctorsList(doctorList);
 
-        doctorList.add(doctor);
-        doctor.setPatientsList(patientList);
+        doctorList.add(DOCTOR);
+        DOCTOR.setPatientsList(patientList);
 
-        Mockito.when(hospitalStaffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(
-                Optional.of(doctor));
+        Mockito.when(validation.checkHospitalStaffId(Mockito.anyInt())).thenReturn(DOCTOR);
+        Mockito.when(validation.checkPatientId(Mockito.anyInt())).thenReturn(PATIENT);
 
         Mockito.when(patientRepository.getPatientById(Mockito.anyInt())).thenReturn(
-                Optional.of(patient));
-
-        Mockito.when(validation.checkHospitalStaffId(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(validation.checkPatientId(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(validation.checkHospitalStaffId(Mockito.anyInt())).thenReturn(true);
+                Optional.of(PATIENT));
     }
 
     @Test
@@ -114,20 +109,23 @@ class MedicalStaffServiceTest {
     }
 
     @Test
-    void getDoctorPatients(){
+    void getDoctorPatients() {
+        Mockito.when(hospitalStaffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(
+                Optional.of(DOCTOR));
+
         String actualPatientName = medicalStaffService.getDoctorPatients(Mockito.anyInt()).get(0).getFirstname();
 
         assertEquals(PATIENT_FIRSTNAME, actualPatientName);
     }
 
     @Test
-    void egtDoctorPatientsWithoutAnyPatient(){
+    void egtDoctorPatientsWithoutAnyPatient() {
         HospitalStaff doctor = new HospitalStaff();
         List<Patient> patientList = new ArrayList<>();
         doctor.setPatientsList(patientList);
 
         Mockito.when(hospitalStaffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(Optional.of(doctor));
 
-       assertThrows(IncorrectDataException.class, () -> medicalStaffService.getDoctorPatients(Mockito.anyInt()));
+        assertThrows(IncorrectDataException.class, () -> medicalStaffService.getDoctorPatients(Mockito.anyInt()));
     }
 }

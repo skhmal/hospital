@@ -59,41 +59,40 @@ public class RegistrationService {
 
     /**
      * Method for adding new patients to the system.
-     * @param firstname first name
-     * @param lastname last name
-     * @param username username
-     * @param birthday date of birthday
-     * @param stuffRoleId roles id in database (checked before adding patient to the system).
+     *
+     * @param firstname   first name
+     * @param lastname    last name
+     * @param username    username
+     * @param birthday    date of birthday
+     * @param staffRoleId roles id in database (checked before adding patient to the system).
      * @return PatientDto
      */
     public PatientDto addNewPatient(@Valid @NotBlank(message = "Field firstname can't be empty") String firstname,
                                     @Valid @NotBlank(message = "Field lastname can't be empty") String lastname,
                                     @Valid @NotBlank(message = "Field username can't be empty") String username,
                                     @Valid @NotBlank(message = "Field birthday can't be empty") LocalDate birthday,
-                                    @Valid @NotNull(message = "Field stuffRoleId can't be empty") Integer stuffRoleId) {
-        Patient patient = null;
+                                    @Valid @NotNull(message = "Field staffRoleId can't be empty") Integer staffRoleId) {
+
+        StaffRole staffRole = validation.checkStaffRoleInDataBase(staffRoleId);
 
         logger.info("Method addNewPatient started");
 
-        if (validation.checkStaffRoleInDataBase(stuffRoleId)) {
+        Patient patient = new Patient(firstname,
+                lastname,
+                username,
+                birthday,
+                staffRole);
 
-            StaffRole staffRolePatient = staffRoleRepository.getStuffRoleById(stuffRoleId).get();
+        patientRepository.save(patient);
 
-            patient = new Patient(firstname,
-                    lastname,
-                    username,
-                    birthday,
-                    staffRolePatient);
+        logger.info("Method addNewPatient finished. Patient with id {} has been created", patient.getId());
 
-            patientRepository.save(patient);
-
-            logger.info("Method addNewPatient finished. Patient with id {} has been created", patient.getId());
-        }
         return PatientMapper.INSTANCE.toDto(patient);
     }
 
     /**
      * Add new user to spring security table. Password encrypted before adding to database.
+     *
      * @param username username
      * @param password password
      * @return UserDto
@@ -119,40 +118,39 @@ public class RegistrationService {
      * Add user to the authorities table(spring security).
      * - Check username in table users before adding to the system.
      * - Check role id in database before adding to the system.
+     *
      * @param username username
-     * @param roleId role id
+     * @param roleId   role id
      */
     public void addUserRoleToSecurityTable(String username,
                                            int roleId) {
 
         logger.info("Method addUserRoleToSecurityTable started. Username = {}, roleId = {}", username, roleId);
 
-        if (validation.checkStaffRoleInDataBase(roleId)) {
+        StaffRole staffRole = validation.checkStaffRoleInDataBase(roleId);
 
-            Role role = new Role(
-                    userRepository.getUserByUsername(username)
-                            .orElseThrow(() ->
-                                    new NoSuchUserException("User with username " + username + " is not found")),
+        Role role = new Role(
+                userRepository.getUserByUsername(username)
+                        .orElseThrow(() ->
+                                new NoSuchUserException("User with username " + username + " is not found")),
 
-                    staffRoleRepository.getStuffRoleById(roleId)
-                            .orElseThrow(() -> new IncorrectDataException("Role with id " + roleId + " is not found!"))
-                            .getRoleName());
+                staffRole.getRoleName());
 
-            roleRepository.save(role);
+        roleRepository.save(role);
 
-            logger.info("Method addUserRoleToSecurityTable finished. Username = {} with authorities id = {}", username,
-                    role.getId());
-        }
+        logger.info("Method addUserRoleToSecurityTable finished. Username = {} with authorities id = {}", username,
+                role.getId());
     }
 
     /**
      * Add new employee(administrator, doctor, nurse) to  the system.
      * - Checking role id in database before adding to the database
-     * @param firstname first name
-     * @param lastname last name
-     * @param username username
+     *
+     * @param firstname            first name
+     * @param lastname             last name
+     * @param username             username
      * @param doctorSpecialization doctor specialization(only for doctors). another have a null.
-     * @param stuffRoleId role id (for example administrators have 1, nurse 2, doctors 3, patients 4)
+     * @param stuffRoleId          role id (for example administrators have 1, nurse 2, doctors 3, patients 4)
      * @return HospitalStaffDto
      */
     public HospitalStaffDto addNewEmployee(String firstname,
@@ -161,32 +159,28 @@ public class RegistrationService {
                                            String doctorSpecialization,
                                            int stuffRoleId) {
 
-        HospitalStaff hospitalStaff = null;
 
         logger.info("Method addNewEmployee started. Employee username = {}", username);
 
-        if (validation.checkStaffRoleInDataBase(stuffRoleId)) {
+        StaffRole staffRole = validation.checkStaffRoleInDataBase(stuffRoleId);
 
-            StaffRole staffRole = staffRoleRepository.getStuffRoleById(stuffRoleId).orElseThrow(
-                    () -> new IncorrectDataException("Role is not found in data base")
-            );
+        HospitalStaff hospitalStaff = new HospitalStaff(
+                firstname,
+                lastname,
+                username,
+                doctorSpecialization,
+                staffRole);
 
-            hospitalStaff = new HospitalStaff(
-                    firstname,
-                    lastname,
-                    username,
-                    doctorSpecialization,
-                    staffRole);
+        hospitalStaffRepository.save(hospitalStaff);
 
-            hospitalStaffRepository.save(hospitalStaff);
+        logger.info("Method addNewEmployee finished. Employee with id = {} has been created", hospitalStaff.getId());
 
-            logger.info("Method addNewEmployee finished. Employee with id = {} has been created", hospitalStaff.getId());
-        }
         return HospitalStuffMapper.INSTANCE.toDto(hospitalStaff);
     }
 
     /**
      * Get list of all patients in the system.
+     *
      * @return list of patients
      */
     public List<PatientDto> getAllPatients() {
@@ -209,6 +203,7 @@ public class RegistrationService {
 
     /**
      * Get list of all doctors in the system.
+     *
      * @return list of doctors
      */
     public List<HospitalStaffDto> getAllDoctors() {
@@ -223,6 +218,7 @@ public class RegistrationService {
 
     /**
      * Get paginated list of all doctors in the system.
+     *
      * @return paginated list of doctors
      */
     public Page<DoctorDto> getAllDoctorsPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
@@ -242,6 +238,7 @@ public class RegistrationService {
 
     /**
      * Get paginated list of all patients in the system.
+     *
      * @return paginated list of patients
      */
     public Page<PatientDto> getAllPatientsPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
@@ -265,7 +262,8 @@ public class RegistrationService {
      * Appoint doctor to patient.
      * - Checking patient and doctor id's in the database.
      * - Checking for double appoint.
-     * @param doctorId doctor id
+     *
+     * @param doctorId  doctor id
      * @param patientId patient id
      */
     public void appointDoctorToPatient(@Valid @Min(value = 1, message = "Field doctor can't be empty") Integer doctorId,
@@ -273,34 +271,30 @@ public class RegistrationService {
 
         logger.info("Method appointDoctorToPatient started. Doctor id = {}, patient id = {}.", doctorId, patientId);
 
-        if (validation.checkPatientId(patientId) && validation.checkHospitalStaffId(doctorId)) {
+        HospitalStaff doctor = validation.checkHospitalStaffId(doctorId);
+        Patient patient = validation.checkPatientId(patientId);
 
-            if (!validation.checkDoubleAppoint(doctorId, patientId))
-                throw new IncorrectDataException("Appoint already exist");
 
-            HospitalStaff doctor = hospitalStaffRepository.getHospitalStuffById(doctorId)
-                    .orElseThrow(() -> new NoSuchUserException("Doctor is not found"));
+        if (!validation.checkDoubleAppoint(doctorId, patientId))
+            throw new IncorrectDataException("Appoint already exist");
 
-            List<Patient> patientList = doctor.getPatientsList();
+        List<Patient> patientList = doctor.getPatientsList();
 
-            Patient patient = patientRepository.getPatientById(patientId).orElseThrow(
-                    () -> new NoSuchUserException("Patient is not found"));
+        doctor.setPatientCount(doctor.getPatientCount() + 1);
+        patient.setDischarged(false);
 
-            doctor.setPatientCount(doctor.getPatientCount() + 1);
-            patient.setDischarged(false);
+        patientList.add(patient);
 
-            patientList.add(patient);
+        hospitalStaffRepository.save(doctor);
 
-            hospitalStaffRepository.save(doctor);
-
-            logger.info("Method appointDoctorToPatient finished. Appoint with id = {} has been created.", doctor.getId());
-        }
+        logger.info("Method appointDoctorToPatient finished. Appoint with id = {} has been created.", doctor.getId());
     }
 
     /**
      * Transactional method which include three methods (addNewEmployee, addNewUserToSecurityTable,
      * addUserRoleToSecurityTable).
      * - Checking doctor specialization to prevent provide incorrect doctor specialization to the system.
+     *
      * @param hospitalStaffDtoUserDtoRoleDto request from view.
      * @return HospitalStaffDto
      */
@@ -335,13 +329,14 @@ public class RegistrationService {
 
     /**
      * Transactional method which include three methods (addNewPatient, addNewUserToSecurityTable,
-     *       addUserRoleToSecurityTable).
+     * addUserRoleToSecurityTable).
+     *
      * @param patientDtoUserDtoRoleDto request from view.
      * @return PatientDto
      */
     @Transactional
     public PatientDto addPatientToTheSystem(
-           @Valid PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
+            @Valid PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
 
         logger.info("Method addPatientToTheSystem started. Username = {}.", patientDtoUserDtoRoleDto.getUsername());
 
@@ -367,13 +362,13 @@ public class RegistrationService {
         return patient;
     }
 
-    public int getRoleIdByName(String name){
+    public int getRoleIdByName(String name) {
         logger.info("Method getRoleIdByName(name = {}) started.", name);
 
         StaffRole role = staffRoleRepository.findStaffRoleByRoleName(name).orElseThrow(
                 () -> new IncorrectDataException("Role with name " + name + " is not found"));
 
         logger.info("Method getRoleIdByName(name = {}) finished.", name);
-        return  role.getId();
+        return role.getId();
     }
 }

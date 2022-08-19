@@ -21,8 +21,8 @@ public class PatientController {
 
     private final SecurityService securityService;
     private final PatientService patientService;
-    private static final String DESC_SORT = "DESC";
-    private static final String ASC_SORT = "ASC";
+    private static final String DESC_SORT = "desc";
+    private static final String ASC_SORT = "asc";
     private static final int PAGE_SIZE = 5;
 
     public PatientController(SecurityService securityService, PatientService patientService) {

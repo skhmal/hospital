@@ -15,7 +15,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 
@@ -77,24 +76,16 @@ class RegistrationServiceTest {
 
         DOCTOR.setPatientsList(new ArrayList<Patient>());
 
-        Mockito.when(hospitalStaffRepository.getHospitalStuffById(Mockito.anyInt())).thenReturn(Optional.of(DOCTOR));
         Mockito.when(patientRepository.getPatientById(Mockito.anyInt())).thenReturn(Optional.of(PATIENT));
 
-        Mockito.when(validation.checkHospitalStaffId(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(validation.checkPatientId(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(validation.checkStaffRoleInDataBase(Mockito.anyInt())).thenReturn(true);
         Mockito.when(validation.checkDoubleAppoint(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
     }
-
-    @Mock
-    Logger logger;
-
-    @Mock
-    private RegistrationServiceTest registrationServiceTest;
 
     @Test
     void addNewPatientPositiveCase() {
         int stuffRoleId = 4;
+
+        Mockito.when(validation.checkStaffRoleInDataBase(Mockito.anyInt())).thenReturn(STAFF_ROLE_PATIENT);
 
         registrationService.addNewPatient(PATIENT_FIRSTNAME, PATIENT_LASTNAME, PATIENT_USERNAME,
                 PATIENT_BIRTHDAY, stuffRoleId);
@@ -126,6 +117,7 @@ class RegistrationServiceTest {
     @Test
     void addNewUserRoleToSecurityTablePositiveCase() {
         int roleId = 4;
+        Mockito.when(validation.checkStaffRoleInDataBase(Mockito.anyInt())).thenReturn(STAFF_ROLE_PATIENT);
 
         Mockito.when(userRepository.getUserByUsername(PATIENT_USERNAME))
                 .thenReturn(Optional.of(new User(PATIENT_USERNAME, PASSWORD)));
@@ -153,6 +145,9 @@ class RegistrationServiceTest {
 
     @Test
     void appointDoctorToPatientPositiveCase() {
+        Mockito.when(validation.checkHospitalStaffId(Mockito.anyInt())).thenReturn(DOCTOR);
+        Mockito.when(validation.checkPatientId(Mockito.anyInt())).thenReturn(PATIENT);
+
         registrationService.appointDoctorToPatient(Mockito.anyInt(), 1);
 
         ArgumentCaptor<HospitalStaff> hospitalStuffArgumentCaptor = ArgumentCaptor.forClass(HospitalStaff.class);
@@ -231,16 +226,17 @@ class RegistrationServiceTest {
 
     @Test
     void addEmployeeToTheSystem() {
+        int staffRoleId = 3;
+
         HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto = new HospitalStaffDtoUserDtoRoleDto();
         hospitalStaffDtoUserDtoRoleDto.setFirstname(DOCTOR_FIRSTNAME);
         hospitalStaffDtoUserDtoRoleDto.setLastname(DOCTOR_LASTNAME);
         hospitalStaffDtoUserDtoRoleDto.setUsername(DOCTOR_USERNAME);
         hospitalStaffDtoUserDtoRoleDto.setPassword(PASSWORD);
         hospitalStaffDtoUserDtoRoleDto.setDoctorSpecialization(DOCTOR_SPECIALIZATION);
-        hospitalStaffDtoUserDtoRoleDto.setStuffRoleId(3);
+        hospitalStaffDtoUserDtoRoleDto.setStuffRoleId(staffRoleId);
 
-        Mockito.when(staffRoleRepository.getStuffRoleById(Mockito.anyInt()))
-                .thenReturn(Optional.of(STAFF_ROLE_DOCTOR));
+        Mockito.when(validation.checkStaffRoleInDataBase(Mockito.anyInt())).thenReturn(STAFF_ROLE_DOCTOR);
         Mockito.when(userRepository.getUserByUsername(DOCTOR_USERNAME))
                 .thenReturn(Optional.of(new User(DOCTOR_USERNAME, Mockito.anyString())));
 
@@ -272,8 +268,7 @@ class RegistrationServiceTest {
         patientDtoUserDtoRoleDto.setPassword(PASSWORD);
         patientDtoUserDtoRoleDto.setBirthday(PATIENT_BIRTHDAY);
 
-        Mockito.when(staffRoleRepository.getStuffRoleById(Mockito.anyInt()))
-                .thenReturn(Optional.of(STAFF_ROLE_PATIENT));
+        Mockito.when(validation.checkStaffRoleInDataBase(Mockito.anyInt())).thenReturn(STAFF_ROLE_PATIENT);
         Mockito.when(userRepository.getUserByUsername(PATIENT_USERNAME))
                 .thenReturn(Optional.of(new User(PATIENT_USERNAME, Mockito.anyString())));
 

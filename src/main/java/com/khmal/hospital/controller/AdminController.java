@@ -27,8 +27,8 @@ public class AdminController {
     private static final String SUCCESSFUL = "redirect:/successful";
 
     private static final int PAGE_SIZE = 5;
-    private static final String DESC_SORT = "DESC";
-    private static final String ASC_SORT = "ASC";
+    private static final String DESC_SORT = "desc";
+    private static final String ASC_SORT = "asc";
 
     @GetMapping("/patient")
     public String createNewPatient(Model model) {

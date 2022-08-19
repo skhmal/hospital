@@ -12,7 +12,6 @@ import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.HospitalStaffDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.mapper.HospitalStuffMapper;
-import com.khmal.hospital.mapper.PatientMapper;
 import com.khmal.hospital.mapper.StaffRoleMapper;
 import com.khmal.hospital.service.MedicalStaffService;
 import com.khmal.hospital.service.RegistrationService;
@@ -26,13 +25,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -42,11 +37,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -200,10 +194,5 @@ Principal principal = new PrincipalImpl();
                 )
                 .andExpect(status().isOk())
                 .andExpect(redirectedUrl("/success"));
-    }
-
-
-    @Test
-    void testGetNurseAppointment() {
     }
 }
