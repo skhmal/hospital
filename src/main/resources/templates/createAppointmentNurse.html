@@ -11,16 +11,16 @@
     <div layout:fragment="content">
         <div class="row mt-5">
             <div class="col">
-                <h2 class="text-center mt-sm-3" th:text="#{createNewAppointmentLabel}">Create new appointment</h2>
+                <h2 class="text-center mt-sm-3" th:text="#{createNewAppointmentLabel}"></h2>
             </div>
             <form action="#" data-th-action="@{/nurse/appointment}" data-th-object="${appointments}" method="post">
 
-                <h3 class="text-center mt-sm-3" th:text="#{chooseAppointmentType}">Choose appointment type</h3>
+                <h3 class="text-center mt-sm-3" th:text="#{chooseAppointmentType}"></h3>
                 <div class="row">
                     <div class="form-group col-md-3 mx-auto">
                         <div class="input-group mb-3">
                             <select class="form-select" id="appointmentTypeNurse" name="appointmentTypeNurse">
-                                <option value="null" th:text="#{chooseAppointmentType}">Choose appointment type</option>
+                                <option value="null" th:text="#{chooseAppointmentType}"></option>
                                 <option th:each="type: ${appointmentType}" th:text="${type.name}"
                                         th:value="${type.name()}"></option>
                             </select>
@@ -28,13 +28,13 @@
                     </div>
                 </div>
 
-                <h3 class="text-center mt-sm-3" th:text="#{choosePatient}">Choose patient</h3>
+                <h3 class="text-center mt-sm-3" th:text="#{choosePatient}"></h3>
                 <div class="row">
                     <div class="form-group col-md-3 mx-auto">
                         <div class="input-group mb-3">
                             <select class="form-select" id="patientIdNurseAppointment"
                                     name="patientIdNurseAppointment">
-                                <option value="null" th:text="#{choosePatient}">Choose patient</option>
+                                <option value="null" th:text="#{choosePatient}"></option>
                                 <option th:each="patient: ${patients}" th:text="${patient.firstname + ' '
                                 + patient.lastname + ' ' + patient.birthday}"
                                         th:value="${patient.id}"></option>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
 
-                <h3 class="text-center mt-sm-3" th:text="#{chooseDate}">Choose date</h3>
+                <h3 class="text-center mt-sm-3" th:text="#{chooseDate}"></h3>
                 <div class="input-group-sm mt-3">
                     <input type="datetime-local" th:field="*{date}"/>
                 </div>
@@ -53,59 +53,9 @@
 
                 <div id="createDoctorAppointment" class="input-group-sm mt-3">
                     <button class="btn btn-primary" type="submit" name="action" value="save" th:text="#{Create}">
-                        create
                     </button>
                 </div>
 
-
-                <!--      <h3 class="text-center mt-sm-3">Choose appointment type</h3>-->
-
-                <!--        <div class="row">-->
-                <!--          <div class="form-group col-md-3 mx-auto">-->
-                <!--            <div class="input-group mb-3">-->
-                <!--              <select class="form-select" id="appointmentTypeNurse" name="appointmentTypeNurse">-->
-                <!--                <option value="null">Choose appointment type</option>-->
-                <!--                <option th:each="type: ${appointmentType}" th:text="${type.name}"-->
-                <!--                        th:value="${type.name()}"></option>-->
-                <!--              </select>-->
-                <!--            </div>-->
-                <!--          </div>-->
-                <!--        </div>-->
-
-                <!--        <h3 class="text-center mt-sm-3">Choose patient</h3>-->
-                <!--        <div class="row">-->
-                <!--          <div class="form-group col-md-3 mx-auto">-->
-                <!--            <div class="input-group mb-3">-->
-                <!--              <select class="form-select" id="patientIdNurseAppointment"-->
-                <!--                      name="patientIdNurseAppointment">-->
-                <!--                <option value="null">Choose patient</option>-->
-                <!--                <option th:each="patient: ${patients}" th:text="${patient.lastname}"-->
-                <!--                        th:value="${patient.id}"></option>-->
-                <!--              </select>-->
-                <!--            </div>-->
-                <!--          </div>-->
-                <!--        </div>-->
-
-                <!--      <h3 class="text-center mt-sm-3">Choose date</h3>-->
-                <!--      <div class="form-group col-md-3 mx-auto">-->
-                <!--        <div class="input-group mb-3">-->
-                <!--          <span class="input-group-text">Date</span>-->
-                <!--          <input type="datetime-local" th:field="*{date}"/>-->
-                <!--        </div>-->
-                <!--      </div>-->
-
-                <!--      <div class="form-group col-md-3 mx-auto">-->
-                <!--        <div class="input-group mb-3">-->
-                <!--          <span class="input-group-text">Summary</span>-->
-                <!--          <input type="text" aria-label="Summary" th:field="*{summary}">-->
-                <!--        </div>-->
-                <!--      </div>-->
-
-                <!--      <div class="form-group col-md-3 mx-auto">-->
-                <!--        <div id="createDoctorAppointment" class="input-group mb-3">-->
-                <!--          <button class="btn btn-primary" type="submit" name="action" value="save">create</button>-->
-                <!--        </div>-->
-                <!--      </div>-->
             </form>
         </div>
     </div>

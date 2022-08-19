@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -67,11 +69,11 @@ public class MedicalStaffService {
      *                           Check date to prevent overbooking
      * @return AppointmentDto
      */
-    public AppointmentDto createAppointment(@NotNull(message = "Pastient can't be empty") Integer patientId,
-                                            @NotNull(message = "Employee can't be empty") Integer hospitalStaffId,
-                                            @NotBlank(message = "Appointment type can't be empty") String appointmentType,
-                                            @NotBlank(message = "Summary can't be empty") String appointmentSummary,
-                                            @NotNull(message = "Date can't be empty") LocalDateTime appointmentDate) {
+    public AppointmentDto createAppointment(@Valid @Min(value = 1, message = "Patient can't be empty") Integer patientId,
+                                            @Valid @NotNull(message = "Employee can't be empty") Integer hospitalStaffId,
+                                            @Valid @NotBlank(message = "Appointment type can't be empty") String appointmentType,
+                                            @Valid @NotBlank(message = "Summary can't be empty") String appointmentSummary,
+                                            @Valid @NotNull(message = "Date can't be empty") LocalDateTime appointmentDate) {
         Appointment appointment = null;
 
         logger.info("Method createAppointment started. Creating appointment for medic id = {}, patient id = {}" +
@@ -95,9 +97,9 @@ public class MedicalStaffService {
                     patient,
                     doctor);
 
-           int appointmentId =  appointmentRepository.save(appointment).getId();
+            appointmentRepository.save(appointment);
 
-           logger.info("Method createAppointment finished. Appointment id = {} has been created", appointmentId);
+           logger.info("Method createAppointment finished. Appointment id = {} has been created", appointment.getId());
         }
 
 
@@ -116,9 +118,9 @@ public class MedicalStaffService {
      * @return DiagnoseDto
      */
     @Transactional
-    public DiagnoseDto createDiagnose(@NotNull(message = "Patient can't be empty") int patientId,
-                                      @NotNull(message = "Employee can't be empty") int doctorId,
-                                      @NotBlank(message = "Summary can't be empty") String summary) {
+    public DiagnoseDto createDiagnose(@Valid @Min(value = 1, message = "Patient not selected") Integer patientId,
+                                      @Valid @Min(value = 1, message = "Medic not selected")Integer doctorId,
+                                      @Valid @NotBlank(message = "Summary can't be empty") String summary) {
         Diagnose diagnose = null;
 
         logger.info("Method createDiagnose started. Creating diagnose for patient id = {}, doctor id = {}", patientId,
@@ -151,9 +153,9 @@ public class MedicalStaffService {
             doctor.getPatientsList().remove(patient);
             doctor.setPatientCount(doctor.getPatientCount() - 1);
 
-            int diagnoseId = diagnoseRepository.save(diagnose).getId();
+            diagnoseRepository.save(diagnose);
 
-            logger.info("Method createDiagnose finished. Diagnose with id {} has been created", diagnoseId);
+            logger.info("Method createDiagnose finished. Diagnose with id {} has been created", diagnose.getId());
         }
         return DiagnoseMapper.INSTANCE.toDto(diagnose);
     }
@@ -164,7 +166,7 @@ public class MedicalStaffService {
      * @param doctorId doctor id
      * @return List <PatientDto >
      */
-    public List<PatientDto> getDoctorPatients(int doctorId) {
+    public List<PatientDto> getDoctorPatients(@Valid @Min(value = 1, message = "Doctor's id can't be empty") Integer doctorId) {
 
         logger.info("Method getDoctorPatients started. Get patient list for doctor id = {}", doctorId);
 

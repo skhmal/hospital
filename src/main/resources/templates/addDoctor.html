@@ -11,8 +11,8 @@
     <div layout:fragment="content">
         <div class="row mt-5">
             <div class="col">
-                <h2 class="text-center mt-sm-3" th:text="#{create_new_doctor}">Create new doctor</h2>
-                <h3 class="text-center mt-sm-3" th:text="#{fillAllFields}">Please fill all fields</h3>
+                <h2 class="text-center mt-sm-3" th:text="#{create_new_doctor}"></h2>
+                <h3 class="text-center mt-sm-3" th:text="#{fillAllFields}"></h3>
             </div>
         </div>
 
@@ -38,9 +38,7 @@
 
                     <div class="input-group-sm mt-3">
                         <select class="form-select-sm" id="doctorSpecialization" name="doctorSpecialization">
-                            <option class="form-control-lg" value="nothing" th:text="#{doctorSpec}">
-                                Select a specialization
-                            </option>
+                            <option class="form-control-lg" value="nothing" th:text="#{doctorSpec}"></option>
                             <option class="form-control-lg" th:each="specialization: ${specializations}"
                                     th:text="${specialization.name()}"
                                     th:value="${specialization.name()}"></option>
@@ -50,7 +48,7 @@
                     <div class="form-group">
                         <div class="input-group-sm mt-3">
                             <button class="btn btn-primary" type="submit" name="action" value="save"
-                                    th:text="#{Create}">create
+                                    th:text="#{Create}">
                             </button>
                         </div>
                     </div>

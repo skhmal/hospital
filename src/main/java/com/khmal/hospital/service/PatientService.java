@@ -34,7 +34,9 @@ public class PatientService {
         this.diagnoseRepository = diagnoseRepository;
     }
 
-    public Page<AppointmentDto> getAllPatientAppointmentsPaginated(int pageNo, int pageSize, String sortField,
+    public Page<AppointmentDto> getAllPatientAppointmentsPaginated(int pageNo,
+                                                                   int pageSize,
+                                                                   String sortField,
                                                                    String sortDirection,
                                                                    int patientId) {
 
@@ -62,8 +64,11 @@ public class PatientService {
     }
 
 
-    public Page<DiagnoseDto> getAllPatientDiagnosesPaginated(int pageNo, int pageSize, String sortField,
-                                                             String sortDirection, int patientId) {
+    public Page<DiagnoseDto> getAllPatientDiagnosesPaginated(int pageNo,
+                                                             int pageSize,
+                                                             String sortField,
+                                                             String sortDirection,
+                                                             int patientId) {
 
         logger.info("Method getAllPatientDiagnosesPaginated started. Patient id = {}", patientId);
 

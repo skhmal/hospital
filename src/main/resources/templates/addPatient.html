@@ -10,8 +10,8 @@
     <div layout:fragment="content">
         <div class="row mt-5">
             <div class="col">
-                <h2 class="text-center mt-sm-3" th:text="#{create_new_patient}">Create new patient</h2>
-                <h3 class="text-center mt-sm-3" th:text="#{fillAllFields}">Please fill all fields</h3>
+                <h2 class="text-center mt-sm-3" th:text="#{create_new_patient}"></h2>
+                <h3 class="text-center mt-sm-3" th:text="#{fillAllFields}"></h3>
             </div>
         </div>
         <form action="#" data-th-action="@{/administrator/patient}" data-th-object="${patient}" method="post">
@@ -35,14 +35,14 @@
                     </div>
 
                     <div class="input-group-sm mt-3">
-                        <span class="input-text" th:text="#{Birthday}">Birthday</span>
+                        <span class="input-text" th:text="#{Birthday}"></span>
                         <a class="overflow-hidden"></a>
                         <input type="date" lang="${locale.language}" th:field="*{birthday}"/>
                     </div>
                     <div class="form-group">
                         <div class="input-group-sm mt-3">
                             <button class="btn btn-primary" type="submit" name="action" value="save"
-                                    th:text="#{Create}">create
+                                    th:text="#{Create}">
                             </button>
                         </div>
                     </div>

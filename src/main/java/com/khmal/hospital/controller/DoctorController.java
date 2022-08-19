@@ -1,6 +1,5 @@
 package com.khmal.hospital.controller;
 
-import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
 import com.khmal.hospital.dao.entity.Appointment;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.PatientDto;
@@ -8,10 +7,12 @@ import com.khmal.hospital.service.MedicalStaffService;
 import com.khmal.hospital.service.SecurityService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotBlank;
 import java.security.Principal;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class DoctorController {
 
     private final MedicalStaffService medicalStaffService;
     private final SecurityService securityService;
+    private static final String SUCCESSFUL = "redirect:/successful";
 
     public DoctorController(MedicalStaffService medicalStaffService, SecurityService securityService) {
         this.medicalStaffService = medicalStaffService;
@@ -43,8 +45,8 @@ public class DoctorController {
 
     @Transactional
     @RequestMapping(value = "/appointment", method = RequestMethod.POST, params = "action=save")
-    public String getDoctorAppointment(@ModelAttribute("appointments") AppointmentDto appointmentDto,
-                                       @RequestParam("patientIdDoctorAppointment") int patientId,
+    public String getDoctorAppointment(AppointmentDto appointmentDto,
+                                       @RequestParam("patientIdDoctorAppointment") Integer patientId,
                                        @RequestParam("appointmentTypeDoctor") String appointmentType,
                                        Principal principal) {
 
@@ -53,13 +55,14 @@ public class DoctorController {
         medicalStaffService.createAppointment(patientId, doctorId, appointmentType,
                 appointmentDto.getSummary(), appointmentDto.getDate());
 
-        return "successful";
+        return SUCCESSFUL;
     }
-
 
     @GetMapping("/diagnose")
     public String getDiagnose(Model model, Principal principal) {
+
         int doctorId = getDoctorId(principal);
+
         List<PatientDto> patientDtoList = medicalStaffService.getDoctorPatients(doctorId);
 
         Appointment.DoctorAppointment[] doctorAppointments = Appointment.DoctorAppointment.values();
@@ -72,25 +75,19 @@ public class DoctorController {
         return "createDiagnose";
     }
 
-    public int getDoctorId(Principal principal) {
-        return securityService.getEmployeeId(principal.getName());
-    }
-
-    @Transactional
     @RequestMapping(value = "/diagnose", method = RequestMethod.POST, params = "action=save")
-    public String getDiagnose(@NotBlank(message = "Field summary is empty") @RequestParam("diagnoseSummary") String summary,
-                              int patientId,
+    public String getDiagnose(@RequestParam("diagnoseSummary") String summary,
+                              @RequestParam("patientIdDoctorDiagnose") Integer patientId,
                               Principal principal) {
 
-        int doctorId = getDoctorId(principal);
+        Integer doctorId = getDoctorId(principal);
 
-        if (patientId != 0) {
+        medicalStaffService.createDiagnose(patientId, doctorId, summary);
 
-            medicalStaffService.createDiagnose(patientId, doctorId, summary);
+        return SUCCESSFUL;
+    }
 
-        }else {
-            throw new IncorrectDataException("Patient id can't be empty or 0");
-        }
-        return "successful";
+    public int getDoctorId(Principal principal) {
+        return securityService.getEmployeeId(principal.getName());
     }
 }

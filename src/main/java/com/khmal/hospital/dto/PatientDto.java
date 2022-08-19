@@ -1,10 +1,7 @@
 package com.khmal.hospital.dto;
 
 import com.khmal.hospital.service.validator.CreateOrUpdateMarker;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -45,5 +42,14 @@ public class PatientDto {
         this.birthday = birthday;
         this.discharged = discharged;
         this.roleId = roleId;
+    }
+
+    public PatientDto(Integer id, String firstname, String lastname, String username, LocalDate birthday, boolean discharged) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.username = username;
+        this.birthday = birthday;
+        this.discharged = discharged;
     }
 }

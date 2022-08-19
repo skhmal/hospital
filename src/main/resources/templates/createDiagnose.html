@@ -11,17 +11,17 @@
     <div layout:fragment="content">
         <div class="row mt-5">
             <div class="col">
-                <h2 class="text-center mt-sm-3" th:text="#{createNewDiagnose}">Create new diagnose</h2>
+                <h2 class="text-center mt-sm-3" th:text="#{createNewDiagnose}"></h2>
             </div>
 
             <form action="#" data-th-action="@{/doctor/diagnose}" data-th-object="${appointments}" method="post">
-                <h3 class="text-center mt-sm-3" th:text="#{choosePatient}">Choose patient</h3>
+                <h3 class="text-center mt-sm-3" th:text="#{choosePatient}"></h3>
                 <div class="row">
                     <div class="form-group col-md-3 mx-auto mt-3">
                         <div class="input-group mb-3">
                             <select class="form-select" id="patientIdDoctorDiagnose"
                                     name="patientIdDoctorDiagnose">
-                                <option value="null" th:text="#{choosePatient}">Choose patient</option>
+                                <option value="0" th:text="#{choosePatient}"></option>
                                 <option th:each="patient: ${patients}" th:text="${patient.firstname + ' '
                                 + patient.lastname + ' ' + patient.birthday}"
                                         th:value="${patient.id}"></option>
@@ -31,12 +31,10 @@
                 </div>
 
                 <div class="input-group-sm mt-3">
-                    <input id="diagnoseSummary" name="diagnoseSummary" type="text" class="form-control-lg"
-                           th:placeholder="#{apsummary}">
+                    <input id="diagnoseSummary" name="diagnoseSummary" type="text" class="form-control-lg" th:placeholder="#{apsummary}">
                 </div>
                 <div id="createDoctorAppointment" class="input-group-sm mt-3">
                     <button class="btn btn-primary" type="submit" name="action" value="save" th:text="#{Create}">
-                        create
                     </button>
                 </div>
             </form>

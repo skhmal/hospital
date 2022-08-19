@@ -24,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -65,11 +66,11 @@ public class RegistrationService {
      * @param stuffRoleId roles id in database (checked before adding patient to the system).
      * @return PatientDto
      */
-    public PatientDto addNewPatient(@NotBlank(message = "Field firstname can't be empty") String firstname,
-                                    @NotBlank(message = "Field lastname can't be empty") String lastname,
-                                    @NotBlank(message = "Field username can't be empty") String username,
-                                    @NotBlank(message = "Field birthday can't be empty") LocalDate birthday,
-                                    @NotNull(message = "Field stuffRoleId can't be empty") int stuffRoleId) {
+    public PatientDto addNewPatient(@Valid @NotBlank(message = "Field firstname can't be empty") String firstname,
+                                    @Valid @NotBlank(message = "Field lastname can't be empty") String lastname,
+                                    @Valid @NotBlank(message = "Field username can't be empty") String username,
+                                    @Valid @NotBlank(message = "Field birthday can't be empty") LocalDate birthday,
+                                    @Valid @NotNull(message = "Field stuffRoleId can't be empty") Integer stuffRoleId) {
         Patient patient = null;
 
         logger.info("Method addNewPatient started");
@@ -84,9 +85,9 @@ public class RegistrationService {
                     birthday,
                     staffRolePatient);
 
-            int patientId = patientRepository.save(patient).getId();
+            patientRepository.save(patient);
 
-            logger.info("Method addNewPatient finished. Patient with id {} has been created", patientId);
+            logger.info("Method addNewPatient finished. Patient with id {} has been created", patient.getId());
         }
         return PatientMapper.INSTANCE.toDto(patient);
     }
@@ -97,10 +98,11 @@ public class RegistrationService {
      * @param password password
      * @return UserDto
      */
-    public UserDto addNewUserToSecurityTable(@NotBlank(message = "Username can't be empty") String username,
-                                             @NotBlank(message = "Password can't be empty") String password) {
+    public UserDto addNewUserToSecurityTable(String username,
+                                             String password) {
 
         logger.info("Method addNewUserToSecurityTable started. Username = {}", username);
+
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String encryptedPassword = bCryptPasswordEncoder.encode(password);
 
@@ -120,8 +122,8 @@ public class RegistrationService {
      * @param username username
      * @param roleId role id
      */
-    public void addUserRoleToSecurityTable(@NotBlank(message = "Username can't be empty") String username,
-                                           @NotNull(message = "Role id can't be empty") int roleId) {
+    public void addUserRoleToSecurityTable(String username,
+                                           int roleId) {
 
         logger.info("Method addUserRoleToSecurityTable started. Username = {}, roleId = {}", username, roleId);
 
@@ -136,10 +138,10 @@ public class RegistrationService {
                             .orElseThrow(() -> new IncorrectDataException("Role with id " + roleId + " is not found!"))
                             .getRoleName());
 
-            int authorityId  = roleRepository.save(role).getId();
+            roleRepository.save(role);
 
             logger.info("Method addUserRoleToSecurityTable finished. Username = {} with authorities id = {}", username,
-                    authorityId);
+                    role.getId());
         }
     }
 
@@ -153,11 +155,11 @@ public class RegistrationService {
      * @param stuffRoleId role id (for example administrators have 1, nurse 2, doctors 3, patients 4)
      * @return HospitalStaffDto
      */
-    public HospitalStaffDto addNewEmployee(@NotBlank(message = "Firstname can't be empty") String firstname,
-                                           @NotBlank(message = "Lastname can't be empty") String lastname,
-                                           @NotBlank(message = "Username can't be empty") String username,
+    public HospitalStaffDto addNewEmployee(String firstname,
+                                           String lastname,
+                                           String username,
                                            String doctorSpecialization,
-                                           @NotNull(message = "Role id can't be null") int stuffRoleId) {
+                                           int stuffRoleId) {
 
         HospitalStaff hospitalStaff = null;
 
@@ -176,9 +178,9 @@ public class RegistrationService {
                     doctorSpecialization,
                     staffRole);
 
-            int employeeId = hospitalStaffRepository.save(hospitalStaff).getId();
+            hospitalStaffRepository.save(hospitalStaff);
 
-            logger.info("Method addNewEmployee finished. Employee with id = {} has been created", employeeId);
+            logger.info("Method addNewEmployee finished. Employee with id = {} has been created", hospitalStaff.getId());
         }
         return HospitalStuffMapper.INSTANCE.toDto(hospitalStaff);
     }
@@ -266,8 +268,8 @@ public class RegistrationService {
      * @param doctorId doctor id
      * @param patientId patient id
      */
-    public void appointDoctorToPatient(@NotNull(message = "Doctor can't be empty") int doctorId,
-                                       @NotNull(message = "Patient can't be empty") int patientId) {
+    public void appointDoctorToPatient(@Valid @Min(value = 1, message = "Field doctor can't be empty") Integer doctorId,
+                                       @Valid @Min(value = 1, message = "Patient can't be empty") Integer patientId) {
 
         logger.info("Method appointDoctorToPatient started. Doctor id = {}, patient id = {}.", doctorId, patientId);
 
@@ -289,9 +291,9 @@ public class RegistrationService {
 
             patientList.add(patient);
 
-            int appointmentId = hospitalStaffRepository.save(doctor).getId();
+            hospitalStaffRepository.save(doctor);
 
-            logger.info("Method appointDoctorToPatient finished. Appointment with id = {} has been created.", appointmentId);
+            logger.info("Method appointDoctorToPatient finished. Appoint with id = {} has been created.", doctor.getId());
         }
     }
 
@@ -304,7 +306,6 @@ public class RegistrationService {
      */
     @Transactional
     public HospitalStaffDto addEmployeeToTheSystem(
-            @NotNull(message = "Request to create employee can't be empty")
             @Valid HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto) {
 
         logger.info("Method addEmployeeToTheSystem started. Username = {}.", hospitalStaffDtoUserDtoRoleDto.getUsername());
@@ -340,26 +341,16 @@ public class RegistrationService {
      */
     @Transactional
     public PatientDto addPatientToTheSystem(
-            @NotNull(message = "Request to create employee can't be empty")
-            PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
+           @Valid PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
 
         logger.info("Method addPatientToTheSystem started. Username = {}.", patientDtoUserDtoRoleDto.getUsername());
-
-        if (patientDtoUserDtoRoleDto.getPassword().isBlank()) {
-
-            logger.warn("Method addPatientToTheSystem warn. Password can't be empty");
-
-            throw new IncorrectDataException("Password can't be empty");
-        }
-
-        int patientRoleId = 4;
 
         PatientDto patient = addNewPatient(
                 patientDtoUserDtoRoleDto.getFirstName(),
                 patientDtoUserDtoRoleDto.getLastname(),
                 patientDtoUserDtoRoleDto.getUsername(),
                 patientDtoUserDtoRoleDto.getBirthday(),
-                patientRoleId
+                patientDtoUserDtoRoleDto.getRoleId()
 
         );
 
@@ -369,7 +360,7 @@ public class RegistrationService {
 
         addUserRoleToSecurityTable(
                 patientDtoUserDtoRoleDto.getUsername(),
-                patientRoleId);
+                patientDtoUserDtoRoleDto.getRoleId());
 
         logger.info("Method addPatientToTheSystem finished");
 

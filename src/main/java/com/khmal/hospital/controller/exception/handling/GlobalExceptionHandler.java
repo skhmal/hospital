@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     /**
      * Incorrect data exceptions
      * @param exception
-     * @return
+     * @return modelAndView
      */
     @ExceptionHandler
     public ModelAndView handleSaveException(IncorrectDataException exception){
@@ -74,6 +74,7 @@ public class GlobalExceptionHandler {
 
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
         modelAndView.setViewName(ERROR_VIEW_NAME);
+
         return modelAndView;
     }
 
@@ -86,12 +87,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ModelAndView handleMethodArgumentNotValidException(MethodArgumentNotValidException  exception){
 
-        ModelAndView error = new ModelAndView();
-        error.addObject(EXCEPTION, exception.getMessage());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject(EXCEPTION, exception.getMessage());
 
-        error.setStatus(HttpStatus.BAD_REQUEST);
-        error.setViewName(ERROR_VIEW_NAME);
+        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
+        modelAndView.setViewName(ERROR_VIEW_NAME);
 
-        return error;
+        return modelAndView;
     }
 }

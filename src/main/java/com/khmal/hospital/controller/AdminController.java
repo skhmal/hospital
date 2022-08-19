@@ -10,13 +10,10 @@ import com.khmal.hospital.service.RegistrationService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
-@Validated
 @Controller
 @RequestMapping("/administrator")
 public class AdminController {
@@ -29,7 +26,10 @@ public class AdminController {
 
     private static final String SUCCESSFUL = "redirect:/successful";
 
-    private final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 5;
+    private static final String DESC_SORT = "DESC";
+    private static final String ASC_SORT = "ASC";
+
     @GetMapping("/patient")
     public String createNewPatient(Model model) {
         model.addAttribute("patient", new PatientDtoUserDtoRoleDto());
@@ -37,7 +37,12 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, params = "action=save")
-    public String createNewPatient(@Valid @ModelAttribute("patient") PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
+    public String createNewPatient(@ModelAttribute("patient") PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto) {
+
+        String patientRoleName = "ROLE_PATIENT";
+        int patientRoleId = registrationService.getRoleIdByName(patientRoleName);
+
+        patientDtoUserDtoRoleDto.setRoleId(patientRoleId);
 
         registrationService.addPatientToTheSystem(patientDtoUserDtoRoleDto);
 
@@ -147,7 +152,7 @@ public class AdminController {
 
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? DESC_SORT : ASC_SORT);
 
         model.addAttribute("listPatients", listPatients);
         return "allPatients";
@@ -168,7 +173,7 @@ public class AdminController {
 
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? DESC_SORT : ASC_SORT);
 
         model.addAttribute("listDoctors", listDoctors);
         return "allDoctors";
@@ -176,11 +181,11 @@ public class AdminController {
 
     @GetMapping("/doctors")
     public String viewDoctorsPage(Model model) {
-        return findPaginatedDoctors(1, "firstname", "asc", model);
+        return findPaginatedDoctors(1, "lastname", ASC_SORT, model);
     }
 
     @GetMapping("/patients")
     public String viewPatientsPage(Model model) {
-        return findPaginatedPatients(1, "firstname", "asc", model);
+        return findPaginatedPatients(1, "lastname", ASC_SORT, model);
     }
 }

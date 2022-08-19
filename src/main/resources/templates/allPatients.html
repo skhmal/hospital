@@ -14,22 +14,22 @@
             <th>
                 <a th:href="@{'/administrator/patients/' + ${currentPage} + '?sortField=firstname&sortDir=' + ${reverseSortDir}}"
                    th:text="#{Firstname}">
-                    First Name</a>
+                </a>
             </th>
             <th>
                 <a th:href="@{'/administrator/patients/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}"
                    th:text="#{LastName}">
-                    Last Name</a>
+                </a>
             </th>
             <th>
                 <a th:href="@{'/administrator/patients/' + ${currentPage} + '?sortField=birthday&sortDir=' + ${reverseSortDir}}"
                    th:text="#{Birthday}">
-                    Birthday</a>
+                </a>
             </th>
             <th>
                 <a th:href="@{'/administrator/patients/' + ${currentPage} + '?sortField=discharged&sortDir=' + ${reverseSortDir}}"
                    th:text="#{status}">
-                    Discharged</a>
+                </a>
             </th>
         </tr>
         </thead>
@@ -50,7 +50,7 @@
             <div class="col-sm-1">
                 <a th:if="${currentPage > 1}"
                    th:href="@{'/administrator/patients/' + ${1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                   th:text="#{First}">First</a>
+                   th:text="#{First}"></a>
                 <span th:unless="${currentPage == 1}"></span>
             </div>
 
@@ -66,7 +66,7 @@
             <div class="col-sm-1">
                 <a th:if="${currentPage < totalPages}"
                    th:href="@{'/administrator/patients/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                   th:text="#{Last}">Last</a>
+                   th:text="#{Last}"></a>
                 <span th:unless="${currentPage < totalPages}"></span>
             </div>
         </div>

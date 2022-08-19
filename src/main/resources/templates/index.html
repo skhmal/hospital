@@ -13,12 +13,12 @@
              th:switch="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
             <div class="p-3 border-5">
            <span th:case="${false}">
-                    <h1 class="text-center" th:text="#{welcome}"> Guest, welcome to our site!</h1>
-                    <h2 class="text-center" th:text="#{welcome_2}"> Please log in.</h2>
+                    <h1 class="text-center" th:text="#{welcome}"></h1>
+                    <h2 class="text-center" th:text="#{welcome_2}"></h2>
            </span>
                 <div class="col-xl-auto">
                      <span th:case="${true}">
-                        <a class="btn btn-primary" href="/main" role="button" th:text="#{mainpage}">Main page</a>
+                        <a class="btn btn-primary" href="/main" role="button" th:text="#{mainpage}"></a>
                      </span>
                 </div>
             </div>

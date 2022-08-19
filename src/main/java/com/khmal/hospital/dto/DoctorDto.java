@@ -14,4 +14,13 @@ public class DoctorDto {
     private String username;
     private String doctorSpecialization;
     private int patientCount;
+
+    public DoctorDto(int id, String firstname, String lastname, String username, String doctorSpecialization, int patientCount) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.username = username;
+        this.doctorSpecialization = doctorSpecialization;
+        this.patientCount = patientCount;
+    }
 }

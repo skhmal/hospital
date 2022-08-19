@@ -13,23 +13,23 @@
         <tr>
             <th>
                 <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=firstname&sortDir=' + ${reverseSortDir}}"
-                th:text="#{Firstname}">
-                    First Name</a>
+                   th:text="#{Firstname}">
+                </a>
             </th>
             <th>
                 <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}"
                    th:text="#{LastName}">
-                    Last Name</a>
+                </a>
             </th>
             <th>
                 <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=doctorSpecialization&sortDir=' + ${reverseSortDir}}"
-                th:text="#{doctorSpec}">
-                    Specialization</a>
+                   th:text="#{doctorSpec}">
+                </a>
             </th>
             <th>
                 <a th:href="@{'/administrator/doctors/' + ${currentPage} + '?sortField=patientCount&sortDir=' + ${reverseSortDir}}"
-                th:text="#{patient_quantity}">
-                    Patient quantity</a>
+                   th:text="#{patient_quantity}">
+                </a>
             </th>
         </tr>
         </thead>
@@ -52,7 +52,7 @@
                 <div class="col-sm-1">
                     <a th:if="${currentPage > 1}"
                        th:href="@{'/administrator/doctors/' + ${1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                    th:text="#{First}">First</a>
+                       th:text="#{First}"></a>
                     <span th:unless="${currentPage == 1}"></span>
                 </div>
 
@@ -67,7 +67,7 @@
                 <div class="col-sm-1">
                     <a th:if="${currentPage < totalPages}"
                        th:href="@{'/administrator/doctors/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                    th:text="#{Last}">Last</a>
+                       th:text="#{Last}"></a>
                     <span th:unless="${currentPage < totalPages}"></span>
                 </div>
             </div>

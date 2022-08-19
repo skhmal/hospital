@@ -178,7 +178,7 @@ Principal principal = new PrincipalImpl();
         hospitalStaffDto.setStuffRole(StaffRoleMapper.INSTANCE.toDto(staffRoleNurse));
         hospitalStaffDto.setStuffRoleName("ROLE_NURSE");
 
-        AppointmentDto appointmentDto = new AppointmentDto(LocalDateTime.now(), "MEDICATIONS", patientDto1,"SUMMARY"
+        AppointmentDto appointmentDto = new AppointmentDto(Mockito.anyInt(), LocalDateTime.now(), "MEDICATIONS", patientDto1,"SUMMARY"
                 , hospitalStaffDto
         );
 

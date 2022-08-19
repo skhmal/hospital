@@ -21,6 +21,9 @@ public class PatientController {
 
     private final SecurityService securityService;
     private final PatientService patientService;
+    private static final String DESC_SORT = "DESC";
+    private static final String ASC_SORT = "ASC";
+    private static final int PAGE_SIZE = 5;
 
     public PatientController(SecurityService securityService, PatientService patientService) {
         this.securityService = securityService;
@@ -33,11 +36,10 @@ public class PatientController {
                                                    @RequestParam("sortField") String sortField,
                                                    @RequestParam("sortDir") String sortDir,
                                                    Model model, Principal principal) {
-        int pageSize = 5;
 
         int patientId = securityService.getPatientId(principal.getName());
 
-        Page<AppointmentDto> page = patientService.getAllPatientAppointmentsPaginated(pageNo, pageSize, sortField, sortDir, patientId);
+        Page<AppointmentDto> page = patientService.getAllPatientAppointmentsPaginated(pageNo, PAGE_SIZE, sortField, sortDir, patientId);
         List<AppointmentDto> appointmentDtoList = page.getContent();
 
         model.addAttribute("currentPage", pageNo);
@@ -46,7 +48,7 @@ public class PatientController {
 
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? DESC_SORT : ASC_SORT);
 
         model.addAttribute("appointmentList", appointmentDtoList);
         return "patientAppointments";
@@ -57,11 +59,10 @@ public class PatientController {
                                                 @RequestParam("sortField") String sortField,
                                                 @RequestParam("sortDir") String sortDir,
                                                 Model model, Principal principal) {
-        int pageSize = 5;
 
         int patientId = securityService.getPatientId(principal.getName());
 
-        Page<DiagnoseDto> page = patientService.getAllPatientDiagnosesPaginated(pageNo, pageSize, sortField,
+        Page<DiagnoseDto> page = patientService.getAllPatientDiagnosesPaginated(pageNo, PAGE_SIZE, sortField,
                 sortDir, patientId);
         List<DiagnoseDto> diagnoseDtoList = page.getContent();
 
@@ -71,7 +72,7 @@ public class PatientController {
 
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? DESC_SORT : ASC_SORT);
 
         model.addAttribute("diagnoseList", diagnoseDtoList);
         return "patientDiagnoses";
@@ -79,12 +80,11 @@ public class PatientController {
 
     @GetMapping("/appointments")
     public String viewPatientAppointmentsPage(Model model, Principal principal) {
-        return findPaginatedPatientAppointments(1, "date", "desc", model, principal);
+        return findPaginatedPatientAppointments(1, "date", DESC_SORT, model, principal);
     }
 
     @GetMapping("/diagnoses")
     public String viewPatientDiagnosesPage(Model model, Principal principal) {
-        return findPaginatedPatientDiagnoses(1, "diagnoseDate", "desc", model, principal);
+        return findPaginatedPatientDiagnoses(1, "diagnoseDate", DESC_SORT, model, principal);
     }
-
 }

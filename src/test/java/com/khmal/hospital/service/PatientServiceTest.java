@@ -150,4 +150,32 @@ class PatientServiceTest {
         assertThrows(IncorrectDataException.class, () -> patientService
                 .getAllPatientAppointmentsPaginated(1, 5, SORT_FIELD_APPOINTMENT, SORT_DIRECTION, USER_ID));
     }
+
+    @Test
+    void getSortedPositiveCaseDesc() {
+        String sortField = "firstname";
+        String sortDirection = "DESC";
+
+        Sort sort = patientService.getSort(sortField, sortDirection);
+
+        for (var element : sort
+        ) {
+            assertEquals(sortField, element.getProperty());
+            assertEquals(sortDirection, element.getDirection().name());
+        }
+    }
+
+    @Test
+    void getSortedPositiveCaseAsc() {
+        String sortField = "lastname";
+        String sortDirection = "ASC";
+
+        Sort sort = patientService.getSort(sortField, sortDirection);
+
+        for (var element : sort
+        ) {
+            assertEquals(sortField, element.getProperty());
+            assertEquals(sortDirection, element.getDirection().name());
+        }
+    }
 }

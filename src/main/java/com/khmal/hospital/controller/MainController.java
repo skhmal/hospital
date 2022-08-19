@@ -36,10 +36,4 @@ public class MainController {
     public String getLogout(){
         return "redirect:/";
     }
-
-    @GetMapping("/error")
-    public String getError(Model model){
-        model.addAttribute("message1");
-        return "error";
-    }
 }

@@ -35,4 +35,13 @@ public class DiagnoseDto {
 
     @NotNull(message = "Field employee must not be empty")
     private HospitalStaffDto hospitalStaff;
+
+    public DiagnoseDto(int id, String summary, LocalDate diagnoseDate, LocalDate editDate, PatientDto patient, HospitalStaffDto hospitalStaff) {
+        this.id = id;
+        this.summary = summary;
+        this.diagnoseDate = diagnoseDate;
+        this.editDate = editDate;
+        this.patient = patient;
+        this.hospitalStaff = hospitalStaff;
+    }
 }

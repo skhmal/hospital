@@ -1,13 +1,13 @@
 package com.khmal.hospital.service;
 
+import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
+import com.khmal.hospital.controller.exception.handling.NoSuchUserException;
 import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dao.repository.*;
 import com.khmal.hospital.dto.DoctorDto;
 import com.khmal.hospital.dto.PatientDto;
 import com.khmal.hospital.dto.request.HospitalStaffDtoUserDtoRoleDto;
 import com.khmal.hospital.dto.request.PatientDtoUserDtoRoleDto;
-import com.khmal.hospital.controller.exception.handling.IncorrectDataException;
-import com.khmal.hospital.controller.exception.handling.NoSuchUserException;
 import com.khmal.hospital.service.validator.Validation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 
@@ -84,6 +85,12 @@ class RegistrationServiceTest {
         Mockito.when(validation.checkStaffRoleInDataBase(Mockito.anyInt())).thenReturn(true);
         Mockito.when(validation.checkDoubleAppoint(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
     }
+
+    @Mock
+    Logger logger;
+
+    @Mock
+    private RegistrationServiceTest registrationServiceTest;
 
     @Test
     void addNewPatientPositiveCase() {
@@ -223,7 +230,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void addEmployeeToTheSystem(){
+    void addEmployeeToTheSystem() {
         HospitalStaffDtoUserDtoRoleDto hospitalStaffDtoUserDtoRoleDto = new HospitalStaffDtoUserDtoRoleDto();
         hospitalStaffDtoUserDtoRoleDto.setFirstname(DOCTOR_FIRSTNAME);
         hospitalStaffDtoUserDtoRoleDto.setLastname(DOCTOR_LASTNAME);
@@ -252,12 +259,12 @@ class RegistrationServiceTest {
         Role role = roleArgumentCaptor.getValue();
 
         assertEquals(DOCTOR_FIRSTNAME, doctor.getFirstname());
-        assertEquals(DOCTOR_USERNAME,  user.getUsername());
+        assertEquals(DOCTOR_USERNAME, user.getUsername());
         assertEquals(ROLE_DOCTOR, role.getRoleName());
     }
 
     @Test
-    void addPatientToTheSystem(){
+    void addPatientToTheSystem() {
         PatientDtoUserDtoRoleDto patientDtoUserDtoRoleDto = new PatientDtoUserDtoRoleDto();
         patientDtoUserDtoRoleDto.setFirstName(PATIENT_FIRSTNAME);
         patientDtoUserDtoRoleDto.setLastname(PATIENT_LASTNAME);
@@ -285,7 +292,28 @@ class RegistrationServiceTest {
         Role role = roleArgumentCaptor.getValue();
 
         assertEquals(PATIENT_FIRSTNAME, patient.getFirstname());
-        assertEquals(PATIENT_USERNAME,  user.getUsername());
+        assertEquals(PATIENT_USERNAME, user.getUsername());
         assertEquals(ROLE_PATIENT, role.getRoleName());
+    }
+
+    @Test
+    void getRoleIdByNamePositiveCase() {
+
+        int expectedId = 123;
+        STAFF_ROLE_DOCTOR.setId(expectedId);
+
+        Mockito.when(staffRoleRepository.findStaffRoleByRoleName(ROLE_DOCTOR))
+                .thenReturn(Optional.of(STAFF_ROLE_DOCTOR));
+
+        assertEquals(expectedId, registrationService.getRoleIdByName(ROLE_DOCTOR));
+    }
+
+    @Test
+    void getRoleIdByNameNegativeCase() {
+
+        Mockito.when(staffRoleRepository.findStaffRoleByRoleName(ROLE_DOCTOR))
+                .thenReturn(Optional.empty());
+
+        assertThrows(IncorrectDataException.class, () -> registrationService.getRoleIdByName(ROLE_DOCTOR));
     }
 }

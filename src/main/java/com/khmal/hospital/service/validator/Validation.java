@@ -107,6 +107,8 @@ public class Validation {
      * @return true if role already exist in database
      */
     public boolean checkStaffRoleInDataBase(int roleId) {
+
+
         if (staffRoleRepository.getStuffRoleById(roleId).isEmpty()) {
             logger.warn("checkStaffRoleInDataBase warn. StaffRole with id {} is not found", roleId);
             throw new IncorrectDataException("Role with id " + roleId + " not found");
