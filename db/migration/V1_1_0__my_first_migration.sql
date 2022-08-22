@@ -1,4 +1,5 @@
-use db_hospital1;
+create schema if not exists db_hospital;
+use db_hospital;
 
 create table if not exists role
 (
@@ -39,6 +40,7 @@ create table if not exists hospital_staff
     patient_count         int         not null default 0,
     unique key (username),
     primary key (id),
+    foreign key (username) references users(username),
     foreign key (role_id) references role (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = UTF8;
@@ -54,6 +56,7 @@ create table if not exists patient
     role_id    int         not null,
     unique key (username),
     primary key (id),
+    foreign key (username) references users(username),
     foreign key (role_id) references role (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = UTF8;

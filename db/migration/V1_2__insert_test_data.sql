@@ -1,18 +1,10 @@
-use db_hospital1;
+use db_hospital;
 
 insert into role(role_name)
 values ('ROLE_ADMINISTRATOR'),
        ('ROLE_NURSE'),
        ('ROLE_DOCTOR'),
        ('ROLE_PATIENT');
-
-insert into patient(firstname, lastname, birthday, username, discharged, role_id)
-values ('Thomas', 'Anderson', '1971-09-13', 'neo', false, 4),
-       ('Donald', 'Trump', '1950-01-23', 'donald', false, 4),
-       ('Pawel', 'Grabowski', '1979-09-13', 'pawel', false, 4),
-       ('Johny', 'Mnemonic', '1989-11-29', 'jm', false, 4),
-       ('Kubus', 'Puchatek', '1929-10-02', 'puchatek', false, 4),
-       ('Kapitan', 'Bomba', '1995-08-15', 'bomba', false, 4);
 
 insert into users(username, password, enabled)
 values ('neo', '{noop}neo', 1),
@@ -45,6 +37,14 @@ VALUES ('neo', 'ROLE_PATIENT'),
        ('zoidberg', 'ROLE_DOCTOR'),
        ('kacz', 'ROLE_DOCTOR'),
        ('rafal', 'ROLE_DOCTOR');
+
+insert into patient(firstname, lastname, birthday, username, discharged, role_id)
+values ('Thomas', 'Anderson', '1971-09-13', 'neo', false, 4),
+       ('Donald', 'Trump', '1950-01-23', 'donald', false, 4),
+       ('Pawel', 'Grabowski', '1979-09-13', 'pawel', false, 4),
+       ('Johny', 'Mnemonic', '1989-11-29', 'jm', false, 4),
+       ('Kubus', 'Puchatek', '1929-10-02', 'puchatek', false, 4),
+       ('Kapitan', 'Bomba', '1995-08-15', 'bomba', false, 4);
 
 insert into hospital_staff(role_id, firstname, lastname, username, doctor_specialization)
 values (3, 'Alphonse', 'Mephesto', 'am', 'ALLERGIST'),

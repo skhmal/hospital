@@ -306,14 +306,6 @@ public class RegistrationService {
 
         validation.checkDoctorSpecialization(hospitalStaffDtoUserDtoRoleDto.getDoctorSpecialization());
 
-        HospitalStaffDto employee = addNewEmployee(
-                hospitalStaffDtoUserDtoRoleDto.getFirstname(),
-                hospitalStaffDtoUserDtoRoleDto.getLastname(),
-                hospitalStaffDtoUserDtoRoleDto.getUsername(),
-                hospitalStaffDtoUserDtoRoleDto.getDoctorSpecialization(),
-                hospitalStaffDtoUserDtoRoleDto.getStuffRoleId()
-        );
-
         addNewUserToSecurityTable(
                 hospitalStaffDtoUserDtoRoleDto.getUsername(),
                 hospitalStaffDtoUserDtoRoleDto.getPassword());
@@ -321,6 +313,14 @@ public class RegistrationService {
         addUserRoleToSecurityTable(
                 hospitalStaffDtoUserDtoRoleDto.getUsername(),
                 hospitalStaffDtoUserDtoRoleDto.getStuffRoleId());
+
+        HospitalStaffDto employee = addNewEmployee(
+                hospitalStaffDtoUserDtoRoleDto.getFirstname(),
+                hospitalStaffDtoUserDtoRoleDto.getLastname(),
+                hospitalStaffDtoUserDtoRoleDto.getUsername(),
+                hospitalStaffDtoUserDtoRoleDto.getDoctorSpecialization(),
+                hospitalStaffDtoUserDtoRoleDto.getStuffRoleId()
+        );
 
         logger.info("Method addEmployeeToTheSystem finished");
 
@@ -340,6 +340,14 @@ public class RegistrationService {
 
         logger.info("Method addPatientToTheSystem started. Username = {}.", patientDtoUserDtoRoleDto.getUsername());
 
+        addNewUserToSecurityTable(
+                patientDtoUserDtoRoleDto.getUsername(),
+                patientDtoUserDtoRoleDto.getPassword());
+
+        addUserRoleToSecurityTable(
+                patientDtoUserDtoRoleDto.getUsername(),
+                patientDtoUserDtoRoleDto.getRoleId());
+
         PatientDto patient = addNewPatient(
                 patientDtoUserDtoRoleDto.getFirstName(),
                 patientDtoUserDtoRoleDto.getLastname(),
@@ -348,14 +356,6 @@ public class RegistrationService {
                 patientDtoUserDtoRoleDto.getRoleId()
 
         );
-
-        addNewUserToSecurityTable(
-                patientDtoUserDtoRoleDto.getUsername(),
-                patientDtoUserDtoRoleDto.getPassword());
-
-        addUserRoleToSecurityTable(
-                patientDtoUserDtoRoleDto.getUsername(),
-                patientDtoUserDtoRoleDto.getRoleId());
 
         logger.info("Method addPatientToTheSystem finished");
 
