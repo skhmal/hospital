@@ -6,7 +6,7 @@
 - In terminal :  mvn clean flyway:migrate.
 - Check migration status:  mvn flyway:info
 
-Project has been deployed in heroku.
+Project was deployed in heroku.
 link: https://hospital-pl.herokuapp.com
 
 Credentials:
