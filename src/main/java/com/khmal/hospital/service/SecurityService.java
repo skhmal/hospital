@@ -35,7 +35,7 @@ public class SecurityService {
         logger.info("Method getEmployeeId started");
 
         HospitalStaff employee = hospitalStaffRepository.findHospitalStuffByUsername(username).orElseThrow(
-                () -> new NoSuchUserException("Employee is not found")
+                () -> new NoSuchUserException("Employee with username " + username + " is not found")
         );
 
         logger.info("Method getEmployeeId finished");
