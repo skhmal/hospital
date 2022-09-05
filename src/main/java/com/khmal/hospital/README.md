@@ -9,7 +9,6 @@
 Project was deployed in heroku.
 link: https://hospital-pl.herokuapp.com
 
-Credentials:
 login :  password
 serg : serg (administrator)
 jb : jb (patient)
