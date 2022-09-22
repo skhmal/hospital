@@ -10,6 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Exceptions handling
@@ -23,11 +26,12 @@ public class GlobalExceptionHandler {
 
     /**
      * User not found exceptions
+     *
      * @param noSuchUserException
      * @return
      */
     @ExceptionHandler
-    public ModelAndView handleGetUserException(NoSuchUserException noSuchUserException){
+    public ModelAndView handleGetUserException(NoSuchUserException noSuchUserException) {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject(EXCEPTION, noSuchUserException.getMessage());
@@ -42,11 +46,12 @@ public class GlobalExceptionHandler {
 
     /**
      * Incorrect data exceptions
+     *
      * @param exception
      * @return modelAndView
      */
     @ExceptionHandler
-    public ModelAndView handleSaveException(IncorrectDataException exception){
+    public ModelAndView handleSaveException(IncorrectDataException exception) {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject(EXCEPTION, exception.getMessage());
@@ -61,15 +66,18 @@ public class GlobalExceptionHandler {
 
     /**
      * Validation exceptions
+     *
      * @param request
      * @param ex
      * @return
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ModelAndView handleEmployeeNotFoundException(HttpServletRequest request, Exception ex){
+    public ModelAndView handleEmployeeNotFoundException(HttpServletRequest request, ConstraintViolationException ex) {
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject(EXCEPTION, ex.getLocalizedMessage());
+        String errorMessage = new ArrayList<>(ex.getConstraintViolations()).get(0).getMessage();
+
+        modelAndView.addObject(EXCEPTION, errorMessage);
         modelAndView.addObject("url", request);
 
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
@@ -81,14 +89,31 @@ public class GlobalExceptionHandler {
 
     /**
      * Validation exceptions
-     * @param exception
-     * @return
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ModelAndView handleMethodArgumentNotValidException(MethodArgumentNotValidException  exception){
+    public ModelAndView handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject(EXCEPTION, exception.getMessage());
+
+        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
+        modelAndView.setViewName(ERROR_VIEW_NAME);
+
+        return modelAndView;
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ModelAndView handleSQLException(SQLIntegrityConstraintViolationException exception) {
+        ModelAndView modelAndView = new ModelAndView();
+        int duplicateErrorCode = 1062;
+        StringBuilder errorMessage = new StringBuilder("SQL error " + exception.getErrorCode() + "!");
+
+        if (exception.getErrorCode() == duplicateErrorCode) {
+            String duplicatedRegistrationLogin = exception.getMessage().split("'")[1];
+            errorMessage.append(" User with login - \"").append(duplicatedRegistrationLogin).append("\" already exist!");
+        }
+
+        modelAndView.addObject(EXCEPTION, errorMessage);
 
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
         modelAndView.setViewName(ERROR_VIEW_NAME);
