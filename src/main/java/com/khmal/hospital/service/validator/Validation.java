@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -138,6 +140,7 @@ public class Validation {
 
     /**
      * Check doctor specialization
+     *
      * @return return true if doctor specialization already exist or equals null(administrator and nurse have null
      * in field doctor specialization)
      */
@@ -199,6 +202,23 @@ public class Validation {
             logger.warn("checkAppointmentType error {}", name);
 
             throw new IncorrectDataException("Appointment type can't be empty");
+        }
+    }
+
+    public void checkBirthdayDate(LocalDate birthday) {
+        if (birthday.isAfter(LocalDate.now())) {
+            throw new IncorrectDataException("Birthday date is wrong");
+        }
+    }
+
+    public void checkAppointmentDate(LocalDateTime appointmentDateTime) {
+        int firstWorkingHour = 8;
+        int lastWorkingHour = 20;
+        DayOfWeek dayOff = DayOfWeek.SUNDAY;
+
+        if (appointmentDateTime.isBefore(LocalDateTime.now()) || appointmentDateTime.getHour() > lastWorkingHour
+                || appointmentDateTime.getHour() < firstWorkingHour || appointmentDateTime.getDayOfWeek().equals(dayOff)) {
+            throw new IncorrectDataException("Wrong appointment date or time");
         }
     }
 }

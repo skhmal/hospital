@@ -11,12 +11,12 @@ import javax.sql.DataSource;
 
 
 @EnableWebSecurity
-public class MySecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     DataSource dataSource;
 
     @Autowired
-    public MySecurityConfig(DataSource dataSource) {
+    public SecurityConfig(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 

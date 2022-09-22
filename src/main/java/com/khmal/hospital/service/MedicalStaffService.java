@@ -74,6 +74,8 @@ public class MedicalStaffService {
                                             @Valid @NotNull(message = "Date can't be empty") LocalDateTime appointmentDate) {
         Appointment appointment = null;
 
+        validation.checkAppointmentDate(appointmentDate);
+
         logger.info("Method createAppointment started. Creating appointment for medic id = {}, patient id = {}" +
                 ", date = {}", hospitalStaffId, patientId, appointmentDate);
 

@@ -73,6 +73,8 @@ public class RegistrationService {
                                     @Valid @NotBlank(message = "Field birthday can't be empty") LocalDate birthday,
                                     @Valid @NotNull(message = "Field staffRoleId can't be empty") Integer staffRoleId) {
 
+        validation.checkBirthdayDate(birthday);
+
         StaffRole staffRole = validation.checkStaffRoleInDataBase(staffRoleId);
 
         logger.info("Method addNewPatient started");
