@@ -205,12 +205,6 @@ public class Validation {
         }
     }
 
-    public void checkBirthdayDate(LocalDate birthday) {
-        if (birthday.isAfter(LocalDate.now())) {
-            throw new IncorrectDataException("Birthday date is wrong");
-        }
-    }
-
     public void checkAppointmentDate(LocalDateTime appointmentDateTime) {
         int firstWorkingHour = 8;
         int lastWorkingHour = 20;

@@ -27,7 +27,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class RegistrationService {
                                     @Valid @NotBlank(message = "Field birthday can't be empty") LocalDate birthday,
                                     @Valid @NotNull(message = "Field staffRoleId can't be empty") Integer staffRoleId) {
 
-        validation.checkBirthdayDate(birthday);
+
 
         StaffRole staffRole = validation.checkStaffRoleInDataBase(staffRoleId);
 
