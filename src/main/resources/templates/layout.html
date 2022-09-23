@@ -42,7 +42,6 @@
                 <a class="nav-link" th:href="@{/main}" th:text="#{mainpage}"></a>
                   </span>
                     </li>
-
                     <li class="nav-item active">
                  <span th:case="${false}">
                 <a class="nav-link" th:text="#{signin}" th:href="@{/main}"></a>
@@ -68,9 +67,12 @@
                         <span th:text="#{ChooseYourlanguage}" class="btn-label"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="?lang=english">English</a></li>
-                        <li><a class="dropdown-item" href="?lang=ru">Russian</a></li>
-                        <li><a class="dropdown-item" href="?lang=pl">Polski</a></li>
+                        <li><a class="dropdown-item" href="?lang=english">English <span
+                                class="flag-icon flag-icon-us"></span></a></li>
+                        <li><a class="dropdown-item" href="?lang=ru">Russian <span
+                                class="flag-icon flag-icon-ru"></span></a></li>
+                        <li><a class="dropdown-item" href="?lang=pl">Polski <span class="flag-icon flag-icon-pl"></span></a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -85,10 +87,6 @@
 
 <!-- Footer -->
 <footer>
-
-
-    <!--        <a th:text="#{signout}" href="/signout" role="button" class="btn btn-primary">Sign out</a>-->
-
     <nav role="navigation" class="fixed-bottom">
 
         <div class="footer-copyright text-center py-xl-5" th:text="#{footer}">&copy; 2022 Copyright: Hospital "The road
