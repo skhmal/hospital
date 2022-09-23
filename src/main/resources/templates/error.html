@@ -12,10 +12,13 @@
             </symbol>
         </svg>
         <div class="alert alert-danger d-flex align-items-center" role="alert">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-
-            <div class="col-sm"><div class="text-center" th:text="${exception}">
-            </div></div>
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                <use xlink:href="#exclamation-triangle-fill"/>
+            </svg>
+            <div class="col-sm">
+                <div class="text-center" th:text="${exception}">
+                </div>
+            </div>
             <div class="col-sm"><a class="btn btn-primary" href="/main" role="button"
                                    th:text="#{mainpage}"></a></div>
             <div class="col-sm"></div>
