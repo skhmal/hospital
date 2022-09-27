@@ -2,72 +2,39 @@ package com.khmal.hospital.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.khmal.hospital.dao.entity.HospitalStaff;
-import com.khmal.hospital.dao.entity.Patient;
-import com.khmal.hospital.dao.entity.StaffRole;
-import com.khmal.hospital.dao.repository.AppointmentRepository;
-import com.khmal.hospital.dao.repository.PatientRepository;
-import com.khmal.hospital.dao.repository.UserRepository;
+import com.khmal.hospital.Helper;
 import com.khmal.hospital.dto.AppointmentDto;
 import com.khmal.hospital.dto.HospitalStaffDto;
 import com.khmal.hospital.dto.PatientDto;
-import com.khmal.hospital.mapper.HospitalStuffMapper;
-import com.khmal.hospital.mapper.StaffRoleMapper;
-import com.khmal.hospital.service.MedicalStaffService;
-import com.khmal.hospital.service.RegistrationService;
-import com.khmal.hospital.service.SecurityService;
-import com.khmal.hospital.service.validator.Validation;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+import com.khmal.hospital.service.PatientService;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
 @AutoConfigureMockMvc
-class NurseControllerTest {
+class NurseControllerTest extends IntegrationTestBaseClass {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private NurseController nurseController;
 
-    @InjectMocks
-    private MedicalStaffService medicalStaffService;
-
-    @InjectMocks
-    private RegistrationService registrationService;
-
-    @Mock
-    private UserRepository userRepository;
-    @Mock
-    private PatientRepository patientRepository;
-    @Mock
-    private Validation validation;
-    @Mock
-    private AppointmentRepository appointmentRepository;
-    @Mock
-    private SecurityService securityService;
+    @Autowired
+    private PatientService patientService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -79,39 +46,6 @@ class NurseControllerTest {
     private final int ROLE_ID = 4;
     private final String ROLE_NURSE = "NURSE";
     private final String ROLE_PATIENT = "PATIENT";
-
-    StaffRole staffRoleNurse = new StaffRole("ROLE_NURSE");
-
-    StaffRole staffRolePatient = new StaffRole("ROLE_PATIENT");
-
-    List<PatientDto> patientDtoList = new ArrayList<>();
-    PatientDto patientDto = new PatientDto(FIRSTNAME, LASTNAME, USERNAME, BIRTHDAY, false, ROLE_ID);
-
-    List<Patient> patientList = new ArrayList<>();
-    Patient patient = new Patient(FIRSTNAME, LASTNAME, USERNAME, BIRTHDAY, staffRolePatient);
-    HospitalStaff nurse = new HospitalStaff(FIRSTNAME, LASTNAME, USERNAME, null, staffRoleNurse);
-
-    @BeforeEach
-    void setUp() {
-
-        staffRolePatient.setId(4);
-        staffRoleNurse.setId(2);
-        staffRoleNurse.setRoleName("ROLE_NURSE");
-        nurse.setStaffRole(staffRoleNurse);
-
-        List<PatientDto> patientDtoList = new ArrayList<>();
-        PatientDto patientDto = new PatientDto(FIRSTNAME, LASTNAME, USERNAME, BIRTHDAY, false, ROLE_ID);
-        patientDtoList.add(patientDto);
-
-        List<Patient> patientList = new ArrayList<>();
-        Patient patient = new Patient(FIRSTNAME, LASTNAME, USERNAME, BIRTHDAY, staffRolePatient);
-        patientList.add(patient);
-
-        Mockito.when(patientRepository.findAll()).thenReturn(patientList);
-
-        Mockito.when(registrationService.getAllPatients()).thenReturn(patientDtoList);
-
-    }
 
     public String toJson(Object o) throws JsonProcessingException {
         return objectMapper.writeValueAsString(o);
@@ -148,51 +82,29 @@ class NurseControllerTest {
                 .andExpect(status().isForbidden());
     }
 
-    class PrincipalImpl implements Principal {
 
-        @Override
-        public String getName() {
-
-            return USERNAME;
-        }
-
-    }
 
     @Test
-    @Disabled
-    @WithMockUser(username = "db", roles = {"NURSE"})
     void getNurseAppointmentMethodPostPositiveCase() throws Exception {
-        PatientDto patientDto1 = new PatientDto(FIRSTNAME, LASTNAME, USERNAME, LocalDate.of(1990,2,1)
-                ,false, 4);
-        patientDto1.setId(1);
-Principal principal = new PrincipalImpl();
 
-        HospitalStaffDto hospitalStaffDto = HospitalStuffMapper.INSTANCE.toDto(nurse);
-        hospitalStaffDto.setId(1);
-        hospitalStaffDto.setStuffRole(StaffRoleMapper.INSTANCE.toDto(staffRoleNurse));
-        hospitalStaffDto.setStuffRoleName("ROLE_NURSE");
 
-        AppointmentDto appointmentDto = new AppointmentDto(Mockito.anyInt(), LocalDateTime.now(), "MEDICATIONS", patientDto1,"SUMMARY"
-                , hospitalStaffDto
-        );
-
-        Mockito.when(medicalStaffService.createAppointment(1, 1, "MEDICATIONS",
-                "SUMMARY", LocalDateTime.now())).thenReturn(appointmentDto);
-
-        Mockito.when(securityService.getEmployeeId(Mockito.any())).thenReturn(1);
+        AppointmentDto dto = new AppointmentDto(1, LocalDateTime.of(2023, 3, 11, 13, 15),
+                "MEDICATIONS", new PatientDto(),
+                "BOLEN", new HospitalStaffDto());
 
         this.mockMvc
                 .perform(
                         post("/nurse/appointment")
                                 .with(csrf())
-                                .with(SecurityMockMvcRequestPostProcessors.user(USERNAME).roles(ROLE_NURSE))
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content( toJson(appointmentDto))
-                                .param("patientIdNurseAppointment",toJson(1))
-                                .param("appointmentTypeNurse", toJson("MEDICATIONS"))
-                                .principal(principal)
+                                .with(SecurityMockMvcRequestPostProcessors.user("basia").password("basia").roles("NURSE"))
+                                .param("patientIdNurseAppointment", String.valueOf(1))
+                                .param("appointmentTypeNurse", "MEDICATIONS")
+                                .flashAttr("appointments", dto)
+                                .principal(() -> "basia")
                 )
-                .andExpect(status().isOk())
-                .andExpect(redirectedUrl("/success"));
+                .andExpect(redirectedUrl("/successful"));
+
+        assertEquals("BOLEN", patientService.getAllPatientAppointmentsPaginated(1, 5, "appointmentType",
+                "desc", 1).map(AppointmentDto::getSummary).get().findFirst().orElse(null));
     }
 }

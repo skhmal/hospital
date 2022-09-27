@@ -1,4 +1,4 @@
-package resources;
+package com.khmal.hospital;
 
 import com.khmal.hospital.dao.entity.*;
 import com.khmal.hospital.dto.AppointmentDto;

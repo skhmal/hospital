@@ -41,7 +41,8 @@ public class NurseController {
         return "createAppointmentNurse";
     }
 
-    @RequestMapping(value = "/appointment", method = RequestMethod.POST, params = "action=save")
+//    @RequestMapping(value = "/appointment", method = RequestMethod.POST, params = "action=save")
+    @RequestMapping(value = "/appointment", method = RequestMethod.POST)
     public String getNurseAppointment(@ModelAttribute("appointments") AppointmentDto appointmentDto,
                                       @RequestParam("patientIdNurseAppointment") int patientId,
                                       @RequestParam("appointmentTypeNurse") String appointmentType,

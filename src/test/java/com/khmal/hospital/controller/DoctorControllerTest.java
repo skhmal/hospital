@@ -89,13 +89,4 @@ class DoctorControllerTest {
     void smokeTest() {
         assertNotNull(doctorController);
     }
-
-    class PrincipalImpl implements Principal {
-
-        @Override
-        public String getName() {
-
-            return USERNAME;
-        }
-    }
 }
